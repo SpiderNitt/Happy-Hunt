@@ -16,11 +16,5 @@ const TeamSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
-  activityFeed: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ActivityFeed",
-    },
-  ],
 });
 module.exports = mongoose.model("Team", TeamSchema);
