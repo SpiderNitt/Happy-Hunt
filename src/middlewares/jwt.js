@@ -4,9 +4,7 @@ const mongoose = require("mongoose");
 const createJWTtoken = async (user) => {
   return jwt.sign(
     {
-      name: user.name,
-      id: user._id,
-      mobileNo: user.mobileNo,
+      id: user.Id,
     },
     process.env.TOKEN_SECRET,
     { expiresIn: "168h" }
