@@ -2,7 +2,7 @@ const loginRouter = require("express").Router();
 const { body, validationResult } = require("express-validator");
 const { createJWTtoken } = require("../../middlewares/jwt");
 
-const { InputValidator } = require("../../middlewares/adminAuthValidator");
+const { InputValidator } = require("../../middlewares/expressValidator");
 
 const User = require("../../database/models/User");
 
