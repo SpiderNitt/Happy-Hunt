@@ -2,13 +2,17 @@ const mongoose = require("mongoose");
 
 const TeamSchema = new mongoose.Schema({
   teamId: {
-    type: Number,
+    type: String,
     required: true,
+  },
+  teamName: {
+    type: String,
+    require: true,
   },
   points: {
     type: Number,
     required: true,
-    default: 100, // for intialization
+    default: 0, // for intialization
   },
   members: [
     {

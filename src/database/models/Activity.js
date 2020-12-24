@@ -9,4 +9,6 @@ const activitySchema = new mongoose.Schema({
   status: Boolean,
   count: Number,
   photo: String,
+  hintsTaken: Number,
+  answer: String,
 });
