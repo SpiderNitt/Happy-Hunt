@@ -15,6 +15,7 @@ loginRouter.post("/", InputValidator, async (req, res) => {
     }
     if (adminID !== undefined || password !== undefined) {
       const user = await User.findOne({ Id: adminID });
+
       if (user === null) {
         return res.status(404).json({ message: "No user found" });
       }

@@ -5,16 +5,13 @@ const User = require("../../database/models/User");
 Router.get("/", async (req, res) => {
   try {
     // creating random adminID
-    const adminID = cryptoRandomString({ length: 5, type: "numeric" });
-    console.log("adminID", adminID);
-    const user = await User.findOne({ Id: adminID });
-    if (user !== null) {
-      return res.status(400).json({
-        message: "unable to create new admin",
-        reason: "random adminId generated already exists",
-        solution: "try again later",
-      });
+    let adminID = cryptoRandomString({ length: 5, type: "numeric" });
+
+    while (await User.findOne({ Id: adminID })) {
+      adminID = cryptoRandomString({ length: 5, type: "numeric" });
     }
+    console.log("adminID", adminID);
+
     // creating random password
     const adminpassword = cryptoRandomString({
       length: 10,
