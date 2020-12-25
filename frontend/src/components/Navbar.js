@@ -1,0 +1,150 @@
+import {
+    AppBar,
+    Toolbar,
+    makeStyles,
+    Button,
+    IconButton,
+    Menu,
+    Link,
+    MenuItem,
+  } from "@material-ui/core";
+  import MenuIcon from "@material-ui/icons/Menu";
+  import React, { useState, useEffect } from "react";
+  import { Link as RouterLink } from "react-router-dom";
+  
+  const navData = [
+    {
+      label: "Home",
+      href: "/",
+    }
+  ];
+  
+  const useStyles = makeStyles(() => ({
+    header: {
+      backgroundColor: "#000080",
+      "@media (max-width: 800px)": {
+      },
+    }, 
+    menuButton: {
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 700,
+      size: "18px",
+      marginLeft: "38px",
+    },
+    toolbar: {
+      justifyContent: "space-between",
+    },
+    menuBox: {
+      padding: "10px 10px",
+    },
+  }));
+  
+  function Navbar() {
+    const { header,  menuButton, toolbar, menuBox } = useStyles();
+  
+    const [state, setState] = useState({
+      mobileView: false,
+      menuopen: false,
+    });
+  
+    const { mobileView, menuopen } = state;
+  
+    useEffect(() => {
+      const setResponsiveness = () => {
+        return window.innerWidth < 900
+          ? setState((prevState) => ({ ...prevState, mobileView: true }))
+          : setState((prevState) => ({ ...prevState, mobileView: false }));
+      };
+  
+      setResponsiveness();
+  
+      window.addEventListener("resize", () => setResponsiveness());
+    }, []);
+  
+    const displayDesktop = () => {
+      return (
+        <Toolbar className={toolbar}>
+          Happy hunt
+          <div>{getMenuButtons()}</div>
+        </Toolbar>
+      );
+    };
+  
+    const displayMobile = () => {
+      const handleMenuOpen = () =>
+        setState((prevState) => ({ ...prevState, menuopen: true }));
+      const handleMenuClose = () =>
+        setState((prevState) => ({ ...prevState, menuopen: false }));
+  
+    return (
+        <Toolbar>
+          <IconButton
+            {...{
+              edge: "start",
+              color: "inherit",
+              "aria-label": "menu",
+              "aria-haspopup": "true",
+              onClick: handleMenuOpen,
+            }}
+          >
+           <MenuIcon />
+          </IconButton>
+
+          <Menu
+             {...{
+                open: menuopen,
+                onClose: handleMenuClose,
+              }}
+            >
+            <div className={menuBox}>{getMenuData()}</div>
+         </Menu>
+        </Toolbar>
+      );
+    };
+  
+    const getMenuData = () => {
+      return navData.map(({ label, href }) => {
+        return (
+          <Link
+            {...{
+              component: RouterLink,
+              to: href,
+              color: "inherit",
+              style: { textDecoration: "none" },
+              key: label,
+            }}
+          >
+            <MenuItem>{label}</MenuItem>
+          </Link>
+        );
+      });
+    };
+  
+  
+    const getMenuButtons = () => {
+      return navData.map(({ label, href }) => {
+        return (
+          <Button
+            {...{
+              key: label,
+              color: "inherit",
+              to: href,
+              component: RouterLink,
+              className: menuButton,
+            }}
+          >
+            {label}
+          </Button>
+        );
+      });
+    };
+  
+    return (
+
+    <AppBar className={header}>
+      {mobileView ? displayMobile() : displayDesktop()}
+    </AppBar>
+ 
+    );
+  }
+  export default Navbar;
