@@ -11,6 +11,7 @@ import Leaderboard from "./components/Leaderbaord";
 import Notifications from "./components/Notifications";
 
 function App() {
+
   return (
     <Router>
       <div className='App'>
@@ -28,6 +29,7 @@ function App() {
     </Router>
     
   )
+
 }
 
 export default App;
