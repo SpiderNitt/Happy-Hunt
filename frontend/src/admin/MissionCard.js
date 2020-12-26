@@ -8,13 +8,13 @@ import './admin.css'
 const MissionCard = (props) => {
     const renderType = (type) => {
         if (type === "1") {
-            return (<CameraAltIcon fontSize="large" />);
+            return (<CameraAltIcon fontSize="large" color="secondary" />);
         }
         else if (type === "2") {
             return (<LocationOnIcon fontSize="large" />);
         }
         else {
-            return (<TextFormatIcon fontSize="large" />);
+            return (<TextFormatIcon fontSize="large" color="primary" />);
         }
     }
     return (
