@@ -24,7 +24,7 @@ Router.get("/", async (req, res) => {
       Role: "admin",
       password: adminpassword,
     });
-    return res.status(200).json({ message: "new admin created" });
+    return res.status(200).json({ AdminID: adminID, password: adminpassword });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
