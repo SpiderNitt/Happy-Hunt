@@ -1,30 +1,41 @@
 const Router = require("express").Router();
 const cryptoRandomString = require("crypto-random-string");
+const { validationResult } = require("express-validator");
 const User = require("../../database/models/User");
+const { AdminCreateValidator } = require("../../middlewares/expressValidator");
 
-Router.get("/", async (req, res) => {
+Router.post("/", AdminCreateValidator, async (req, res) => {
   try {
-    // creating random adminID
-    let adminID = cryptoRandomString({ length: 5, type: "numeric" });
-
-    while (await User.findOne({ Id: adminID })) {
-      adminID = cryptoRandomString({ length: 5, type: "numeric" });
+    const { emailId } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-    console.log("adminID", adminID);
+    if (emailId !== undefined) {
+      // creating random password
+      const user = await User.findOne({ Id: emailId });
+      if (user) {
+        return res.status(403).json({ message: "user already exists" });
+      }
+      const adminpassword = cryptoRandomString({
+        length: 10,
+        type: "alphanumeric",
+      });
+      console.log("password", adminpassword);
 
-    // creating random password
-    const adminpassword = cryptoRandomString({
-      length: 10,
-      type: "alphanumeric",
-    });
-    console.log("password", adminpassword);
-
-    await User.create({
-      Id: adminID,
-      Role: "admin",
-      password: adminpassword,
-    });
-    return res.status(200).json({ AdminID: adminID, password: adminpassword });
+      await User.create({
+        Id: emailId,
+        Role: "admin",
+        password: adminpassword,
+      });
+      return res
+        .status(200)
+        .json({ AdminEmailId: emailId, password: adminpassword });
+    } else {
+      return res
+        .status(401)
+        .json({ message: "emailId provided was undefined" });
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).json({

@@ -1,10 +1,11 @@
 const { body } = require("express-validator");
 
 module.exports = {
-  InputValidator: [
-    body("adminID").isString().notEmpty(),
+  AdminLoginValidator: [
+    body("emailId").isEmail().notEmpty(),
     body("password").isString().notEmpty(),
   ],
+  AdminCreateValidator: [body("emailId").isEmail().notEmpty()],
   playerRegisterValidator: [
     body("name").isString().notEmpty(),
     body("emailId").isEmail().notEmpty(),

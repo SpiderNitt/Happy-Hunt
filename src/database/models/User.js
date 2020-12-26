@@ -16,9 +16,6 @@ const UserSchema = new mongoose.Schema({
   phoneNo: {
     type: Number,
   },
-  age: {
-    type: Number,
-  },
   team: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
