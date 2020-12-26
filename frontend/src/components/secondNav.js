@@ -11,31 +11,35 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import SearchIcon from "@material-ui/icons/Search";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import ShowChartIcon from "@material-ui/icons/ShowChart";
+import NotificationsIcon from "@material-ui/icons/NotificationsActive";
 
 const navData = [
   {
-    label: "Clues",
+    label: <SearchIcon style={{ fontSize: 35, padding: 15 }} />,
     href: "/main",
   },
   {
-    label: "Stats",
-    href: "/stats",
+    label: <ShowChartIcon style={{ fontSize: 35, padding: 15 }} />,
+    href: "/activity",
   },
   {
-    label: "Leader board",
+    label: <BarChartIcon style={{ fontSize: 35, padding: 15 }} />,
     href: "/leaderboard",
   },
   {
-    label: "Notifications",
+    label: <NotificationsIcon style={{ fontSize: 35, padding: 15 }} />,
     href: "/notifications",
   },
 ];
 
 const useStyles = makeStyles(() => ({
   header: {
-    marginTop: 70,
+    marginTop: window.innerHeight * 0.17,
     backgroundColor: "#778899",
-    "@media (max-width: 800px)": {},
+    "@media (max-width: 500px)": {},
   },
   menuButton: {
     fontFamily: "Open Sans, sans-serif",
@@ -63,7 +67,7 @@ function SecondNavbar() {
 
   useEffect(() => {
     const setResponsiveness = () => {
-      return window.innerWidth < 900
+      return window.innerWidth < 400
         ? setState((prevState) => ({ ...prevState, mobileView: true }))
         : setState((prevState) => ({ ...prevState, mobileView: false }));
     };
