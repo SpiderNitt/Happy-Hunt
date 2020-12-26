@@ -1,14 +1,16 @@
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const createJWTtoken = async (user) =>
-  jwt.sign(
+// eslint-disable-next-line arrow-body-style
+const createJWTtoken = async (user) => {
+  return jwt.sign(
     {
       id: user.Id,
     },
     process.env.TOKEN_SECRET,
     { expiresIn: "168h" }
   );
+};
 
 const jwtVerify = (req, res, next) => {
   try {
