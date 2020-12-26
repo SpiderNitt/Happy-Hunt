@@ -5,6 +5,10 @@ const MissionSchema = new Schema({
     type: String,
     required: true,
   },
+  level: {
+    type: String,
+    required: true,
+  },
   clue: {
     type: String,
     required: true,
