@@ -1,9 +1,12 @@
 import React from 'react';
+import ActivityCard from './ActivityCard'
 
 const Activity = () => {
     return (
-        <div>
-            Activity page
+        <div class="activity-container">
+            <ActivityCard />
+            <ActivityCard />
+            <ActivityCard />
         </div>
     );
 }
