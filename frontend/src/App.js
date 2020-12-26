@@ -6,24 +6,26 @@ import Welcome from './components/Welcome';
 import Rules from './components/Rules';
 import MainClues from './components/MainClues';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import Stats from "./components/Stats";
+import Activity from "./components/Activity";
 import Leaderboard from "./components/Leaderbaord";
 import Notifications from "./components/Notifications";
+
 
 function App() {
 
   return (
     <Router>
       <div className='App'>
-        <Navbar/>
+      <Navbar/>
         <Switch>
           <Route path="/" exact component={Welcome}/>
           <Route path="/starting" component={Starting}/>
           <Route path="/rules" component={Rules}/>
           <Route path="/main" component={MainClues}/>
-          <Route path="/stats" exact component={Stats}/>
+          <Route path="/activity" exact component={Activity}/>
           <Route path="/leaderboard" component={Leaderboard}/>
           <Route path="/notifications" component={Notifications}/>
+          
         </Switch>
         </div>
     </Router>
