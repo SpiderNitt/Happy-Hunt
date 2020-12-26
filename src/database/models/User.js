@@ -12,17 +12,14 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   phoneNo: {
-    type: Number,
-  },
-  age: {
     type: Number,
   },
   team: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
   },
+  active: Boolean,
 });
 module.exports = mongoose.model("User", UserSchema);

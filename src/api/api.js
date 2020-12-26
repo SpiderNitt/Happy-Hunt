@@ -1,5 +1,9 @@
-const auth = require("express").Router();
+const api = require("express").Router();
 const MissionRouter = require("./routers/mission");
 
-auth.use("/mission", MissionRouter);
-module.exports = auth;
+api.use("/mission", MissionRouter);
+
+const scoreboard = require("./routers/scoreboard");
+
+api.use("/scoreboard", scoreboard);
+module.exports = api;

@@ -15,7 +15,8 @@ Router.get("/admin", async (req, res) => {
 });
 Router.get("/player", async (req, res) => {
   try {
-    return res.status(200).json({});
+    const TotalMissions = await Mission.find({});
+    return res.status(200).json({ Missions: TotalMissions });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
