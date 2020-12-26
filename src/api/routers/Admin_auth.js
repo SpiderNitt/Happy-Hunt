@@ -2,11 +2,11 @@ const loginRouter = require("express").Router();
 const { validationResult } = require("express-validator");
 const { createJWTtoken } = require("../../middlewares/jwt");
 
-const { InputValidator } = require("../../middlewares/adminAuthValidator");
+const { AdminLoginValidator } = require("../../middlewares/expressValidator");
 
 const User = require("../../database/models/User");
 
-loginRouter.post("/", InputValidator, async (req, res) => {
+loginRouter.post("/", AdminLoginValidator, async (req, res) => {
   try {
     const { emailId, password } = req.body;
     const errors = validationResult(req);

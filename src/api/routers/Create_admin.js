@@ -2,9 +2,9 @@ const Router = require("express").Router();
 const cryptoRandomString = require("crypto-random-string");
 const { validationResult } = require("express-validator");
 const User = require("../../database/models/User");
-const { InputValidator2 } = require("../../middlewares/adminAuthValidator");
+const { AdminCreateValidator } = require("../../middlewares/expressValidator");
 
-Router.post("/", InputValidator2, async (req, res) => {
+Router.post("/", AdminCreateValidator, async (req, res) => {
   try {
     const { emailId } = req.body;
     const errors = validationResult(req);
