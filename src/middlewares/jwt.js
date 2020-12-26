@@ -1,14 +1,16 @@
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const createJWTtoken = async (user) =>
-  jwt.sign(
+// eslint-disable-next-line arrow-body-style
+const createJWTtoken = async (user) => {
+  return jwt.sign(
     {
       id: user.Id,
     },
     process.env.TOKEN_SECRET,
     { expiresIn: "168h" }
   );
+};
 
 const jwtVerify = (req, res, next) => {
   try {
@@ -19,10 +21,11 @@ const jwtVerify = (req, res, next) => {
     jwt.verify(token, process.env.TOKEN_SECRET, async (error, decoded) => {
       req.jwt_payload = decoded;
       if (error)
-        return await logout(req, res, "Invalid Token or Token expired", 403);
+        return res
+          .status(404)
+          .json({ message: "Invalid Token or Token expired" });
       if (!mongoose.Types.ObjectId.isValid(decoded.id))
-        // eslint-disable-next-line no-return-await
-        return await logout(req, res, "Invalid userId", 400);
+        return res.status(400).json({ message: "Invalid userId" });
       req.user = true;
       return next();
     });

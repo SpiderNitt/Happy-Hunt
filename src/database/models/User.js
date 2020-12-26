@@ -12,7 +12,6 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   phoneNo: {
     type: Number,
@@ -24,5 +23,6 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
   },
+  active: Boolean,
 });
 module.exports = mongoose.model("User", UserSchema);
