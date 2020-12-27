@@ -10,7 +10,7 @@ const { createJWTtoken, jwtVerify } = require("../../middlewares/jwt");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
-    const { name, emailId, phoneNo, age } = req.body;
+    const { name, emailId, phoneNo } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -24,7 +24,7 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       Id: emailId,
       phoneNo,
       name,
-      age,
+
       active: false,
       Role: "Player",
     });
