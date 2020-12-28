@@ -6,6 +6,7 @@ const createJWTtoken = async (user) => {
   return jwt.sign(
     {
       id: user.Id,
+      team: user.team,
     },
     process.env.TOKEN_SECRET,
     { expiresIn: "168h" }

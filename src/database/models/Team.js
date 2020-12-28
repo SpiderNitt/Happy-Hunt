@@ -20,5 +20,9 @@ const TeamSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  AssignedSet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Set",
+  },
 });
 module.exports = mongoose.model("Team", TeamSchema);
