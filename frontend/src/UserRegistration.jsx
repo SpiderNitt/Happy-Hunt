@@ -88,11 +88,11 @@ export default function UserRegistration() {
                   />
                   <ErrorMessage visible={touched.email} error={errors.email} />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <TextField 
                     type="number" 
                     name="age" 
-                    label="Age"
+                    label="Mobile Number"
                     min={18}
                     variant="outlined"
                     onChange={e => setFieldValue( "age", e.target.value)}
