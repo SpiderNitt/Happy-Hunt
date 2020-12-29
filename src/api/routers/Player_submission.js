@@ -80,6 +80,7 @@ submission.post("/submission", upload.single("answer"), async (req, res) => {
         mission,
         hintsTaken,
       });
+      return res.status(200).json({ message: "Successfully submitted" });
     } catch (error) {
       console.log(error.message);
       return res.status(416).json({ message: "File upload issue" });
