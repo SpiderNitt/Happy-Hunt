@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+}
+.nav {
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  background:rgb(150, 150, 150);
+}
+.navLinks {
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  background:rgb(150, 150, 150);
+}
+
+
