@@ -1,8 +1,12 @@
 const { Schema, model } = require("mongoose");
 
 const HintSchema = new Schema({
-  Hint: {
+  Content: {
     type: String,
+    required: true,
+  },
+  MaxPoints: {
+    type: Number,
     required: true,
   },
 });
