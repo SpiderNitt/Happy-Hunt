@@ -4,6 +4,7 @@ const { jwtVerify } = require("../../middlewares/jwt");
 const Mission = require("../../database/models/Mission");
 const Set = require("../../database/models/Set");
 const Team = require("../../database/models/Team");
+const Activity = require("../../database/models/Activity");
 
 Router.get("/admin", async (req, res) => {
   try {
@@ -22,6 +23,14 @@ Router.get("/player/", async (req, res) => {
     const team = await Team.findById(teamId);
 
     const set = await Set.findById(team.AssignedSet);
+    let arr = [];
+    let allMissions = set.Missions;
+    for (let i = 0; i < allMissions.length; i++) {
+      let mission = await Mission.findById(allMissions[i]);
+      arr.push(mission);
+      await Activity.create({});
+    }
+
     res.status(200).json({ missions: set.Missions });
   } catch (e) {
     console.log(e);
@@ -29,10 +38,6 @@ Router.get("/player/", async (req, res) => {
       message: "Server Error ",
     });
   }
-
-  /* res.setHeader("Content-Type", "text/html");
-  res.setHeader("Content-Length", Buffer.byteLength(content));
-  res.end(content); */
 });
 
 module.exports = Router;
