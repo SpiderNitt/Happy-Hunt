@@ -23,7 +23,7 @@ setInterval(async () => {
   const teams = await team.find({});
   const sets = await Set.find({});
   let teamcount = teams.length;
-  console.log(sets.length);
+
   for (let i = 0; i < sets.length; i++) {
     console.log(i);
     if (teamcount === 1) {
@@ -83,6 +83,7 @@ setInterval(async () => {
       teamcount -= 4;
     }
   }
+  console.log("complete");
 }, 1800000);
 
 module.exports = { app };

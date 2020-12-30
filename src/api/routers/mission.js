@@ -5,6 +5,7 @@ const Mission = require("../../database/models/Mission");
 const Set = require("../../database/models/Set");
 const Team = require("../../database/models/Team");
 const Activity = require("../../database/models/Activity");
+const User = require("../../database/models/User");
 
 Router.get("/admin", async (req, res) => {
   try {
@@ -17,20 +18,23 @@ Router.get("/admin", async (req, res) => {
     });
   }
 });
-Router.get("/player/", async (req, res) => {
+Router.get("/player/", jwtVerify, async (req, res) => {
   try {
-    const teamId = "5fe641ef1da3c71e2c3c0222";
+    const teamId = req.jwt_payload.team;
+
     const team = await Team.findById(teamId);
 
     const set = await Set.findById(team.AssignedSet);
+    console.log(set._id);
     const arr = [];
     const allMissions = set.Missions;
     // eslint-disable-next-line no-await-in-loop
     for (let i = 0; i < allMissions.length; i++) {
-      const activity = Activity.findOne({
-        team: "5fe641ef1da3c71e2c3c0222",
+      const activity = await Activity.findOne({
+        team: req.jwt_payload.team,
         mission: allMissions[i],
       });
+
       const mission = await Mission.findById(allMissions[i]).select({
         clue: 1,
         Category: 1,
@@ -38,11 +42,9 @@ Router.get("/player/", async (req, res) => {
       });
       arr.push(mission);
 
-      console.log(activity);
       if (!activity) {
-        console.log("inside");
         await Activity.create({
-          team: "5fe641ef1da3c71e2c3c0222",
+          team: req.jwt_payload.team,
           ShouldBeShown: false,
           likes: 0,
           mission: allMissions[i],
