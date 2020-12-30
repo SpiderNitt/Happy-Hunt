@@ -1,7 +1,8 @@
 const Router = require("express").Router();
 const Feed = require("../../database/models/Activity");
+const { jwtVerify } = require("../../middlewares/jwt");
 
-Router.get("/feed", async (req, res) => {
+Router.get("/feed", jwtVerify, async (req, res) => {
   try {
     const feeds = await Feed.find({ status: "accepted", ShouldBeShown: true });
     res.status(200).json({ actiityFeeds: feeds });
@@ -12,7 +13,7 @@ Router.get("/feed", async (req, res) => {
     });
   }
 });
-Router.get("/feed/likes/:id", async (req, res) => {
+Router.get("/feed/likes/:id", jwtVerify, async (req, res) => {
   try {
     const { id } = req.params;
     let feed = await Feed.findById(id);
