@@ -19,7 +19,9 @@ Router.get("/feed/likes/:id", async (req, res) => {
     if (!feed) {
       res.status(404).json({ message: "no such feed found" });
     }
+    console.log("previous", feed.likes);
     feed.likes += 1;
+    console.log("after", feed.likes);
     feed.save();
     res.status(200).json({ message: "post liked" });
   } catch (err) {
