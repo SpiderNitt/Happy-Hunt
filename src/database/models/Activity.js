@@ -23,6 +23,7 @@ const activitySchema = new mongoose.Schema({
   },
   likes: {
     type: Number,
+    default: 0,
   },
   mission: {
     type: mongoose.Types.ObjectId,
