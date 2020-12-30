@@ -9,11 +9,9 @@ submission.post(
   multer({ storage: multer.memoryStorage() }).single("answer"),
   async (req, res) => {
     try {
-      const user = req.jwt_payload.id;
-      const { mission, shown, hintsTaken, activity } = req.body;
-      const { team } = await User.findOne({ Id: user });
-      if (!mission || !hintsTaken)
-        return res.status(400).json({ message: "Fill all fields" });
+      const { team } = req.jwt_payload;
+      const { mission, shown } = req.body;
+      if (!mission) return res.status(400).json({ message: "Fill all fields" });
       const submit = await Mission.findById(mission);
       const answerType = submit.answer_Type;
       const { Category } = submit;
@@ -71,15 +69,12 @@ submission.post(
         }
 
         const { err, result } = await Activity.updateOne(
-          { _id: activity, isSubmitted: false },
+          { team, mission, isSubmitted: false },
           {
-            team,
             Answer: answer,
             category: Category,
             status: "Pending",
             ShouldBeShown: shown,
-            mission,
-            hintsTaken,
           }
         );
         if (err) {
