@@ -7,19 +7,19 @@ const activitySchema = new mongoose.Schema({
   },
   Answer: {
     type: String,
-    required: true,
+    // required: true,
   },
   category: {
     type: String,
-    required: true,
+    // required: true,
   },
   status: {
     type: String, // pending/accepted
-    required: true,
+    // required: true,
   },
   ShouldBeShown: {
     type: Boolean,
-    required: true,
+    // required: true,
   },
   likes: {
     type: Number,
@@ -39,6 +39,10 @@ const activitySchema = new mongoose.Schema({
   },
   hintsTaken: {
     type: Number,
+  },
+  isSubmitted: {
+    type: Boolean,
+    default: false,
   },
 });
 module.exports = mongoose.model("Activity", activitySchema);
