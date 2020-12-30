@@ -26,8 +26,6 @@ const jwtVerify = (req, res, next) => {
         return res
           .status(404)
           .json({ message: "Invalid Token or Token expired" });
-      if (!mongoose.Types.ObjectId.isValid(decoded.id))
-        return res.status(400).json({ message: "Invalid userId" });
       req.user = true;
       return next();
     });
