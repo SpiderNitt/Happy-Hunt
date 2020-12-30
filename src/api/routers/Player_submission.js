@@ -10,7 +10,7 @@ submission.post(
   async (req, res) => {
     try {
       const user = req.jwt_payload.id;
-      const { mission, shown, hintsTaken } = req.body;
+      const { mission, shown, hintsTaken, activity } = req.body;
       const { team } = await User.findOne({ Id: user });
       if (!mission || !hintsTaken)
         return res.status(400).json({ message: "Fill all fields" });
@@ -32,7 +32,7 @@ submission.post(
           }
 
           case "Text": {
-            if (req.file.buffer === undefined || req.file.buffer == null)
+            if (req.body.answer === undefined || req.body.answer == null)
               return res.status(400).json({ message: "No text submission" });
             answer = req.body.answer;
             break;
@@ -70,7 +70,8 @@ submission.post(
           }
         }
 
-        const activity = Activity.create(
+        const { err, result } = await Activity.updateOne(
+          { _id: activity, isSubmitted: false },
           {
             team,
             Answer: answer,
@@ -79,13 +80,19 @@ submission.post(
             ShouldBeShown: shown,
             mission,
             hintsTaken,
-          },
-          (err, result) => {
-            if (err) console.log(err.message);
-
-            return res.status(200).json({ message: "Successfully submitted" });
           }
         );
+        if (err) {
+          console.log(err.message);
+          return res.status(400).json({ message: err.message });
+        }
+        if (result.nModified === 1) {
+          return res.status(200).json({ message: "Successfully submitted" });
+        }
+        if (result.n === 1) {
+          return res.status(204).json({ mission: "Activity unable to submit" });
+        }
+        return res.status(404).json({ message: "Activity not found" });
       } catch (error) {
         console.log(error.message);
         return res.status(416).json({ message: "File upload issue" });
