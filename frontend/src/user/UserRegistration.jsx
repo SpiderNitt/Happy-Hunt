@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from "yup";
 import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
 
-import ErrorMessage from './components/ErrorMessage';
+import ErrorMessage from '../components/ErrorMessage';
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().required().label("User name"),

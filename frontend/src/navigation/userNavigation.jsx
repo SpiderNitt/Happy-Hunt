@@ -1,11 +1,8 @@
 import React from "react";
-import Welcome from '../components/Welcome';
-import MainClues from '../components/MainClues';
-import Activity from "../components/Activity";
-import Leaderboard from "../components/Leaderbaord";
-import Notifications from "../components/Notifications";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import Navbar from '../components/Navbar';
+import Home from "../user/Home";
+import UserRegistration from "../user/UserRegistration";
+import Template from "../user/Template";
 
 function UserNav() {
 
@@ -13,15 +10,12 @@ function UserNav() {
     
     <Router>
       <div>
-      <Navbar/>
         <Switch>
-          <Route path="/" exact component={Welcome}/>
-          <Route path="/main" component={MainClues}/>
-          <Route path="/activity" exact component={Activity}/>
-          <Route path="/leaderboard" component={Leaderboard}/>
-          <Route path="/notifications" component={Notifications}/>  
+          <Route path="/" exact component={Home}/>
+          <Route path="/register" component={UserRegistration}/>
+          <Route path="/happy-hunt" exact component={Template}/>  
         </Switch>
-        </div>
+      </div>
     </Router>
     
   )
