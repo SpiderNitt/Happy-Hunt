@@ -41,7 +41,7 @@ Router.get("/player/", jwtVerify, async (req, res) => {
 
       if (!activity) {
         await Activity.create({
-          team: "5fe641ef1da3c71e2c3c0222",
+          team: req.jwt_payload.team,
           ShouldBeShown: false,
           likes: 0,
           mission: allMissions[i],
