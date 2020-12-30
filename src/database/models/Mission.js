@@ -5,14 +5,7 @@ const MissionSchema = new Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: String, // lock or unlock
-    required: true,
-  },
-  level: {
-    type: String,
-    required: true,
-  },
+
   clue: {
     type: String,
     required: true,
@@ -42,5 +35,9 @@ const MissionSchema = new Schema({
       ref: "Hint",
     },
   ],
+  maxPoints: {
+    type: Number,
+    required: true,
+  },
 });
 module.exports = model("Mission", MissionSchema);

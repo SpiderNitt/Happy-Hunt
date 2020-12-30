@@ -2,13 +2,14 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 // eslint-disable-next-line arrow-body-style
-const createJWTtoken = async (user) => {
+const createJWTtoken = (user) => {
   return jwt.sign(
     {
       id: user.Id,
       team: user.team,
     },
     process.env.TOKEN_SECRET,
+
     { expiresIn: "168h" }
   );
 };
@@ -25,8 +26,6 @@ const jwtVerify = (req, res, next) => {
         return res
           .status(404)
           .json({ message: "Invalid Token or Token expired" });
-      if (!mongoose.Types.ObjectId.isValid(decoded.id))
-        return res.status(400).json({ message: "Invalid userId" });
       req.user = true;
       return next();
     });

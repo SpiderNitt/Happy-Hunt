@@ -23,15 +23,36 @@ Router.get("/player/", async (req, res) => {
     const team = await Team.findById(teamId);
 
     const set = await Set.findById(team.AssignedSet);
-    let arr = [];
-    let allMissions = set.Missions;
+    const arr = [];
+    const allMissions = set.Missions;
+    // eslint-disable-next-line no-await-in-loop
     for (let i = 0; i < allMissions.length; i++) {
-      let mission = await Mission.findById(allMissions[i]);
+      const activity = Activity.findOne({
+        team: "5fe641ef1da3c71e2c3c0222",
+        mission: allMissions[i],
+      });
+      const mission = await Mission.findById(allMissions[i]).select({
+        clue: 1,
+        Category: 1,
+        maxPoints: 1,
+      });
       arr.push(mission);
-      await Activity.create({});
+
+      console.log(activity);
+      if (!activity) {
+        console.log("inside");
+        await Activity.create({
+          team: "5fe641ef1da3c71e2c3c0222",
+          ShouldBeShown: false,
+          likes: 0,
+          mission: allMissions[i],
+
+          hintsTaken: 0,
+        });
+      }
     }
 
-    res.status(200).json({ missions: set.Missions });
+    return res.status(200).json({ missions: arr });
   } catch (e) {
     console.log(e);
     return res.status(500).json({

@@ -1,9 +1,8 @@
 const api = require("express").Router();
-const MissionRouter = require("./routers/mission");
-
-api.use("/mission", MissionRouter);
 
 const scoreboard = require("./routers/scoreboard");
+const missionroute = require("./routers/mission");
 
 api.use("/scoreboard", scoreboard);
+api.use("/mission", missionroute);
 module.exports = api;
