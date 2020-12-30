@@ -72,13 +72,15 @@ setInterval(async () => {
       teams[teamcount - 2].AssignedSet = sets[i];
       teams[teamcount - 3].AssignedSet = sets[i];
 
-      teamcount -= 4;
+      // teamcount -= 4;
 
       await teams[teamcount - 4].save();
       await teams[teamcount - 1].save();
       await teams[teamcount - 2].save();
       await teams[teamcount - 3].save();
       await sets[i].save();
+
+      teamcount -= 4;
     }
   }
 }, 1800000);
