@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(8),
-    width: '100%',
   },
   card: {
     height: '100%',
@@ -41,7 +40,7 @@ export default function Album() {
 
   return (
     <React.Fragment>
-      <CssBaseline />
+
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>

@@ -6,10 +6,11 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 
 import ErrorMessage from '../components/ErrorMessage';
 
+
 const validationSchema = Yup.object().shape({
     username: Yup.string().required().label("User name"),
     email: Yup.string().required().email().label("Email"),
-    age: Yup.number().min(18).required().label("Age"),
+    phoneNo: Yup.number().positive().required().label("Mobile Number")
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -59,7 +60,7 @@ export default function UserRegistration() {
             Register
           </Typography>
           <Formik
-          initialValues={{ username: '', email: '', age: 0 }}
+          initialValues={{ username: '', email: '', phoneNo: 0 }}
           validationSchema={validationSchema}
           onSubmit={values => console.log(values)}
           >
@@ -90,19 +91,18 @@ export default function UserRegistration() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField 
-                    type="number" 
-                    name="age" 
+                    type="tel" 
+                    name="phoneNo" 
                     label="Mobile Number"
-                    min={18}
                     variant="outlined"
-                    onChange={e => setFieldValue( "age", e.target.value)}
+                    onChange={e => setFieldValue( "phoneNo", e.target.value)}
                     className={classes.TextField} 
                   />
-                  <ErrorMessage visible={touched.age} error={errors.age} />
+                  <ErrorMessage visible={touched.phoneNo} error={errors.phoneNo} />
                 </Grid>
               </Grid>
               <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
-                Submit
+                Register
               </Button>
             </Form>
           )}
