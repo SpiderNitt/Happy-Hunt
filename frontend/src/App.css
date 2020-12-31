@@ -1,6 +1,8 @@
-.App {
-  text-align: center;
-}
+.app {
+    height: 100%;
+    margin: 0;
+  }
+
 .nav {
   text-align: center;
   display: flex;

@@ -41,7 +41,7 @@ function Timer(props) {
 
 const useStyles = makeStyles({
     timer: {
-      margin: 50
+     alignSelf:"center"
     },
   });
 

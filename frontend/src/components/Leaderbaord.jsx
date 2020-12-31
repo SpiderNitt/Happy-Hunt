@@ -6,7 +6,7 @@ const useStyles = makeStyles({
 container:{
   marginTop:window.innerHeight *0.3,
   justifyContent:"center",
-  width: 440,
+  width: 340,
   marginRight: "auto",
   marginLeft: "auto"
 },
@@ -21,14 +21,15 @@ cards:{
   fontWeight: 200
   
 },
+
 index:{
- marginRight:100,
+ marginRight:60,
  fontFamily:"sans-serif",
  color:"rgb(250,250,200)",
  fontWeight: 400
 },
 points:{
-  marginLeft:100,
+  marginLeft:60,
   fontFamily:"sans-serif"
  },
 

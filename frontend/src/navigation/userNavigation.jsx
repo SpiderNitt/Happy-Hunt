@@ -3,9 +3,9 @@ import Welcome from '../components/Welcome';
 import MainClues from '../components/MainClues';
 import Activity from "../components/Activity";
 import Leaderboard from "../components/Leaderbaord";
-import Notifications from "../components/Notifications";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import Navbar from '../components/Navbar';
+import ButtonAppBar from '../components/Navbar';
+import PictureClues from '../components/PictureClues';
 
 function UserNav() {
 
@@ -13,13 +13,13 @@ function UserNav() {
     
     <Router>
       <div>
-      <Navbar/>
+      <ButtonAppBar/>
         <Switch>
           <Route path="/" exact component={Welcome}/>
           <Route path="/main" component={MainClues}/>
-          <Route path="/activity" exact component={Activity}/>
+          <Route path="/activity" component={Activity}/>
           <Route path="/leaderboard" component={Leaderboard}/>
-          <Route path="/notifications" component={Notifications}/>  
+          <Route path="/pictureclues" component={PictureClues}/>
         </Switch>
         </div>
     </Router>
