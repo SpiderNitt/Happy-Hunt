@@ -5,9 +5,7 @@ import UserRegistration from "../user/UserRegistration";
 import Template from "../user/Template";
 
 function UserNav() {
-
   return (
-    
     <Router>
       <div>
         <Switch>
@@ -17,9 +15,7 @@ function UserNav() {
         </Switch>
       </div>
     </Router>
-    
   )
-
 }
 
 export default UserNav;
