@@ -6,5 +6,6 @@ import App from "./App";
 // import UserRegistration from "./UserRegistration";
 // import CreateTeam from "./CreateTeam.jsx";
 // import AdminRegistration from "./AdminRegistration";
+// import Template from "./user/Template";
 
 ReactDOM.render(<App />, document.getElementById("root"));

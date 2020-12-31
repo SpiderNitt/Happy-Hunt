@@ -5,13 +5,10 @@ import UserNav from "./navigation/userNavigation";
 
 function App() {
   return (
-
     <div className='App'>
-        <UserNav/>
+      <UserNav />
     </div>
-    
-  )
-
+  );
 }
 
 export default App;
