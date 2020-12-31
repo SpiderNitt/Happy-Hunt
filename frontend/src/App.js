@@ -1,13 +1,15 @@
 import React from "react";
 import "./App.css";
-
-import UserNav from "./navigation/userNavigation";
+import Welcome from './components/Welcome';
+import Navbar from './components/Navbar';
+//import UserNav from "./navigation/UserNavigation";
 
 function App() {
   return (
 
     <div className='App'>
-        <UserNav/>
+        <Navbar/>
+        <Welcome/>
     </div>
     
   )
