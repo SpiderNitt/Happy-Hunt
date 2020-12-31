@@ -9,6 +9,10 @@ const TeamSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  SocketId: {
+    type: String,
+    unique: true,
+  },
   points: {
     type: Number,
     required: true,
