@@ -7,9 +7,12 @@ function Starting(props) {
     return (
         <div className={classes.starting}>
             <h1>hunt starts in..</h1>
+            <h2>30:00</h2>
+
             <Button variant="contained" color="primary" href="/rules">
                 Rules and Regulations 
             </Button>
+        
         </div>
     );
 }
