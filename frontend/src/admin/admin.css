@@ -42,5 +42,57 @@
     justify-content: center;
     align-items: center;
   }
-  
+  .activity-container{
+    max-height: 500px; 
+    overflow: auto;
+    width:570px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 10px;
+  }
+ 
+  .activity-card-container{
+    width: 530px;
+    border: 2px solid black;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
+  .activity-card-header{
+    display: flex;
+    align-items: center;
+    width: 90%;
+  }
+  .person-icon{
+    border: 1px solid black;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .person-details{
+    margin: 10px;
+  }
+  .reject-button{
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right:5px;
+  }
+  .submitted-image{
+    border: 1px solid black;
+    width: 85%;
+    height: 170px;
+    margin:10px;
+  }
+  img{
+    max-width: 100%;
+    max-height: 100%;
+  }
   
