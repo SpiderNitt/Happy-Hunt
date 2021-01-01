@@ -1,11 +1,10 @@
+/* eslint-disable no-await-in-loop */
 const Router = require("express").Router();
 const { validationResult } = require("express-validator");
-
 const Mission = require("../../database/models/Mission");
 const Set = require("../../database/models/Set");
 const Team = require("../../database/models/Team");
 const Activity = require("../../database/models/Activity");
-
 const Hint = require("../../database/models/Hint");
 const {
   MissionValidator,
@@ -35,12 +34,11 @@ Router.get("/player/", async (req, res) => {
     const allMissions = set.Missions;
 
     for (let i = 0; i < allMissions.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
       const activity = await Activity.findOne({
         team: req.jwt_payload.team,
         mission: allMissions[i],
       });
-      // eslint-disable-next-line no-await-in-loop
+
       const mission = await Mission.findById(allMissions[i]).select({
         clue: 1,
         Category: 1,
@@ -49,7 +47,6 @@ Router.get("/player/", async (req, res) => {
       arr.push(mission);
 
       if (!activity) {
-        // eslint-disable-next-line no-await-in-loop
         await Activity.create({
           team: req.jwt_payload.team,
           ShouldBeShown: false,
@@ -64,6 +61,30 @@ Router.get("/player/", async (req, res) => {
     return res.status(200).json({ missions: arr });
   } catch (e) {
     console.log(e);
+    return res.status(500).json({
+      message: "Server Error ",
+    });
+  }
+});
+Router.get("/hint", async (req, res) => {
+  try {
+    const { MissionId } = req.body;
+    const mission = await Mission.findById(MissionId);
+    const hint = mission.Hints;
+    const activity = await Activity.findOne({
+      team: req.jwt_payload.team,
+      mission: MissionId,
+    });
+    const HintNumber = activity.hintsTaken;
+    if (HintNumber < 3) {
+      activity.hintsTaken += 1;
+      activity.save();
+      const hintStatement = await Hint.findById(hint[HintNumber]);
+      return res.status(200).json({ hint: hintStatement });
+    }
+    return res.status(403).json({ message: "No more hints available" });
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({
       message: "Server Error ",
     });
@@ -90,7 +111,6 @@ Router.post("/admin/add", MissionValidator, async (req, res) => {
     const newHints = [];
 
     for (let i = 0; i < Hints.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
       const newhint = await Hint.create(Hints[i]);
       newHints.push(newhint);
     }
@@ -131,7 +151,6 @@ Router.patch("/admin/update", UpdateMissionValidator, async (req, res) => {
     if (HintsGiven) {
       const hints = mission.Hints;
       for (let index = 0; index < HintsGiven.length; index++) {
-        // eslint-disable-next-line no-await-in-loop
         await Hint.findByIdAndUpdate(hints[index], HintsGiven[index]);
       }
     }

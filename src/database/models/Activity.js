@@ -7,19 +7,15 @@ const activitySchema = new mongoose.Schema({
   },
   Answer: {
     type: String,
-    // required: true,
   },
   category: {
     type: String,
-    // required: true,
   },
   status: {
     type: String, // pending/accepted
-    // required: true,
   },
   ShouldBeShown: {
     type: Boolean,
-    // required: true,
   },
   likes: {
     type: Number,

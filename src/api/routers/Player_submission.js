@@ -2,7 +2,6 @@ const multer = require("multer");
 const submission = require("express").Router();
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
-const User = require("../../database/models/User");
 
 submission.post(
   "/submission",

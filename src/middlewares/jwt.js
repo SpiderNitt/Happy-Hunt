@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 
 // eslint-disable-next-line arrow-body-style
 const createJWTtoken = (user) => {

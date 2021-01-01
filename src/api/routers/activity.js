@@ -16,7 +16,7 @@ Router.get("/feed", jwtVerify, async (req, res) => {
 Router.get("/feed/likes/:id", jwtVerify, async (req, res) => {
   try {
     const { id } = req.params;
-    let feed = await Feed.findById(id);
+    const feed = await Feed.findById(id);
     if (!feed) {
       res.status(404).json({ message: "no such feed found" });
     }

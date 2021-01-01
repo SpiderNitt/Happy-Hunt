@@ -1,25 +1,23 @@
+/* eslint-disable no-await-in-loop */
 const express = require("express");
+
 const app = express();
-
-require("../database/setup");
-//
-// require("./src/helpers/timer");
-const Set = require("../database/models/Set");
-const team = require("../database/models/Team");
-
 const server = require("http").createServer(app);
+require("../database/setup");
 
 const options = {
   /* ... */
 };
 const io = require("socket.io")(server, options);
+const Set = require("../database/models/Set");
+const team = require("../database/models/Team");
 
 io.on("connection", (socket) => {
   console.log("Socket connected successfully");
 });
 setInterval(async () => {
   io.emit("missions");
-  // here
+
   const teams = await team.find({});
   const sets = await Set.find({});
   let teamcount = teams.length;
@@ -29,6 +27,7 @@ setInterval(async () => {
     if (teamcount === 1) {
       sets[i].AssignedTeams.push(teams[teamcount - 1]);
       teams[teamcount - 1].AssignedSet = sets[i];
+
       await teams[teamcount - 1].save();
       await sets[i].save();
 
@@ -57,7 +56,6 @@ setInterval(async () => {
 
       await teams[teamcount - 1].save();
       await teams[teamcount - 2].save();
-
       await sets[i].save();
 
       break;
@@ -71,8 +69,6 @@ setInterval(async () => {
       teams[teamcount - 1].AssignedSet = sets[i];
       teams[teamcount - 2].AssignedSet = sets[i];
       teams[teamcount - 3].AssignedSet = sets[i];
-
-      // teamcount -= 4;
 
       await teams[teamcount - 4].save();
       await teams[teamcount - 1].save();
