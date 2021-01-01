@@ -13,6 +13,7 @@ import Clues from '../user/Clues';
 import Notification from '../user/Notifications';
 import Leaderboard from './Leaderbaord';
 import ActivityFeed from './ActivityFeed';
+import { Link } from 'react-router-dom';
 
 function NavBar(props) {
   const { children, value, index, ...other } = props;
@@ -75,10 +76,10 @@ export default function TabNavigation() {
           onChange={handleChange}
           variant="fullWidth"
         >
-          <Tab {...a11yProps(0)} icon={<Search />} />
-          <Tab {...a11yProps(1)} icon={<ShowChart />} />
-          <Tab {...a11yProps(2)} icon={<BarChart />} />
-          <Tab {...a11yProps(3)} icon={<Notifications />} />
+          <Tab {...a11yProps(0)} icon={<Search />} component={Link} to={'/register'} />
+          <Tab {...a11yProps(1)} icon={<ShowChart />} component={Link} />
+          <Tab {...a11yProps(2)} icon={<BarChart />} component={Link} />
+          <Tab {...a11yProps(3)} icon={<Notifications />} component={Link} />
         </Tabs>
       </AppBar>
       <SwipeableViews
