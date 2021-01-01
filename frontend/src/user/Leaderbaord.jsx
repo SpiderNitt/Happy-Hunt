@@ -101,7 +101,10 @@ const rows = [
 
 const useStyles2 = makeStyles(theme => ({
     root: {
-        width: "100%"
+        width: "100%",
+        paddingTop: 20,
+        paddingLeft: '10%',
+        paddingRight: '10%',
     },
     paper: {
         width: "100%",
