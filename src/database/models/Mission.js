@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const MissionSchema = new Schema({
   Category: {
-    type: String,
+    type: String, // Picture/Video/Picture and Location /Text
     required: true,
   },
 

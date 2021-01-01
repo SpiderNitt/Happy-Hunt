@@ -31,11 +31,8 @@ Router.post("/", AdminCreateValidator, async (req, res) => {
       return res
         .status(200)
         .json({ AdminEmailId: emailId, password: adminpassword });
-    } else {
-      return res
-        .status(401)
-        .json({ message: "emailId provided was undefined" });
     }
+    return res.status(401).json({ message: "emailId provided was undefined" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
