@@ -1,24 +1,11 @@
 import React from "react";
-<<<<<<< HEAD
-import { makeStyles, Grid, Paper, Avatar } from "@material-ui/core";
-=======
 import { makeStyles, Grid, Avatar, Divider } from "@material-ui/core";
->>>>>>> frontend
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-<<<<<<< HEAD
-    paddingLeft: '10%',
-    paddingRight: '10%',
-  },
-  paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary,
-    flexDirection: 'column'
-  },
-=======
+    paddingTop: 10,
   },
   paper: {
     padding: theme.spacing(1),
@@ -34,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: theme.palette.text.secondary,
   }
->>>>>>> frontend
 }));
 
 let data = [];
@@ -49,19 +35,6 @@ function Notifications(props) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-<<<<<<< HEAD
-      <Grid container spacing={0}>
-        {
-        data.map((element, i) => (
-            <Grid item xs={12} key={i}>  
-              <Paper className={classes.paper}>
-                <Avatar>{element.teamName[0]}</Avatar>
-                <div>
-                  <p>{element.teamName}</p>
-                  <p>{element.message}</p>
-                </div>
-              </Paper>
-=======
       <Grid container>
         {
         data.map((element, i) => (
@@ -74,7 +47,6 @@ function Notifications(props) {
                 </div>
               </div>
               <Divider />
->>>>>>> frontend
             </Grid>
           ))
         }
