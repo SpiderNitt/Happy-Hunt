@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+// import GameIntro from "./user/GameIntro";
 // import Notifications from "./user/Notifications";
 // import Home from "./admin/Home";
 // import UserRegistration from "./UserRegistration";

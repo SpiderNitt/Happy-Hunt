@@ -3,8 +3,8 @@ import { Formik, Form } from 'formik';
 import * as Yup from "yup";
 import { TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
 
-import ErrorMessage from '../components/ErrorMessage';
-import team from '../assets/animations/team.gif';
+import ErrorMessage from './components/ErrorMessage';
+import team from './assets/animations/team.gif';
 
 const validationSchema = Yup.object().shape({
     teamName: Yup.string().required().label("Team Name"),

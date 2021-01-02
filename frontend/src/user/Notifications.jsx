@@ -5,6 +5,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    paddingTop: 10,
   },
   paper: {
     padding: theme.spacing(1),
