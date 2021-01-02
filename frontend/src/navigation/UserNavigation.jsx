@@ -11,6 +11,9 @@ import Leaderboard from "../user/Leaderbaord";
 import Notifications from "../user/Notifications";
 import GameIntro from "../user/GameIntro";
 import CreateTeam from "../user/CreateTeam";
+import PictureClues from '../user/PictureClues';
+import TextClues from '../user/TextClues';
+import LocationClues from '../user/LocationClues';
 
 function UserNav() {
 
@@ -22,6 +25,9 @@ function UserNav() {
           <Route path="/" exact component={Home}/>
           <Route path="/register" component={UserRegistration}/>
           <Route path="/register-team" component={CreateTeam}/>
+          <Route path="/photo-clue" component={PictureClues}/>
+          <Route path="/location-clue" component={LocationClues}/>
+          <Route path="/text-clue" component={TextClues}/>
           <Route path="/happy-hunt" exact>
             <TopNav />
             <Container style={{ marginTop: 70 }}>
@@ -61,7 +67,6 @@ function UserNav() {
     </Router>
 
   )
-
 }
 
 export default UserNav;
