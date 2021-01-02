@@ -1,37 +1,25 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
+import clsx from 'clsx';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { NotificationsActive, ChatBubble } from '@material-ui/icons';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import ScoreIcon from '@material-ui/icons/Score';
-import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
+import Drawer from "../admin/Drawer";
 import Mission from '../admin/Mission'
 import Activity from '../admin/Activity'
 import ScoreBoard from '../admin/ScoreBoard'
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge';
+import MenuIcon from '@material-ui/icons/Menu';
+import { ChatBubble } from '@material-ui/icons';
 
-
-const drawerWidth = 240;
+const drawerWidth = 190;
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
+        display: "flex"
     },
     toolbar: {
         paddingRight: 24, // keep right padding when drawer closed
@@ -115,92 +103,54 @@ export default function AdminNav() {
     const handleDrawerOpen = () => {
         setOpen(true);
     };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
+    const onTitleChange = (title) => {
+        setTitle(title);
+    }
+    const getTitle = () => {
+        if (window.location.pathname === '/') {
+            setTitle('Missions')
+        }
+        else if (window.location.pathname === '/activity') {
+            setTitle('Activity feeds')
+        }
+        else if (window.location.pathname === '/scoreboard') {
+            setTitle('Score Board')
+        }
+        return <div>{title}</div>
+    }
     return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-                <Toolbar className={classes.toolbar}>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        {title}
-                    </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <ChatBubble />
-                        </Badge>
-                        <Badge badgeContent={2} color="secondary">
-                            <NotificationsActive />
-                        </Badge>
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    <div>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DashboardIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Missions" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DynamicFeedIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Activity feed" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <ScoreIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Score board" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <ExitToAppIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Logout" />
-                        </ListItem>
-                    </div>
-                </List>
-            </Drawer>
-            <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Router>
-                    <Switch>
-                        <Route path="/" exact component={Mission}>
-                        </Route>
-                        <Route path='/activity' exact component={Activity}>
-                        </Route>
-                        <Route path='/scoreboard' exact component={ScoreBoard}>
-                        </Route>
-                    </Switch>
-                </Router>
-            </main>
-        </div>
+        <Router>
+            <div className={classes.root}>
+                <CssBaseline />
+                <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+                    <Toolbar className={classes.toolbar}>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleDrawerOpen}
+                            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                            {title}
+                        </Typography>
+                        <IconButton color="inherit">
+                            <Badge badgeContent={4} color="secondary">
+                                <ChatBubble />
+                            </Badge>
+                        </IconButton>
+                    </Toolbar>
+                </AppBar>
+                <Drawer onTitleChange={onTitleChange} />
+                <Switch>
+                    <Route exact from="/" render={props => <Mission {...props} />} />
+                    <Route exact path="/activity" render={props => <Activity {...props} />} />
+                    <Route exact path="/scoreboard" render={props => <ScoreBoard {...props} />} />
+                </Switch>
+
+            </div>
+        </Router>
     );
 }
