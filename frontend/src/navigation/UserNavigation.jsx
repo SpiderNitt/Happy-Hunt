@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from "../user/Home";
 import UserRegistration from "../user/UserRegistration";
 import TopNav from "../user/TopNav";
@@ -17,8 +17,7 @@ import LocationClues from '../user/LocationClues';
 
 function UserNav() {
 
-  return (
-
+    return (
     <Router>
       <div>
         <Switch>
@@ -29,44 +28,44 @@ function UserNav() {
           <Route path="/location-clue" component={LocationClues}/>
           <Route path="/text-clue" component={TextClues}/>
           <Route path="/happy-hunt" exact>
-            <TopNav />
-            <Container style={{ marginTop: 70 }}>
-              <GameIntro />
-            </Container>
+              <TopNav />
+              <Container style={{ marginTop: 70 }}>
+                  <GameIntro />
+              </Container>
           </Route>
           <Route path="/activity" exact>
-            <TopNav />
-            <div style={{ marginTop: 70 }}><NavBar select="activity" /></div>
-            <Container>
-              <ActivityFeed />
-            </Container>
+              <TopNav />
+              <div style={{ marginTop: 70 }}><NavBar select="activity" /></div>
+              <Container>
+                  <ActivityFeed />
+              </Container>
           </Route>
           <Route path="/clue" exact>
-            <TopNav />
-            <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
-            <div style={{ marginTop: 20 }}>
-              <Clues />
-            </div>
+              <TopNav />
+              <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
+              <div style={{ marginTop: 20 }}>
+                  <Clues />
+              </div>
           </Route>
           <Route path="/scoreboard" exact>
-            <TopNav />
-            <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>
-            <Container>
-              <Leaderboard />
-            </Container>
+              <TopNav />
+              <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>
+              <Container>
+                  <Leaderboard />
+              </Container>
           </Route>
           <Route path="/notification" exact>
-            <TopNav />
-            <div style={{ marginTop: 70 }}><NavBar select="notification" /></div>
-            <Container>
-              <Notifications />
-            </Container>
+              <TopNav />
+              <div style={{ marginTop: 70 }}><NavBar select="notification" /></div>
+              <Container>
+                  <Notifications />
+              </Container>
           </Route>
-        </Switch>
+      </Switch>
       </div>
     </Router>
-
   )
+
 }
 
 export default UserNav;
