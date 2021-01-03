@@ -82,7 +82,7 @@ const Drawer = props => {
             text: "Missions",
             icon: <EditIcon />,
             onClick: () => {
-                props.onTitleChange('Update mission');
+                props.onTitleChange('Missions');
                 history.push('/mission/edit');
             }
         }

@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AdminMission(props) {
+    const { history } = props;
     const classes = useStyles();
     const [dense, setDense] = React.useState(false);
     return (
@@ -49,7 +50,7 @@ function AdminMission(props) {
                 position: 'fixed',
                 top: '81%',
                 left: '88%',
-            }}>
+            }} onClick={() => { history.push('/mission/new') }}>
                 <Fab>
                     <AddIcon fontSize="large" color="primary" />
                 </Fab>

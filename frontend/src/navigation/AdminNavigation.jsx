@@ -11,6 +11,7 @@ import Activity from '../admin/Activity.jsx'
 import ScoreBoard from '../admin/ScoreBoard'
 import AdminList from '../admin/AdminList'
 import AdminMission from '../admin/AdminMission';
+import NewMission from '../admin/NewMission';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
@@ -140,6 +141,7 @@ export default function AdminNav() {
                     <Route exact path="/scoreboard" render={props => <ScoreBoard {...props} />} />
                     <Route exact path="/adminlist" render={props => <AdminList {...props} />} />
                     <Route exact path="/mission/edit" render={props => <AdminMission {...props} />} />
+                    <Route exact path="/mission/new" component={NewMission} />
                 </Switch>
 
             </div>

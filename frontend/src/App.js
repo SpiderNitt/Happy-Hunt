@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-import UserNav from "./navigation/AdminNavigation";
+import UserNav from "./navigation/UserNavigation";
 
 function App() {
   return (
