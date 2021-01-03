@@ -10,7 +10,7 @@ module.exports = {
   playerRegisterValidator: [
     body("name").isString().notEmpty(),
     body("emailId").isEmail().notEmpty(),
-
+    body("password").isString().notEmpty(),
     body("phoneNo").isString().notEmpty(),
   ],
   playerLoginValidator: [
