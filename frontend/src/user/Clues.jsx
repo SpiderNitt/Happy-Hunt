@@ -5,47 +5,30 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-const clueData = [
-    { cluename: "Clue 1",
-      isRead : false,
-      points: "100 points"
-
-    },
-    { cluename: "Clue 2",
-    isRead : false,
-    points: "120 points"
-
-    },
-    { cluename: "Clue 3",
-    isRead : false,
-    points: "140 points"
-
-    },
-    { cluename: "Clue 4",
-    isRead : false,
-    points: "150 points"
-
-    }
-]
-
+import clueData from './ClueData';
 
 const RenderClues=(clue , index)=> {
    const classes= useStyles();
+   
     return (
+      
       <Card className={classes.root} key={index}>
         <CardContent>
           <Typography className={classes.title} color="textSecondary" variant="ul">
-            {clue.cluename}
+            Clue : {clue.cluename}
           </Typography>
           
           <Typography className={classes.pos} color="textSecondary">
-            {clue.isRead ? "read" : "unread" }
+            {clue.isSolved? "solved" : "unsolved" }
+          </Typography>
+
+          <Typography className={classes.points} color="textSecondary">
+            {clue.points}
           </Typography>
           
         </CardContent>
         <CardActions>
-          <Button size="small">View</Button>
+          <Button size="small" href="/photo-clue">View</Button>
         </CardActions>
       </Card>
     );
@@ -73,5 +56,8 @@ const useStyles = makeStyles({
     },
     pos: {
       marginBottom: 12,
+    },
+    points: {
+      float:"right",
     },
   });
