@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import TextFormatIcon from '@material-ui/icons/TextFormat';
+import EditIcon from '@material-ui/icons/Edit';
 
 function AdminMissionListItem(props) {
     const [secondary, setSecondary] = React.useState(false);
@@ -34,6 +35,9 @@ function AdminMissionListItem(props) {
                 secondary={secondary ? 'Secondary text' : null}
             />
             <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="delete">
+                    <EditIcon />
+                </IconButton>
                 <IconButton edge="end" aria-label="delete">
                     <DeleteIcon />
                 </IconButton>

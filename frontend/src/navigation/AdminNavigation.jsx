@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import { ChatBubble } from '@material-ui/icons';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 
 const drawerWidth = 190;
 
@@ -130,6 +131,11 @@ export default function AdminNav() {
                         <IconButton color="inherit">
                             <Badge badgeContent={4} color="secondary">
                                 <ChatBubble />
+                            </Badge>
+                        </IconButton>
+                        <IconButton color="inherit">
+                            <Badge badgeContent={3} color="secondary">
+                                <NotificationsActiveIcon />
                             </Badge>
                         </IconButton>
                     </Toolbar>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormik, Formik } from 'formik';
+import { useFormik } from 'formik';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';

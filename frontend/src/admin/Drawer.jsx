@@ -109,7 +109,11 @@ const Drawer = props => {
                     );
                 })}
             </List>
-            <h1>Admin</h1>
+            <h2 style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                paddingLeft: '10px'
+            }}>Admin</h2>
             <List>
                 {adminList.map((item, index) => {
                     const { text, icon, onClick } = item;
