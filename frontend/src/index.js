@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+// import AdminMembers from "./AdminMembers";
+// import AdminRegistration from "./AdminRegistration";
 import App from "./App";
 // import GameIntro from "./user/GameIntro";
 // import Notifications from "./user/Notifications";

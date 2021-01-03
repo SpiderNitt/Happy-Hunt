@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 function TextClues(props) {
     const classes = useStyles();
@@ -60,7 +59,6 @@ const useStyles = makeStyles((theme)=>({
           width: '25ch',
           backgroundColor: "whitesmoke",
           borderRadius:10,
-          margin: 10
         },
         },
     task: {

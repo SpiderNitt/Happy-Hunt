@@ -12,7 +12,7 @@ import AlertMessage from '../components/AlertMessage';
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label("User name"),
   email: Yup.string().required().email().label("Email"),
-  phoneNo: Yup.number().required().label("Mobile Number")
+  phoneNo: Yup.number().required().label("Mobile Number"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -81,7 +81,7 @@ export default function UserRegistration() {
           Register
         </Typography>
         <Formik
-        initialValues={{ username: '', email: '', phoneNo: undefined }}
+        initialValues={{ username: '', email: '', phoneNo: 0 }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         >
