@@ -12,4 +12,4 @@ import UserLogin from "./UserLogin";
 // import AdminRegistration from "./AdminRegistration";
 // import Template from "./user/Template";
 
-ReactDOM.render(<UserLogin />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));

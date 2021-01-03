@@ -17,10 +17,11 @@ import ListIcon from '@material-ui/icons/List';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
+import colors from '../utils/colors';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
-        width: "190px"
+        width: "190px",
     },
     toolbarIcon: {
         display: 'flex',

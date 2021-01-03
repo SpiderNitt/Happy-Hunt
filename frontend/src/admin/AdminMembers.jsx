@@ -15,8 +15,8 @@ import {
 } from '@material-ui/core';
 import { AccountCircle, Add, Close, Delete } from '@material-ui/icons';
 import React from 'react';
-import AdminRegistration from './AdminRegistration';
-import colors from './utils/colors';
+import AdminRegistration from '../AdminRegistration';
+import colors from '../utils/colors';
 
 const admins = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: '20%',
     },
     box: {
-        marginTop: 30,
+        marginTop: 70,
         height: 640,
         overflowY: 'scroll',
         backgroundColor: colors.light,
@@ -84,7 +84,7 @@ function AdminMembers(props) {
                   </ListItemAvatar>
                   <ListItemText
                     primary={`admin${index+1}@example.com`}
-                    style={{ textAlign: 'center'}}
+                    style={{ marginLeft: 10 }}
                   />
                   <ListItemSecondaryAction>
                     <IconButton edge="end" style={{ marginRight: 20 }}>

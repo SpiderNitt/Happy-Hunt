@@ -15,6 +15,7 @@ import PictureClues from '../user/PictureClues';
 import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
 import VerificationEmail from "../user/VerificationEmail";
+import UserLogin from "../UserLogin";
 
 function UserNav() {
 
@@ -24,6 +25,7 @@ function UserNav() {
         <Switch>
           <Route path="/" exact component={Home}/>
           <Route path="/register" component={UserRegistration}/>
+          <Route path="/login" component={UserLogin}/>
           <Route path="/verify" component={VerificationEmail}/>
           <Route path="/register-team" component={CreateTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>

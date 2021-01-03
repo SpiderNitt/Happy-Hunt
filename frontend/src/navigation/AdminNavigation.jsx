@@ -9,8 +9,9 @@ import Drawer from "../admin/Drawer";
 import Mission from '../admin/Mission'
 import Activity from '../admin/Activity.jsx'
 import ScoreBoard from '../admin/ScoreBoard'
-import AdminList from '../admin/AdminList'
+import AdminList from '../admin/AdminMembers'
 import AdminMission from '../admin/AdminMission';
+import Notification from '../admin/Notifications';
 import NewMission from '../admin/NewMission';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
@@ -133,7 +134,7 @@ export default function AdminNav() {
                                 <ChatBubble />
                             </Badge>
                         </IconButton>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" href="/admin/notification">
                             <Badge badgeContent={3} color="secondary">
                                 <NotificationsActiveIcon />
                             </Badge>
@@ -148,6 +149,7 @@ export default function AdminNav() {
                     <Route exact path="/adminlist" render={props => <AdminList {...props} />} />
                     <Route exact path="/mission/edit" render={props => <AdminMission {...props} />} />
                     <Route exact path="/mission/new" component={NewMission} />
+                    <Route exact path="/admin/notification" component={Notification} />
                 </Switch>
 
             </div>
