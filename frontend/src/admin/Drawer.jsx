@@ -12,6 +12,11 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ScoreIcon from '@material-ui/icons/Score';
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
+import EditIcon from '@material-ui/icons/Edit';
+import ListIcon from '@material-ui/icons/List';
+import Divider from '@material-ui/core/Divider';
+import Avatar from '@material-ui/core/Avatar';
+import { deepOrange } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -20,10 +25,14 @@ const useStyles = makeStyles((theme) => ({
     toolbarIcon: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-around',
         padding: '0 8px',
         ...theme.mixins.toolbar,
     },
+    orange: {
+        color: theme.palette.getContrastText(deepOrange[500]),
+        backgroundColor: deepOrange[500],
+    }
 }));
 
 const Drawer = props => {
@@ -60,19 +69,58 @@ const Drawer = props => {
             onClick: () => history.push("/logout")
         }
     ];
+    const adminList = [
+        {
+            text: "Admin List",
+            icon: <ListIcon />,
+            onClick: () => {
+                props.onTitleChange('Admin List');
+                history.push('/adminlist')
+            }
+        },
+        {
+            text: "Missions",
+            icon: <EditIcon />,
+            onClick: () => {
+                props.onTitleChange('Update mission');
+                history.push('/mission/edit');
+            }
+        }
+    ]
     return (
         <MUIDrawer variant="permanent" className={classes.drawer} open="true">
             <div className={classes.toolbarIcon}>
-
+                <Avatar className={classes.orange}>S</Avatar>
+                <div>
+                    <div>Sanju Samson</div>
+                </div>
             </div>
             <List>
                 {itemsList.map((item, index) => {
                     const { text, icon, onClick } = item;
                     return (
-                        <ListItem button key={text} onClick={onClick}>
-                            {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                            <ListItemText primary={text} />
-                        </ListItem>
+                        <div>
+                            <ListItem button key={text} onClick={onClick}>
+                                {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                                <ListItemText primary={text} />
+                            </ListItem>
+                            <Divider />
+                        </div>
+                    );
+                })}
+            </List>
+            <h1>Admin</h1>
+            <List>
+                {adminList.map((item, index) => {
+                    const { text, icon, onClick } = item;
+                    return (
+                        <div>
+                            <ListItem button key={text} onClick={onClick}>
+                                {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                                <ListItemText primary={text} />
+                            </ListItem>
+                            <Divider />
+                        </div>
                     );
                 })}
             </List>
