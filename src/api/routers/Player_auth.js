@@ -9,7 +9,7 @@ const { createJWTtoken } = require("../../middlewares/jwt");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
-    const { name, emailId, phoneNo } = req.body;
+    const { name, emailId, phoneNo, password } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -23,7 +23,7 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       Id: emailId,
       phoneNo,
       name,
-
+      password,
       active: false,
       Role: "Player",
     });
@@ -74,6 +74,19 @@ player.get("/verify/:id", async (req, res) => {
     const token = createJWTtoken(result);
     console.log(token);
     return res.status(200).json({ JWTtoken: token });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
+player.post("/login", async (req, res) => {
+  try {
+    const { userId, password } = req.body;
+    const user = await User.findOne({ userId, password, status: true });
+    if (user === undefined || user === null)
+      return res.status(400).json({ message: "Invalid username or password" });
+    const token = createJWTtoken(user);
+    return res.status(200).json(token);
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
