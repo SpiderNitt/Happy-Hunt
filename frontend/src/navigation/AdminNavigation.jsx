@@ -7,13 +7,17 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Drawer from "../admin/Drawer";
 import Mission from '../admin/Mission'
-import Activity from '../admin/Activity'
+import Activity from '../admin/Activity.jsx'
 import ScoreBoard from '../admin/ScoreBoard'
+import AdminList from '../admin/AdminList'
+import AdminMission from '../admin/AdminMission';
+import NewMission from '../admin/NewMission';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import { ChatBubble } from '@material-ui/icons';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 
 const drawerWidth = 190;
 
@@ -106,18 +110,6 @@ export default function AdminNav() {
     const onTitleChange = (title) => {
         setTitle(title);
     }
-    const getTitle = () => {
-        if (window.location.pathname === '/') {
-            setTitle('Missions')
-        }
-        else if (window.location.pathname === '/activity') {
-            setTitle('Activity feeds')
-        }
-        else if (window.location.pathname === '/scoreboard') {
-            setTitle('Score Board')
-        }
-        return <div>{title}</div>
-    }
     return (
         <Router>
             <div className={classes.root}>
@@ -141,6 +133,11 @@ export default function AdminNav() {
                                 <ChatBubble />
                             </Badge>
                         </IconButton>
+                        <IconButton color="inherit">
+                            <Badge badgeContent={3} color="secondary">
+                                <NotificationsActiveIcon />
+                            </Badge>
+                        </IconButton>
                     </Toolbar>
                 </AppBar>
                 <Drawer onTitleChange={onTitleChange} />
@@ -148,6 +145,9 @@ export default function AdminNav() {
                     <Route exact from="/" render={props => <Mission {...props} />} />
                     <Route exact path="/activity" render={props => <Activity {...props} />} />
                     <Route exact path="/scoreboard" render={props => <ScoreBoard {...props} />} />
+                    <Route exact path="/adminlist" render={props => <AdminList {...props} />} />
+                    <Route exact path="/mission/edit" render={props => <AdminMission {...props} />} />
+                    <Route exact path="/mission/new" component={NewMission} />
                 </Switch>
 
             </div>
