@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { useState } from "react";
 import Container from '@material-ui/core/Container';
 import Sample3 from '../assets/sample3.jpg';
-import { create } from 'apisauce'
+import { create } from 'apisauce';
 import { Image } from "cloudinary-react";
 import  clueData  from './ClueData';
 import Modal from "@material-ui/core/Modal";
@@ -60,8 +60,8 @@ function PictureClues(clue, index) {
                    <p>
                     Task : Click a picture at this spot by creatively framing
                     the name using just your hands    
-                    <span>100 points</span>
                     </p>
+                    <p className={classes.points}>100 points</p>
                 </div>
 
                <input type="file" onChange={(e)=>{
@@ -75,7 +75,7 @@ function PictureClues(clue, index) {
                 </Button>
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"whitesmoke", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href="/clue">Back to clues</Button>
-                <Button className={classes.Button}>Take Picture!</Button>
+                <Button className={classes.Button} href="/photo">Take Picture!</Button>
                 <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"
@@ -130,6 +130,12 @@ const useStyles = makeStyles((theme)=>({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        
+    },
+    points: {
+       float:"right",
+       fontSize:16,
+       fontStyle:'italic'
         
     },
     paper: {

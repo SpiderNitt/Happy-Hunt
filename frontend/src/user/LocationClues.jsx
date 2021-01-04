@@ -42,7 +42,7 @@ function LocationClues(props) {
                 </p>
                 
                 <Button className={classes.Button} href="/clue">Back to clues</Button>
-                <Button className={classes.Button}>Take Picture!</Button>
+                <Button className={classes.Button}  href="/photo">Take Picture!</Button>
                 <Button className={classes.Button}>Hint</Button>
                 
             </Container>
