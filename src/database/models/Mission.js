@@ -39,5 +39,13 @@ const MissionSchema = new Schema({
     type: Number,
     required: true,
   },
+  Feed: {
+    type: Boolean, // 1-visible 0- hidden
+    required: true,
+  },
+  ServerEvaluation: {
+    type: Boolean,
+    required: true,
+  },
 });
 module.exports = model("Mission", MissionSchema);

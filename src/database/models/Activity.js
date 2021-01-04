@@ -14,9 +14,6 @@ const activitySchema = new mongoose.Schema({
   status: {
     type: String, // pending/accepted
   },
-  ShouldBeShown: {
-    type: Boolean,
-  },
   likes: {
     type: Number,
     default: 0,
