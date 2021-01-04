@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  Role: { type: String, required: true },
+  Role: { type: String, required: true }, // TeamLeader , TeamMember , Admin , SuperAdmin,
   Id: {
     type: String,
     required: true,
