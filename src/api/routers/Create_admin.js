@@ -6,6 +6,12 @@ const { AdminCreateValidator } = require("../../middlewares/expressValidator");
 
 Router.post("/", AdminCreateValidator, async (req, res) => {
   try {
+    const issuperadmin = await User.findById(req.jwt_payload.id);
+    if (issuperadmin.Role !== "SuperAdmin") {
+      return res.status(402).json({
+        message: "You don't have permission to perform the operation",
+      });
+    }
     const { emailId } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
