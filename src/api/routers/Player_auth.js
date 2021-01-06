@@ -28,40 +28,25 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       Role: "Player",
     });
     try {
-      const testAccount = await nodemailer.createTestAccount();
-
       // create reusable transporter object using the default SMTP transport
-      const transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: testAccount.user, // generated ethereal user
-          pass: testAccount.pass, // generated ethereal password
-        },
-      });
-      const info = await transporter.sendMail({
-        from: `Happy Hunt <info@happyhunt.com>`,
-        to: emailId,
-        subject: "Happy hunt player account verification",
-        html: `<a href='localhost:${process.env.APP_PORT}/auth/player/verify/${user._id}' >Click the above link to verify your account</a>`,
-      });
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      return res.status(200).json({ message: "Verification email sent" });
+      return res.status(200).json({ message: "OTP sent" });
     } catch (err) {
       console.log(err.message);
-      return res.status(400).json({ message: "Verification email not sent" });
+      return res.status(400).json({ message: "OTP not sent" });
     }
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-player.get("/verify/:id", async (req, res) => {
+player.post("/verify", async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await User.findByIdAndUpdate(
-      id,
+    const { otp, mobileNo } = req.body;
+    if (otp !== "99999") {
+      return res.status(400).json({ message: "OTP incorrect" });
+    }
+    const result = await User.findOneAndUpdate(
+      mobileNo,
       { active: true },
       { new: true }
     );
@@ -86,7 +71,7 @@ player.post("/login", async (req, res) => {
     if (user === undefined || user === null)
       return res.status(400).json({ message: "Invalid username or password" });
     const token = createJWTtoken(user);
-    return res.status(200).json(token);
+    return res.status(200).json({ JWTtoken: token });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });

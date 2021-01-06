@@ -2,6 +2,7 @@ const multer = require("multer");
 const submission = require("express").Router();
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
+const Team = require("../../database/models/Team");
 
 submission.post(
   "/submission",
@@ -9,11 +10,11 @@ submission.post(
   async (req, res) => {
     try {
       const { team } = req.jwt_payload;
-      const { mission, shown } = req.body;
+      const { mission } = req.body;
       if (!mission) return res.status(400).json({ message: "Fill all fields" });
       const submit = await Mission.findById(mission);
       const answerType = submit.answer_Type;
-      const { Category } = submit;
+      const { Category, visibility, serverEvaluation, maxMarks } = submit;
       console.log(req.file);
       if (answerType === undefined || answerType === null) {
         return res.status(404).json({ message: "Mission not found" });
@@ -66,19 +67,36 @@ submission.post(
               .json({ message: "Database error,answerType improper" });
           }
         }
-
-        const { err, result } = await Activity.updateOne(
-          { team, mission, isSubmitted: false },
-          {
-            Answer: answer,
-            category: Category,
-            status: "Pending",
-            ShouldBeShown: shown,
-          }
-        );
-        if (err) {
-          console.log(err.message);
-          return res.status(400).json({ message: err.message });
+        let result;
+        if (serverEvaluation) {
+          const { hintsTaken } = await Activity.findOne(mission, team, {
+            isSubmitted: false,
+          });
+          let { points } = await Team.findById(team);
+          const marks = maxMarks - hintsTaken * 20;
+          points += marks;
+          const teamResult = await Team.findByIdAndUpdate(team, { points });
+          if (teamResult.nModified !== 1)
+            return res.status(404).json({ message: "Team score not updated" });
+          result = await Activity.updateOne(
+            { team, mission, isSubmitted: false },
+            {
+              Answer: answer,
+              category: Category,
+              status: "Accepted",
+              ShouldBeShown: visibility,
+            }
+          );
+        } else {
+          result = await Activity.updateOne(
+            { team, mission, isSubmitted: false },
+            {
+              Answer: answer,
+              category: Category,
+              status: "Pending",
+              ShouldBeShown: visibility,
+            }
+          );
         }
         if (result.nModified === 1) {
           return res.status(200).json({ message: "Successfully submitted" });
