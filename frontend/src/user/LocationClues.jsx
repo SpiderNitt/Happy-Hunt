@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import LocationIcon from '../assets/location-icon.png'
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 
 function LocationClues(props) {
@@ -34,13 +33,16 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <br/>
-                < LocationOnIcon className={classes.icon} />
+                <div>
+                < LocationOnIcon  className={classes.icon} />
+                </div>
+                
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"whitesmoke", display:'flex', justifyContent:'center'}}>
                      you haven't reached the location yet.
                 </p>
                 
                 <Button className={classes.Button} href="/clue">Back to clues</Button>
-                <Button className={classes.Button}>Take Picture!</Button>
+                <Button className={classes.Button}  href="/photo">Take Picture!</Button>
                 <Button className={classes.Button}>Hint</Button>
                 
             </Container>
@@ -88,7 +90,7 @@ const useStyles = makeStyles((theme)=>({
       margin:5
     },
     icon: {
-        fontSize:100 ,
+        fontSize:65,
         color:"#EF7257"
     },
     }));
