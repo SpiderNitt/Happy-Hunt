@@ -4,31 +4,50 @@ import Button from '@material-ui/core/Button';
 import { useState } from "react";
 import Container from '@material-ui/core/Container';
 import Sample3 from '../assets/sample3.jpg';
-import Axios from 'axios';
+import { create } from 'apisauce';
 import { Image } from "cloudinary-react";
+import  clueData  from './ClueData';
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import Hints from './Hints';
 
-function PictureClues(props) {
+const api = create({
+    baseURL: 'https://api.cloudinary.com/v1_1/dqj309mtu/image',
+})
+
+function PictureClues(clue, index) {
     const classes = useStyles();
 
     const [imageSelected, setImageSelected] = useState("");
+    const [open, setOpen] = useState(false);
 
+    const handleOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+    
     const uploadImage=()=>{
         const formData= new FormData();
         formData.append("file", imageSelected);
         formData.append("upload_preset", "haqdfpiu");
 
-        Axios.post ("https://api.cloudinary.com/v1_1/dqj309mtu/image/upload", formData)
+        api.post ("/upload", formData)
         .then((response)=>{
             console.log(response)
         });
     }
     return (
+        
         <React.Fragment >
             <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
-                        Clue: Match it!!
+                        { clueData[0].cluename}
                 </h4>
                 <p style={{color:'#F5F5F5',
                     fontSize:16,
@@ -41,8 +60,8 @@ function PictureClues(props) {
                    <p>
                     Task : Click a picture at this spot by creatively framing
                     the name using just your hands    
-                    <span>100 points</span>
                     </p>
+                    <p className={classes.points}>100 points</p>
                 </div>
 
                <input type="file" onChange={(e)=>{
@@ -56,15 +75,34 @@ function PictureClues(props) {
                 </Button>
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"whitesmoke", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href="/clue">Back to clues</Button>
-                <Button className={classes.Button}>Take Picture!</Button>
-                <Button className={classes.Button}>Hint</Button>
+                <Button className={classes.Button} href="/photo">Take Picture!</Button>
+                <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+            >
+                <Fade in={open}>
+                <div className={classes.paper}>
+                    <Hints/>
+                </div>
+                </Fade>
+            </Modal>
                 
             </Container>
         </React.Fragment>
       );
 }
 
-const useStyles = makeStyles({
+
+const useStyles = makeStyles((theme)=>({
     task: {
       display:'flex',
       alignSelf:'center',
@@ -78,14 +116,35 @@ const useStyles = makeStyles({
         alignSelf:'center',
         justifyContent:'center',
         color:'white',
-        fontSize:20,
+        backgroundColor:"olive",
+        fontSize:16,
         fontFamily:'tahoma'
       },
-    Button:{color:'white', 
-    fontFamily:'tahoma', 
-    backgroundColor:"gray",
-    margin:5}
-  });
+    Button:{
+        color:'white', 
+        fontFamily:'tahoma', 
+        backgroundColor:"gray",
+        margin:5
+    },
+    modal: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        
+    },
+    points: {
+       float:"right",
+       fontSize:16,
+       fontStyle:'italic'
+        
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+      },
+  }));
 
 export default PictureClues;
 

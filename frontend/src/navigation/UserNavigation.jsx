@@ -14,6 +14,7 @@ import CreateTeam from "../user/CreateTeam";
 import PictureClues from '../user/PictureClues';
 import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
+import Capture from '../user/Photogragh';
 import VerificationEmail from "../user/VerificationEmail";
 import UserLogin from "../UserLogin";
 
@@ -30,6 +31,7 @@ function UserNav() {
           <Route path="/verify" component={VerificationEmail}/>
           <Route path="/register-team" component={CreateTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>
+          <Route path="/photo" exact component={Capture}/>
           <Route path="/location-clue" component={LocationClues}/>
           <Route path="/text-clue" component={TextClues}/>
           <Route path="/happy-hunt" exact>
