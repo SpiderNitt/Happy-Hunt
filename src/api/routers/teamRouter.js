@@ -1,6 +1,5 @@
 const team = require("express").Router();
 const { uid } = require("uid");
-const nodemailer = require("nodemailer");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { jwtVerify } = require("../../middlewares/jwt");
@@ -65,6 +64,34 @@ team.get("/join", jwtVerify, async (req, res) => {
       .json({ Message: "Internal Server Error, Try again later!!" });
   }
   return 0;
+});
+
+team.post("/location", async (req, res) => {
+  try {
+    const user = await User.findOne({ Id: req.jwt_payload.id });
+    if (user.Role === "TeamLeader") {
+      const theTeam = await Team.findOne({ Id: req.jwt_payload.Team });
+      //       GeolocationPosition {coords: GeolocationCoordinates, timestamp: 1610034540979}
+      // coords: GeolocationCoordinates
+      // accuracy: 215723
+      // altitude: null
+      // altitudeAccuracy: null
+      // heading: null
+      // latitude: 11.127122499999999
+      // longitude: 78.6568942
+      // speed: null
+      // __proto__: GeolocationCoordinates
+      // timestamp: 1610034540979
+      // __proto__: GeolocationPosition;
+      const { Location } = req.body;
+      theTeam.avgLocation.Lat = Location.coords.latitude;
+      theTeam.avgLocation.Long = Location.coords.longitude;
+      await team.save();
+      return res.status(200).json({ message: "success" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = team;
