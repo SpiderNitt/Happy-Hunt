@@ -2,10 +2,12 @@ import React from 'react';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import TextFormatIcon from '@material-ui/icons/TextFormat';
+import { withRouter } from 'react-router-dom'
 import './admin.css'
 
 
 const MissionCard = (props) => {
+    const { history } = props;
     const renderType = (type) => {
         if (type === "1") {
             return (<CameraAltIcon fontSize="large" color="secondary" />);
@@ -18,7 +20,7 @@ const MissionCard = (props) => {
         }
     }
     return (
-        <div className='mission-card'>
+        <div className='mission-card' onClick={() => { history.push('/missiondetail') }}>
             <div className='mission-card-img'>
                 {renderType(props.type)}
             </div>
@@ -29,4 +31,4 @@ const MissionCard = (props) => {
     );
 }
 
-export default MissionCard;
+export default withRouter(MissionCard);
