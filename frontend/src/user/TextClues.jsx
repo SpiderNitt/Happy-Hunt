@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { TextareaAutosize } from '@material-ui/core';
 
 function TextClues(props) {
     const classes = useStyles();
@@ -42,7 +43,7 @@ function TextClues(props) {
                     note: the picture should be taken from inside the car.
                 </p>
                 <form className={classes.root} noValidate autoComplete="off">
-                <TextField id="outlined-basic" required label="Answer" variant="outlined" />
+                <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}} placeholder="Answer" required/>
                 </form>
                 <Button className={classes.Button} href="/clue">Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>

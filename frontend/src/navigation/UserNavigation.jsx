@@ -15,6 +15,7 @@ import PictureClues from '../user/PictureClues';
 import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
+import UserProfile from '../user/UserProfile';
 
 function UserNav() {
 
@@ -29,6 +30,7 @@ function UserNav() {
           <Route path="/photo" exact component={Capture}/>
           <Route path="/location-clue" component={LocationClues}/>
           <Route path="/text-clue" component={TextClues}/>
+          <Route path="/profile" component={UserProfile}/>
           <Route path="/happy-hunt" exact>
               <TopNav />
               <Container style={{ marginTop: 70 }}>

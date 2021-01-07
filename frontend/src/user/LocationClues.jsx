@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+   
 
 function LocationClues(props) {
     const classes = useStyles();
+    const [location, setLocation]= useState({
+        loaded:false,
+        coordinates: {lat:"", long:""}
+    });
+
+    const onSucces = location=>{
+        setLocation({
+            loaded:true,
+            coordinates:{
+                lat: location.coords.latitude,
+                long: location.coords.longitude
+            }
+        })
+    };
+
+    useEffect(()=>{
+        navigator.geolocation.getCurrentPosition(onSucces);
+
+    }, []);
+
+    console.log(location);
     return (
+        
         <React.Fragment >
-            
             <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"20vh" }}>
                 <h4 style={{color:'#57EFC0',
                     fontSize:25,
@@ -34,13 +56,14 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <div>
-                < LocationOnIcon  className={classes.icon} />
+                    <LocationOnIcon className={classes.icon} />
                 </div>
                 
-                <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"whitesmoke", display:'flex', justifyContent:'center'}}>
-                     you haven't reached the location yet.
-                </p>
-                
+                {/* <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"whitesmoke", display:'flex', justifyContent:'center'}}>
+                    { location ? JSON.stringify(location) : " Location data not available."}
+                </p> */}
+                <br/>
+                <br/>
                 <Button className={classes.Button} href="/clue">Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
                 <Button className={classes.Button}>Hint</Button>
