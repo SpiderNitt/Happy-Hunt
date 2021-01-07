@@ -44,7 +44,7 @@ function Home(props) {
             <h1>Welcome!</h1>
             <div>
           <h3>Happy Hunt Challenge</h3>
-            <Button href="/register" variant="outlined" color="secondary">Register</Button>
+            {/* <Button href="/register" variant="outlined" color="secondary">Register</Button> */}
          
             <Button variant="outlined" color="secondary" onClick={handleOpen}>start</Button>
             <br/>

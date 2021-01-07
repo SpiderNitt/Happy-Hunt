@@ -2,8 +2,7 @@ import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
-
-
+import colors from '../utils/colors';
 
 export default function AlertMessage({ message, setInfo }) {
   const [state, setState] = React.useState({
@@ -27,6 +26,7 @@ export default function AlertMessage({ message, setInfo }) {
     open={state.open} 
     message={message}
     autoHideDuration={5000}
+    style={{ backgroundColor: colors.error }}
     action={
     <React.Fragment>
         <IconButton size="small" color="inherit" onClick={handleClose}>

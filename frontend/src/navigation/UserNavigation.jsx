@@ -17,14 +17,21 @@ import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
 import UserProfile from '../user/UserProfile';
 
+import VerificationEmail from "../user/VerificationEmail";
+import UserLogin from "../UserLogin";
+
+
 function UserNav() {
 
     return (
     <Router>
       <div>
         <Switch>
-          <Route path="/" exact component={Home}/>
+          <Route path="/" exact component={GameIntro}/>
+          <Route path="/home" exact component={Home}/>
           <Route path="/register" component={UserRegistration}/>
+          <Route path="/login" component={UserLogin}/>
+          <Route path="/verify" component={VerificationEmail}/>
           <Route path="/register-team" component={CreateTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>
           <Route path="/photo" exact component={Capture}/>

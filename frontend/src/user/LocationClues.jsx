@@ -31,6 +31,7 @@ function LocationClues(props) {
     return (
         
         <React.Fragment >
+
             <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"20vh" }}>
                 <h4 style={{color:'#57EFC0',
                     fontSize:25,

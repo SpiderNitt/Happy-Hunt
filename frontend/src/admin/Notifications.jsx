@@ -1,18 +1,28 @@
 import React from "react";
-import { makeStyles, Grid, Paper, Avatar } from "@material-ui/core";
+import { makeStyles, Grid, Avatar, Divider } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    paddingLeft: '10%',
-    paddingRight: '10%',
+    marginLeft: '10%',
+    marginRight: '10%',
+    marginTop: 70,
   },
   paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary,
-    flexDirection: 'column'
+    padding: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
+  teamName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  message: {
+    fontSize: 14,
+    color: theme.palette.text.secondary,
+  }
 }));
 
 let data = [];
@@ -27,17 +37,18 @@ function Notifications(props) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Grid container spacing={0}>
+      <Grid container>
         {
         data.map((element, i) => (
             <Grid item xs={12} key={i}>  
-              <Paper className={classes.paper}>
+              <div className={classes.paper}>
                 <Avatar>{element.teamName[0]}</Avatar>
-                <div>
-                  <p>{element.teamName}</p>
-                  <p>{element.message}</p>
+                <div style={{ marginLeft: 15 }}>
+                  <p className={classes.teamName}>{element.teamName}</p>
+                  <p className={classes.message}>{element.message}</p>
                 </div>
-              </Paper>
+              </div>
+              <Divider />
             </Grid>
           ))
         }

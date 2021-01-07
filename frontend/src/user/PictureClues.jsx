@@ -42,7 +42,7 @@ function PictureClues(clue, index) {
     return (
         
         <React.Fragment >
-            <Container maxWidth="sm" key={index} style={{ backgroundColor: '#484848', height: '100vh', marginTop:"20vh" }}>
+            <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>

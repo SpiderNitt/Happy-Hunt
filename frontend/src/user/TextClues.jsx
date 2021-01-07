@@ -3,15 +3,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { TextareaAutosize } from '@material-ui/core';
+
 
 function TextClues(props) {
     const classes = useStyles();
     return (
         <React.Fragment >
             
-            <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"20vh" }}>
+            <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#C866F5',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
@@ -61,7 +63,6 @@ const useStyles = makeStyles((theme)=>({
           width: '25ch',
           backgroundColor: "whitesmoke",
           borderRadius:10,
-          margin: 10
         },
         },
     task: {
