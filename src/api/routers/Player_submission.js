@@ -68,7 +68,39 @@ submission.post(
           }
         }
         let result;
-        if (serverEvaluation) {
+        if (serverEvaluation && answerType === "Text") {
+          const originalAnswer = submit.answer;
+          let rightAnswer = false;
+          for (let i = 0; i < originalAnswer.length; i += 1) {
+            if (originalAnswer[i] === answer) {
+              rightAnswer = true;
+            }
+          }
+          if (rightAnswer) {
+            const { hintsTaken } = await Activity.findOne(mission, team, {
+              isSubmitted: false,
+            });
+            let { points } = await Team.findById(team);
+            const marks = maxMarks - hintsTaken * 20;
+            points += marks;
+            const teamResult = await Team.findByIdAndUpdate(team, { points });
+            if (teamResult.nModified !== 1)
+              return res
+                .status(404)
+                .json({ message: "Team score not updated" });
+            result = await Activity.updateOne(
+              { team, mission, isSubmitted: false },
+              {
+                Answer: answer,
+                category: Category,
+                status: "Accepted",
+                ShouldBeShown: visibility,
+              }
+            );
+          } else {
+            return res.status(200).json({ message: "Your answer is wrong" });
+          }
+        } else if (serverEvaluation) {
           const { hintsTaken } = await Activity.findOne(mission, team, {
             isSubmitted: false,
           });
