@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import AdminMissionListItem from './AdminMissionListItem';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
+import colors from '../utils/colors';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -15,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         margin: theme.spacing(4, 0, 2),
+    },
+    fab: {
+        position: 'absolute',
+        bottom: theme.spacing(5),
+        right: theme.spacing(7),
     },
 }));
 
@@ -46,15 +52,10 @@ function AdminMission(props) {
                     </List>
                 </div>
             </div>
-            <div style={{
-                position: 'fixed',
-                top: '81%',
-                left: '88%',
-            }} onClick={() => { history.push('/mission/new') }}>
-                <Fab>
-                    <AddIcon fontSize="large" color="primary" />
+                <Fab color="primary" className={classes.fab} onClick={() => { history.push('/mission/new') }}>
+                    <AddIcon fontSize="large" color={colors.white} />
                 </Fab>
-            </div>
+
         </div>
     )
 }

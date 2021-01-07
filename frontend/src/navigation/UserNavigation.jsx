@@ -23,7 +23,8 @@ function UserNav() {
     <Router>
       <div>
         <Switch>
-          <Route path="/" exact component={Home}/>
+          <Route path="/" exact component={GameIntro}/>
+          <Route path="/home" exact component={Home}/>
           <Route path="/register" component={UserRegistration}/>
           <Route path="/login" component={UserLogin}/>
           <Route path="/verify" component={VerificationEmail}/>

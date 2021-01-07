@@ -9,7 +9,7 @@ function TextClues(props) {
     return (
         <React.Fragment >
             
-            <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"20vh" }}>
+            <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#C866F5',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>

@@ -40,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
     },
     fab: {
         position: 'absolute',
-        bottom: theme.spacing(4),
-        right: theme.spacing(3),
+        bottom: theme.spacing(5),
+        right: theme.spacing(7),
     },
     modal: {
         display: 'flex',

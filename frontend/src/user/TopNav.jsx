@@ -76,8 +76,8 @@ export default function ButtonAppBar() {
         >
           <Fade in={open}>
             <div className={classes.paper}>
-              <Button href="/logout" className={classes.button}>Logout</Button>
-              <Button href="/exit" className={classes.button}>Exit Game</Button>
+              <Button href="/" className={classes.button}>Logout</Button>
+              <Button href="/home" className={classes.button}>Exit Game</Button>
             </div>
           </Fade>
         </Modal>
