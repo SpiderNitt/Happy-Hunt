@@ -4,21 +4,28 @@ const Activity = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 
 admin.post("/accept", async (req, res) => {
-  const { isAccepted, activityfeedId, MissionId } = req.body;
-  const team = await Team.findOne({
-    id: "5fe641ef1da3c71e2c3c0222" /* req.jwt_payload.team */,
-  });
-  const mission = await Mission({ id: MissionId });
-  const activity = await Activity.findOne({ id: activityfeedId });
-  if (isAccepted) {
-    team.points += mission.maxPoints - activity.hintsTaken * 20;
-    activity.status = true;
-    await team.save();
-    await activity.save();
-  } else {
-    await Team.deleteOne({ id: team.id });
+  try {
+    const { isAccepted, activityfeedId } = req.body;
+    const activity = await Activity.findById(activityfeedId).populate('team').exec()
+    const mission = await Mission.findById(activity.mission);
+    const team = await Team.findById(activity.team._id);
+    console.log();
+    
+    if (isAccepted) {
+      console.log(mission.maxPoints , " - ",activity.hintsTaken );
+      team.points += mission.maxPoints - activity.hintsTaken * 20;
+      activity.status = true;
+      await team.save();
+      await activity.save();
+    } else {
+      await activity.deleteOne({ id: activityfeedId});
+    }
+    res.status(200).json({ message: 'Answered successfully accepted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message})
+    console.log(error);
   }
-  res.atatus(200).json({ team, mission, activity });
+
 });
 
 module.exports = admin;
