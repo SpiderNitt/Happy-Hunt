@@ -14,6 +14,15 @@ const TeamSchema = new mongoose.Schema({
     required: true,
     default: 0, // for intialization
   },
+  avgLocation: {
+    Lat: {
+      type: Number,
+    },
+    Long: {
+      type: Number,
+    },
+  },
+
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
