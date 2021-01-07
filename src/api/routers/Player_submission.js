@@ -151,7 +151,7 @@ submission.post(
 );
 player.get("/profile", async (req, res) => {
   try {
-    const user = await User.findOne({ Id: req.jwt_payload.id });
+    const user = await User.findById(req.jwt_payload.id);
     if (user === undefined || user === null)
       return res.status(400).json({ message: "User not found" });
     return res.status(200).json(user);
