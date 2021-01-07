@@ -95,6 +95,7 @@ submission.post(
                 category: Category,
                 status: "Accepted",
                 ShouldBeShown: visibility,
+                isSubmitted: true,
               }
             );
           } else {
@@ -117,6 +118,7 @@ submission.post(
               category: Category,
               status: "Accepted",
               ShouldBeShown: visibility,
+              isSubmitted: true,
             }
           );
         } else {
@@ -127,6 +129,7 @@ submission.post(
               category: Category,
               status: "Pending",
               ShouldBeShown: visibility,
+              isSubmitted: true,
             }
           );
         }
