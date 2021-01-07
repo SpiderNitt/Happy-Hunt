@@ -12,9 +12,16 @@ const io = require("socket.io")(server, options);
 const Set = require("../database/models/Set");
 const team = require("../database/models/Team");
 
-io.on("connection", (socket) => {
+io.on("connection",async (socket) => {
+  const teams = await team.find({});
+  for (const team of teams) {
+    socket.on('Admin '+team.id, (notification) => {
+      socket.emit('Notifications '+ team.id, notification)
+    })
+  }
   console.log("Socket connected successfully");
 });
+
 setInterval(async () => {
   io.emit("missions");
 
