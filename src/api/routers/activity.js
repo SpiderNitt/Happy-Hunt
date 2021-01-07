@@ -1,11 +1,19 @@
 const Router = require("express").Router();
 const Feed = require("../../database/models/Activity");
-const { jwtVerify } = require("../../middlewares/jwt");
+const Mission = require("../../database/models/Mission");
 
-Router.get("/feed", jwtVerify, async (req, res) => {
+Router.get("/feed", async (req, res) => {
   try {
-    const feeds = await Feed.find({ status: "accepted", ShouldBeShown: true });
-    return res.status(200).json({ actiityFeeds: feeds });
+    const feeds = await Feed.find({ status: "accepted" });
+    const feedToBeShown = [];
+    for (let index = 0; index < feeds.length; index++) {
+      const { mission } = feeds[index];
+      const missionStatement = await Mission.findById(mission);
+      if (missionStatement.Feed) {
+        feedToBeShown.push(feeds[index]);
+      }
+    }
+    return res.status(200).json({ activityFeeds: feedToBeShown });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -13,7 +21,7 @@ Router.get("/feed", jwtVerify, async (req, res) => {
     });
   }
 });
-Router.get("/feed/likes/:id", jwtVerify, async (req, res) => {
+Router.get("/feed/likes/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const feed = await Feed.findById(id);
