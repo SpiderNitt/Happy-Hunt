@@ -12,6 +12,7 @@ import ScoreBoard from '../admin/ScoreBoard'
 import AdminList from '../admin/AdminMembers'
 import AdminMission from '../admin/AdminMission';
 import Notification from '../admin/Notifications';
+import MissionDetail from '../admin/MissionDetail'
 import NewMission from '../admin/NewMission';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex"
     },
     toolbar: {
-        paddingRight: 24, // keep right padding when drawer closed
+        paddingRight: 24,
     },
     toolbarIcon: {
         display: 'flex',
@@ -145,6 +146,7 @@ export default function AdminNav() {
                 <Switch>
                     <Route exact from="/" render={props => <Mission {...props} />} />
                     <Route exact path="/activity" render={props => <Activity {...props} />} />
+                    <Route exact path="/missiondetail" render={props => <MissionDetail {...props} />} />
                     <Route exact path="/scoreboard" render={props => <ScoreBoard {...props} />} />
                     <Route exact path="/adminlist" render={props => <AdminList {...props} />} />
                     <Route exact path="/mission/edit" render={props => <AdminMission {...props} />} />
