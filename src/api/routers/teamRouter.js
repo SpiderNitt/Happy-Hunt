@@ -11,18 +11,6 @@ team.post("/create", jwtVerify, async (req, res) => {
     if (teamName == null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-    const testAccount = await nodemailer.createTestAccount();
-
-    // create reusable transporter object using the default SMTP transport
-    const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
-      },
-    });
 
     const user = await User.findOne({ Id: req.jwt_payload.id });
     console.log(user);
@@ -36,20 +24,13 @@ team.post("/create", jwtVerify, async (req, res) => {
       teamName,
       members: [],
     });
+
     newTeam.members.push(user);
     await newTeam.save();
 
-    const info = await transporter.sendMail({
-      from: `"${user.name}" <info@happyhunt.com>`,
-      to: emails.join(", "),
-      subject: "Invite to the greatest hunt ever",
-      html: `<a href='localhost:8000/auth/team/join?teamid=${newTeam.teamId}' >click the link to join my team</a>`,
-    });
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
-      Team: newTeam,
+      TeamId: newTeam.teamId,
     });
   } catch (error) {
     console.log(error);

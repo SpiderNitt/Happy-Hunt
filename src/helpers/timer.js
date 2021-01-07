@@ -13,9 +13,16 @@ const { getDistance } = require("geolib");
 const Mission = require("../database/models/Mission");
 const Team = require("../database/models/Team");
 
-io.on("connection", (socket) => {
+io.on("connection",async (socket) => {
+  const teams = await team.find({});
+  for (const team of teams) {
+    socket.on('Admin '+team.id, (notification) => {
+      socket.emit('Notifications '+ team.id, notification)
+    })
+  }
   console.log("Socket connected successfully");
 });
+
 setInterval(async () => {
   io.emit("missions");
   const teams = await Team.find({});
