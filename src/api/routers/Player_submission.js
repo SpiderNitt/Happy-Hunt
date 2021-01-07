@@ -3,6 +3,8 @@ const submission = require("express").Router();
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
 const Team = require("../../database/models/Team");
+const player = require("./Player_auth");
+const User = require("../../database/models/User");
 
 submission.post(
   "/submission",
@@ -147,4 +149,15 @@ submission.post(
     }
   }
 );
+player.get("/profile", async (req, res) => {
+  try {
+    const user = await User.findOne({ Id: req.jwt_payload.id });
+    if (user === undefined || user === null)
+      return res.status(400).json({ message: "User not found" });
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
 module.exports = submission;
