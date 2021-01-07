@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import HomeIcon from "@material-ui/icons/Home";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +59,7 @@ export default function ButtonAppBar() {
             Happy Hunt
           </Typography>
           <Button onClick={handleOpen} color="inherit">
-            <HomeIcon />
+            <AccountCircleIcon />
           </Button>
         </Toolbar>
         <Modal
@@ -76,8 +76,10 @@ export default function ButtonAppBar() {
         >
           <Fade in={open}>
             <div className={classes.paper}>
-              <Button href="/" className={classes.button}>Logout</Button>
-              <Button href="/home" className={classes.button}>Exit Game</Button>
+
+            <Button href="/profile" className={classes.button}>Profile</Button>
+              <Button href="/exit" className={classes.button}>Exit Game</Button>
+
             </div>
           </Fade>
         </Modal>

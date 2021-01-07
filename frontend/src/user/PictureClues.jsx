@@ -5,7 +5,6 @@ import { useState } from "react";
 import Container from '@material-ui/core/Container';
 import Sample3 from '../assets/sample3.jpg';
 import { create } from 'apisauce';
-import { Image } from "cloudinary-react";
 import  clueData  from './ClueData';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -18,7 +17,7 @@ const api = create({
 
 function PictureClues(clue, index) {
     const classes = useStyles();
-
+    const [dataUri, setDataUri] = useState('');
     const [imageSelected, setImageSelected] = useState("");
     const [open, setOpen] = useState(false);
 
@@ -68,8 +67,6 @@ function PictureClues(clue, index) {
                     setImageSelected(e.target.files[0]);
                     }
                 }/>
-                {/* <Image cloudName= "dqj309mtu"
-                publid= "https://res.cloudinary.com/dqj309mtu/image/upload/v1609596646/t5jbiocbudctz9hdvz0z.gif"/> */}
                 <Button type="submit" onClick={uploadImage}  style={{backgroundColor:"#4863A0", color:"whitesmoke"}}>
                     Submit
                 </Button>
