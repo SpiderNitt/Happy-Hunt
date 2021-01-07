@@ -7,13 +7,14 @@ const { jwtVerify } = require("../../middlewares/jwt");
 
 team.post("/create", jwtVerify, async (req, res) => {
   try {
-    const { teamName, emails } = req.body;
+    const { teamName } = req.body;
     if (teamName == null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
 
     const user = await User.findOne({ Id: req.jwt_payload.id });
     console.log(user);
+    user.Role = "TeamLeader";
     let teamId = uid();
     while (await Team.exists({ teamId })) {
       teamId = uid();
@@ -27,7 +28,7 @@ team.post("/create", jwtVerify, async (req, res) => {
 
     newTeam.members.push(user);
     await newTeam.save();
-
+    await user.save();
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
       TeamId: newTeam.teamId,
@@ -49,9 +50,11 @@ team.get("/join", jwtVerify, async (req, res) => {
     }
 
     const user = await User.findOne({ Id: req.jwt_payload.id });
+    user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
     existingTeam.members.push(user);
-
+    existingTeam.save();
+    user.save();
     return res
       .status(200)
       .json({ Message: "joined to the Team Successfully. Happy Hunting!!" });
