@@ -20,6 +20,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import { ChatBubble } from '@material-ui/icons';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import Routes from "../utils/routes";
 
 const drawerWidth = 190;
 
@@ -144,14 +145,14 @@ export default function AdminNav() {
                 </AppBar>
                 <Drawer onTitleChange={onTitleChange} />
                 <Switch>
-                    <Route exact from="/" render={props => <Mission {...props} />} />
-                    <Route exact path="/activity" render={props => <Activity {...props} />} />
-                    <Route exact path="/missiondetail" render={props => <MissionDetail {...props} />} />
-                    <Route exact path="/scoreboard" render={props => <ScoreBoard {...props} />} />
-                    <Route exact path="/adminlist" render={props => <AdminList {...props} />} />
-                    <Route exact path="/mission/edit" render={props => <AdminMission {...props} />} />
-                    <Route exact path="/mission/new" component={NewMission} />
-                    <Route exact path="/admin/notification" component={Notification} />
+                    <Route exact from={Routes.ADMIN_MISSIONS} render={props => <Mission {...props} />} />
+                    <Route exact path={Routes.ADMIN_ACTIVITY_FEED} render={props => <Activity {...props} />} />
+                    <Route exact path={Routes.ADMIN_MISSION_DETAILS} render={props => <MissionDetail {...props} />} />
+                    <Route exact path={Routes.ADMIN_LEADERBOARD} render={props => <ScoreBoard {...props} />} />
+                    <Route exact path={Routes.ADMIN_LIST} render={props => <AdminList {...props} />} />
+                    <Route exact path={Routes.ADMIN_MISSION_EDIT} render={props => <AdminMission {...props} />} />
+                    <Route exact path={Routes.ADMIN_NEW_MISSION} component={NewMission} />
+                    <Route exact path={Routes.ADMIN_NOTIFICATION} component={Notification} />
                 </Switch>
 
             </div>

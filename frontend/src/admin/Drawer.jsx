@@ -18,6 +18,7 @@ import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
 import colors from '../utils/colors';
+import Routes from '../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -45,7 +46,7 @@ const Drawer = props => {
             icon: <DashboardIcon />,
             onClick: () => {
                 props.onTitleChange('Missions')
-                history.push("/")
+                history.push(Routes.ADMIN_MISSIONS);
             }
         },
         {
@@ -53,7 +54,7 @@ const Drawer = props => {
             icon: <DynamicFeedIcon />,
             onClick: () => {
                 props.onTitleChange('Activity feed')
-                history.push("/activity")
+                history.push(Routes.ADMIN_ACTIVITY_FEED);
             }
         },
         {
@@ -61,7 +62,7 @@ const Drawer = props => {
             icon: <ScoreIcon />,
             onClick: () => {
                 props.onTitleChange('Score Board')
-                history.push("/scoreboard")
+                history.push(Routes.ADMIN_LEADERBOARD)
             }
         },
         {
@@ -76,7 +77,7 @@ const Drawer = props => {
             icon: <ListIcon />,
             onClick: () => {
                 props.onTitleChange('Admin List');
-                history.push('/adminlist')
+                history.push(Routes.ADMIN_LIST);
             }
         },
         {
@@ -84,7 +85,7 @@ const Drawer = props => {
             icon: <EditIcon />,
             onClick: () => {
                 props.onTitleChange('Missions');
-                history.push('/mission/edit');
+                history.push(Routes.ADMIN_MISSION_EDIT);
             }
         }
     ]
