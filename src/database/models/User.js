@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   phoneNo: {
-    type: Number,
+    type: String,
   },
   team: {
     type: mongoose.Schema.Types.ObjectId,
