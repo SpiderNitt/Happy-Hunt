@@ -2,12 +2,15 @@ const Router = require("express").Router();
 const cryptoRandomString = require("crypto-random-string");
 const { validationResult } = require("express-validator");
 const User = require("../../database/models/User");
-const { AdminCreateValidator } = require("../../middlewares/expressValidator");
+const {
+  AdminCreateValidator,
+  AcceptValidator,
+} = require("../../middlewares/expressValidator");
 const Team = require("../../database/models/Team");
 const Activity = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 
-Router.post("/create_admin", AdminCreateValidator, async (req, res) => {
+Router.post("/createAdmin", AdminCreateValidator, async (req, res) => {
   try {
     const issuperadmin = await User.findById(req.jwt_payload.id);
     if (issuperadmin.Role !== "SuperAdmin") {
@@ -49,7 +52,7 @@ Router.post("/create_admin", AdminCreateValidator, async (req, res) => {
     });
   }
 });
-Router.delete("/delete_admin", AdminCreateValidator, async (req, res) => {
+Router.delete("/deleteAdmin", AdminCreateValidator, async (req, res) => {
   try {
     const issuperadmin = await User.findById(req.jwt_payload.id);
     if (issuperadmin.Role !== "SuperAdmin") {
@@ -78,29 +81,42 @@ Router.delete("/delete_admin", AdminCreateValidator, async (req, res) => {
     });
   }
 });
-Router.post("/accept", async (req, res) => {
+Router.post("/accept", AcceptValidator, async (req, res) => {
   try {
     const { isAccepted, activityfeedId } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const activity = await Activity.findById(activityfeedId)
       .populate("team")
       .exec();
+    if (!activity) {
+      return res.status(404).json({ message: "no such activity found" });
+    }
     const mission = await Mission.findById(activity.mission);
     const team = await Team.findById(activity.team._id);
     console.log();
 
-    if (isAccepted) {
-      console.log(mission.maxPoints, " - ", activity.hintsTaken);
-      team.points += mission.maxPoints - activity.hintsTaken * 20;
-      activity.status = true;
-      await team.save();
-      await activity.save();
+    if (isAccepted == "true") {
+      if (activity.isSubmitted && !activity.status) {
+        console.log(mission.maxPoints, " - ", activity.hintsTaken);
+        team.points += mission.maxPoints - activity.hintsTaken * 20;
+        activity.status = true;
+        await team.save();
+        await activity.save();
+      } else {
+        return res.status(403).json({ message: "answer is already accepted" });
+      }
     } else {
       await activity.deleteOne({ id: activityfeedId });
     }
-    res.status(200).json({ message: "Answered successfully accepted" });
+    return res
+      .status(200)
+      .json({ message: "Answered successfully accepted or rejected" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
     console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 });
 

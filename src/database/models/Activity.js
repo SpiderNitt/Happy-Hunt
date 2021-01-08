@@ -9,10 +9,11 @@ const activitySchema = new mongoose.Schema({
     type: String,
   },
   category: {
+    // Picture/Video/Picture and Location /Text
     type: String,
   },
   status: {
-    type: String, // pending/accepted
+    type: Boolean, // pending - 0/accepted - 1
   },
   likes: {
     type: Number,
