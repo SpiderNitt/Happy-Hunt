@@ -19,6 +19,7 @@ loginRouter.post("/login", AdminLoginValidator, async (req, res) => {
       }
       if (user.password === password) {
         const token = createJWTtoken(user);
+        req.session.token = token;
         console.log("token", token);
 
         return res.status(200).json({ JWTtoken: token });

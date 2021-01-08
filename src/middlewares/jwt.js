@@ -15,8 +15,9 @@ const createJWTtoken = (user) => {
 
 const jwtVerify = (req, res, next) => {
   try {
-    console.log(req.headers);
-    const { token } = req.headers;
+    // console.log(req.headers);
+    // const { token } = req.headers;
+    const { token } = req.session;
 
     if (!token) return res.status(401).json({ message: "No token" });
     // console.log(process.env.TOKEN_SECRET)
