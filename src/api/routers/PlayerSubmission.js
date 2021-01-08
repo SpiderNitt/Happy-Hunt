@@ -165,7 +165,7 @@ player.get("/profile", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-player.post(
+player.patch(
   "/update",
   multer({ storage: multer.memoryStorage() }).single("photo"),
   async (req, res) => {
@@ -179,13 +179,16 @@ player.post(
       update.age = req.body.age ? req.body.age : userDetails.age;
       update.gender = req.body.gender ? req.body.gender : userDetails.gender;
       update.name = req.body.name ? req.body.name : userDetails.name;
-      update.photo = req.file
-        ? req.file.buffer.toString("base64")
-        : userDetails.photo;
+      try {
+        update.photo = req.file
+          ? req.file.buffer.toString("base64")
+          : userDetails.photo;
+      } catch (err) {
+        console.log(err.message);
+        return res.status(400).json({ message: "Image upload failed" });
+      }
       const result = await User.updateOne({ _id: id }, update);
-      console.log(result);
       if (result.nModified === 1) {
-        console.log("completed");
         return res.status(200).json({ message: "Successfully updated" });
       }
       if (result.n === 1) {

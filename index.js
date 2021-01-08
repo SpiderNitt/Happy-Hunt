@@ -2,8 +2,16 @@ require("dotenv").config({ path: "./src/env/.env" });
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const session = require("express-session");
 const { app } = require("./src/helpers/timer");
-
+// session
+app.use(
+  session({
+    secret: "happyHunt",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 // routes
 const authRouter = require("./src/api/auth");
 const apiRouter = require("./src/api/api");

@@ -6,6 +6,7 @@ const {
 } = require("../../middlewares/expressValidator");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
+const { async } = require("crypto-random-string");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
@@ -42,7 +43,7 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
 player.post("/verify", async (req, res) => {
   try {
     const { otp, mobileNo } = req.body;
-    if (otp === undefined || mobileNo === undefined)
+    if (!otp || !mobileNo)
       return res.status(400).json({ message: "Enter all fields" });
     if (otp !== "99999") {
       return res.status(400).json({ message: "OTP incorrect" });
@@ -59,6 +60,7 @@ player.post("/verify", async (req, res) => {
       return res.status(400).json({ message: "User unable to verify" });
     }
     const token = createJWTtoken(result);
+    req.session.token = token;
     return res.status(200).json({ JWTtoken: token });
   } catch (err) {
     console.log(err.message);
@@ -68,10 +70,13 @@ player.post("/verify", async (req, res) => {
 player.post("/login", async (req, res) => {
   try {
     const { userId, password } = req.body;
+    if (!userId || !password)
+      return res.status(400).json({ message: "Enter all fields" });
     const user = await User.findOne({ Id: userId, password, active: true });
     if (user === undefined || user === null)
       return res.status(400).json({ message: "User does not exist" });
     const token = createJWTtoken(user);
+    req.session.token = token;
     return res.status(200).json({ JWTtoken: token });
   } catch (err) {
     console.log(err.message);
