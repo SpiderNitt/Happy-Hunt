@@ -7,7 +7,7 @@ const { jwtVerify } = require("../../middlewares/jwt");
 team.post("/create", async (req, res) => {
   try {
     const { teamName } = req.body;
-    if (teamName == null) {
+    if (teamName == null || teamName === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
 
@@ -44,7 +44,7 @@ team.post("/create", async (req, res) => {
 team.get("/join", async (req, res) => {
   try {
     const { teamid } = req.query;
-    if (teamid == null) {
+    if (teamid == null || teamid === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
 
