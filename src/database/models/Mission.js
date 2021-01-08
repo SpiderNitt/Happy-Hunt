@@ -5,12 +5,17 @@ const MissionSchema = new Schema({
     type: String, // Picture/Video/Picture and Location /Text
     required: true,
   },
+  MissionName: {
+    type: String,
+    required: true,
+  },
 
   clue: {
     type: String,
     required: true,
   },
   answer_Type: {
+    // Picture/Video/Picture and Location /Text
     type: String,
     required: true,
   },

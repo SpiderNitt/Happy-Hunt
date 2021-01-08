@@ -3,8 +3,6 @@ const Router = require("express").Router();
 const { validationResult } = require("express-validator");
 const Mission = require("../../database/models/Mission");
 
-const Team = require("../../database/models/Team");
-const Activity = require("../../database/models/Activity");
 const Hint = require("../../database/models/Hint");
 const {
   MissionValidator,
@@ -32,6 +30,7 @@ Router.post("/add", MissionValidator, async (req, res) => {
       answer,
       Location,
       Other_Info,
+      MissionName,
       Feed,
       ServerEvaluation,
       maxPoints,
@@ -58,6 +57,7 @@ Router.post("/add", MissionValidator, async (req, res) => {
       Location,
       Other_Info,
       maxPoints,
+      MissionName,
       Feed,
       ServerEvaluation,
       assignedTeams: [],
@@ -82,8 +82,10 @@ Router.patch("/update", UpdateMissionValidator, async (req, res) => {
     }
     const mission = await Mission.findById(id);
     const HintsGiven = req.body.Hints;
+
     if (HintsGiven) {
       const hints = mission.Hints;
+
       for (let index = 0; index < HintsGiven.length; index++) {
         await Hint.findByIdAndUpdate(hints[index], HintsGiven[index]);
       }
@@ -105,6 +107,9 @@ Router.delete("/delete/:id", async (req, res) => {
     const { id } = req.params;
 
     const mission = await Mission.findById(id);
+    if (!mission) {
+      return res.status(404).json({ message: "No such mission found" });
+    }
     const hintarr = mission.Hints;
     hintarr.forEach(async (hint) => {
       await Hint.findByIdAndDelete(hint);
