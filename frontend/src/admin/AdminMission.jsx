@@ -5,6 +5,7 @@ import AdminMissionListItem from './AdminMissionListItem';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import colors from '../utils/colors';
+import Routes from '../utils/routes'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,9 +53,9 @@ function AdminMission(props) {
                     </List>
                 </div>
             </div>
-                <Fab color="primary" className={classes.fab} onClick={() => { history.push('/mission/new') }}>
-                    <AddIcon fontSize="large" color={colors.white} />
-                </Fab>
+            <Fab color="primary" className={classes.fab} onClick={() => { history.push(Routes.ADMIN_NEW_MISSION) }}>
+                <AddIcon fontSize="large" color={colors.white} />
+            </Fab>
 
         </div>
     )

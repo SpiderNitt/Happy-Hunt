@@ -4,6 +4,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import TextFormatIcon from '@material-ui/icons/TextFormat';
 import { withRouter } from 'react-router-dom'
 import './admin.css'
+import Routes from '../utils/routes'
 
 
 const MissionCard = (props) => {
@@ -20,7 +21,7 @@ const MissionCard = (props) => {
         }
     }
     return (
-        <div className='mission-card' onClick={() => { history.push('/missiondetail') }}>
+        <div className='mission-card' onClick={() => { history.push(Routes.ADMIN_MISSION_DETAILS) }}>
             <div className='mission-card-img'>
                 {renderType(props.type)}
             </div>
