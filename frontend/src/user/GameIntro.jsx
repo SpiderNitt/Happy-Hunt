@@ -2,13 +2,14 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import Routes from '../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
-    marginTop: '30%',
+    marginTop: '5%',
   },
 }));
 
@@ -20,11 +21,11 @@ export default function GameIntro() {
         <Typography variant="button" display="block" style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>
             Happy Hunt Challenge
         </Typography>
-        <Button variant="outlined" color="secondary" href="/register">
+        <Button variant="outlined" color="secondary" href={Routes.USER_REGISTER}>
             Register
         </Button>
         <br/>
-        <Button variant="outlined" color="secondary" href="/login">
+        <Button variant="outlined" color="secondary" href={Routes.USER_LOGIN}>
             Login
         </Button>
     </div>

@@ -6,6 +6,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Rules from './Rules';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import Routes from '../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -69,7 +70,7 @@ function Home(props) {
         <Fade in={open}>
           <div className={classes.paper}>
             <Rules/>
-            <Button variant="contained" color="primary" href="/clue" style={{margin:5}}>
+            <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
                 Start Game !
             </Button>
             

@@ -6,29 +6,30 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import clueData from './ClueData';
+import { Chip, Container, Grid } from '@material-ui/core';
 
 const RenderClues=(clue , index)=> {
    const classes= useStyles();
    
     return (
       
-      <Card className={classes.root} key={index}>
+      <Card key={index} style={{ marginBottom: 10, padding: 10 }}>
         <CardContent>
-          <Typography className={classes.title} color="textSecondary" variant="ul">
-            Clue : {clue.cluename}
-          </Typography>
-          
-          <Typography className={classes.pos} color="textSecondary">
-            {clue.isSolved? "solved" : "unsolved" }
-          </Typography>
+          <div className={classes.container}>
+            <Typography className={classes.title} color="textSecondary" variant="ul">
+              Clue : {clue.cluename}
+            </Typography>
+            
+            <Chip size="small" label={clue.isSolved? "solved" : "unsolved" } />
+          </div>
 
-          <Typography className={classes.points} color="textSecondary">
-            {clue.points}
-          </Typography>
           
         </CardContent>
-        <CardActions>
-          <Button size="small" href="/photo-clue">View</Button>
+        <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <Button variant="contained" size="small" href="/photo-clue">View</Button>
+          <Typography color="textSecondary">
+            {clue.points}
+          </Typography>
         </CardActions>
       </Card>
     );
@@ -36,9 +37,14 @@ const RenderClues=(clue , index)=> {
 
 function Clues() {
     return (
-        <div className="grid">
+      <Container maxWidth="md">
+        {/* <div className="grid">
             {clueData.map(RenderClues)}
-        </div> 
+        </div>  */}
+        <Grid item xs={12}>
+          {clueData.map(RenderClues)}
+        </Grid>
+      </Container>
     );
 }
 
@@ -46,13 +52,11 @@ function Clues() {
 export default Clues;
 
 const useStyles = makeStyles({
-    root: {
-      minWidth: 275,
-      maxWidth: 360,
-    },
     title: {
       fontSize: 20,
-      color:"olive"
+      color:"olive",
+      fontWeight: 'bold',
+      textAlign: 'left',
     },
     pos: {
       marginBottom: 12,
@@ -60,4 +64,10 @@ const useStyles = makeStyles({
     points: {
       float:"right",
     },
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+    }
   });
