@@ -5,15 +5,16 @@ import * as Yup from "yup";
 import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
 
 import ErrorMessage from './components/ErrorMessage';
+import colors from './utils/colors';
+import { AdminRegister } from './api/auth';
 
 const validationSchema = Yup.object().shape({
-    adminName: Yup.string().required().label("Admin Name"),
-    email: Yup.string().required().email().label("Email"),
+  email: Yup.string().required().email().label("Email"),
 });
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(2),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -22,30 +23,35 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.secondary.main,
       padding: 10,
       color: 'white',
-      borderRadius: 30,
-      margin: 20,
+      borderRadius: '50%',
+      margin: 10,
     },
     form: {
-      justifyContent: 'center',
-      padding: 10,
-      alignItems: 'center',
+      width: '100%',
+      marginTop: 30,
     },
     submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-    error: {
-      fontSize: 14,
-      color: 'red',
+      marginTop: 20,
     },
     TextField: {
-      width: '100%',
-      backgroundColor: '#fafafa',
+      backgroundColor: colors.light,
     }
 }));
 
 export default function AdminRegistration() {
 
     const classes = useStyles();
+
+    const handleSubmit = async ({ email }, { resetForm }) => {
+      const response = await AdminRegister(email);
+      if(!response.ok){
+        console.log(response.problem);
+        console.log(response.data);
+        return;
+      }
+      console.log(response.data);
+      resetForm();
+    }
 
     return (
       <Container component="main" maxWidth="xs">
@@ -58,37 +64,28 @@ export default function AdminRegistration() {
             Add Admin
           </Typography>
           <Formik
-          initialValues={{ adminName: '', email: '' }}
+          initialValues={{ email: '' }}
           validationSchema={validationSchema}
-          onSubmit={values => console.log(values)}
+          onSubmit={handleSubmit}
           >
-          {({ setFieldValue, errors, touched }) => (
+          {({ setFieldValue, errors, touched, values }) => (
             <Form className={classes.form}>
-              <Grid container spacing={4}>
+              <Grid container>
                 <Grid item xs={12}>
                   <TextField 
-                      type="text" 
-                      name="adminName" 
-                      label="Admin Name" 
-                      variant="outlined" 
-                      onChange={e => setFieldValue( "adminName", e.target.value)}
-                      className={classes.TextField} 
-                  />
-                  <ErrorMessage visible={touched.adminName} error={errors.adminName} />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField 
-                    type="text" 
+                    type="email" 
                     name="email" 
                     label="Email Address" 
-                    variant="outlined" 
+                    variant="filled" 
+                    value={values.email}
                     onChange={e => setFieldValue("email", e.target.value)}
                     className={classes.TextField}
+                    fullWidth
                   />
                   <ErrorMessage visible={touched.email} error={errors.email} />
                 </Grid>
               </Grid>
-              <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
+              <Button type="submit" variant="contained" color="secondary" fullWidth className={classes.submit}>
                 Add
               </Button>
             </Form>

@@ -1,12 +1,11 @@
 const player = require("express").Router();
-const { body, validationResult } = require("express-validator");
-const bcrypt = require("bcrypt");
+const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
 const {
   playerRegisterValidator,
 } = require("../../middlewares/expressValidator");
 const User = require("../../database/models/User");
-const { createJWTtoken, jwtVerify } = require("../../middlewares/jwt");
+const { createJWTtoken } = require("../../middlewares/jwt");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
