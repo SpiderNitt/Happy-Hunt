@@ -1,10 +1,11 @@
 const multer = require("multer");
-const submission = require("express").Router();
+const player = require("express").Router();
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
 const Team = require("../../database/models/Team");
+const User = require("../../database/models/User");
 
-submission.post(
+player.post(
   "/submission",
   multer({ storage: multer.memoryStorage() }).single("answer"),
   async (req, res) => {
@@ -150,4 +151,49 @@ submission.post(
     }
   }
 );
-module.exports = submission;
+player.get("/profile", async (req, res) => {
+  try {
+    const user = await User.findById(req.jwt_payload.id);
+    if (user === undefined || user === null) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
+player.post(
+  "/update",
+  multer({ storage: multer.memoryStorage() }).single("photo"),
+  async (req, res) => {
+    try {
+      const { id } = req.jwt_payload;
+      let update = {};
+      const userDetails = await User.findById(id);
+      if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
+        return res.status(400).json({ message: "Fill all fields" });
+      }
+      update.age = req.body.age ? req.body.age : userDetails.age;
+      update.gender = req.body.gender ? req.body.gender : userDetails.gender;
+      update.name = req.body.name ? req.body.name : userDetails.name;
+      update.photo = req.file
+        ? req.file.buffer.toString("base64")
+        : userDetails.photo;
+      const result = await User.updateOne({ _id: id }, update);
+      console.log(result);
+      if (result.nModified === 1) {
+        console.log("completed");
+        return res.status(200).json({ message: "Successfully updated" });
+      }
+      if (result.n === 1) {
+        return res.status(200).json({ mission: "Unable to update" });
+      }
+      return res.status(404).json({ message: "User not found" });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(416).json({ message: "Server error, try again later" });
+    }
+  }
+);
+module.exports = player;

@@ -10,7 +10,6 @@ const deleteAdmin = require("./routers/delete_admin");
 const playerSubmission = require("./routers/Player_submission");
 const { jwtVerify } = require("../middlewares/jwt");
 
-
 api.use("/", jwtVerify);
 api.use("/create_admin", NewAdmin);
 api.use("/delete_admin", deleteAdmin);
