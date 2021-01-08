@@ -4,7 +4,7 @@ function Rules(props) {
     return (
         <div>
             <h1>
-                Rules
+                Instructions
             </h1>
             <ul>
                 Rule 1

@@ -1,4 +1,4 @@
-import { Grid, Paper, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import React from "react";
 import ActivityFeedCard from "./Card";
 
@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexDirection: "column",
     alignContent: "center",
+    marginTop: 70,
   },
 }));
 
