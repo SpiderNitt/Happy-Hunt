@@ -1,31 +1,19 @@
 const team = require("express").Router();
 const { uid } = require("uid");
-const nodemailer = require("nodemailer");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { jwtVerify } = require("../../middlewares/jwt");
 
-team.post("/create", jwtVerify, async (req, res) => {
+team.post("/create", async (req, res) => {
   try {
-    const { teamName, emails } = req.body;
+    const { teamName } = req.body;
     if (teamName == null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-    const testAccount = await nodemailer.createTestAccount();
 
-    // create reusable transporter object using the default SMTP transport
-    const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
-      },
-    });
-
-    const user = await User.findOne({ Id: req.jwt_payload.id });
+    const user = await User.findById(req.jwt_payload.id);
     console.log(user);
+    user.Role = "TeamLeader";
     let teamId = uid();
     while (await Team.exists({ teamId })) {
       teamId = uid();
@@ -36,41 +24,37 @@ team.post("/create", jwtVerify, async (req, res) => {
       teamName,
       members: [],
     });
+    user.team = newTeam;
     newTeam.members.push(user);
     await newTeam.save();
-
-    const info = await transporter.sendMail({
-      from: `"${user.name}" <info@happyhunt.com>`,
-      to: emails.join(", "),
-      subject: "Invite to the greatest hunt ever",
-      html: `<a href='localhost:8000/auth/team/join?teamid=${newTeam.teamId}' >click the link to join my team</a>`,
-    });
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
+    await user.save();
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
-      Team: newTeam,
+      TeamId: newTeam.teamId,
     });
   } catch (error) {
     console.log(error);
-    res
+    return res
       .status(500)
       .json({ Message: "Internal Server Error, Try again later!!" });
   }
-  return 0;
+  // return 0;
 });
 
-team.get("/join", jwtVerify, async (req, res) => {
+team.get("/join", async (req, res) => {
   try {
     const { teamid } = req.query;
     if (teamid == null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
 
-    const user = await User.findOne({ Id: req.jwt_payload.id });
+    const user = await User.findById(req.jwt_payload.id);
+    user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
+    user.team = existingTeam;
     existingTeam.members.push(user);
-
+    existingTeam.save();
+    user.save();
     return res
       .status(200)
       .json({ Message: "joined to the Team Successfully. Happy Hunting!!" });
@@ -81,6 +65,34 @@ team.get("/join", jwtVerify, async (req, res) => {
       .json({ Message: "Internal Server Error, Try again later!!" });
   }
   return 0;
+});
+
+team.post("/location", async (req, res) => {
+  try {
+    const user = await User.findOne({ Id: req.jwt_payload.id });
+    if (user.Role === "TeamLeader") {
+      const theTeam = await Team.findOne({ Id: req.jwt_payload.Team });
+      //       GeolocationPosition {coords: GeolocationCoordinates, timestamp: 1610034540979}
+      // coords: GeolocationCoordinates
+      // accuracy: 215723
+      // altitude: null
+      // altitudeAccuracy: null
+      // heading: null
+      // latitude: 11.127122499999999
+      // longitude: 78.6568942
+      // speed: null
+      // __proto__: GeolocationCoordinates
+      // timestamp: 1610034540979
+      // __proto__: GeolocationPosition;
+      const { Location } = req.body;
+      theTeam.avgLocation.Lat = Location.coords.latitude;
+      theTeam.avgLocation.Long = Location.coords.longitude;
+      await team.save();
+      return res.status(200).json({ message: "success" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = team;

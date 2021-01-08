@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  Role: { type: String, required: true },
+  Role: { type: String, required: true }, // TeamLeader , TeamMember , Admin , SuperAdmin,
   Id: {
     type: String,
     required: true,
@@ -13,12 +13,29 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
   },
-  phoneNo: {
+  age: {
     type: Number,
+  },
+  gender: {
+    type: String,
+  },
+  photo: {
+    type: String,
+  },
+  phoneNo: {
+    type: String,
   },
   team: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
+  },
+  Location: {
+    Lat: {
+      type: Number,
+    },
+    Long: {
+      type: Number,
+    },
   },
   active: Boolean,
 });

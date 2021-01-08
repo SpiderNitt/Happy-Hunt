@@ -36,15 +36,17 @@
 		"crypto-random-string": "^3.3.0",
 		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
-		"express-validator": "^6.8.1",
+		"express-session": "^1.17.1",
+		"express-validator": "^6.9.2",
+		"geolib": "^3.3.1",
 		"http": "0.0.1-security",
 		"jsonwebtoken": "^8.5.1",
-		"mongoose": "^5.11.8",
+		"mongoose": "^5.11.10",
 		"multer": "^1.4.2",
 		"node-cron": "^2.0.3",
 		"nodemailer": "^6.4.17",
-		"socket.io": "^3.0.4",
-		"uid": "^2.0.0",
-		"react-swipeable-views": "^0.13.9"
+		"react-swipeable-views": "^0.13.9",
+		"socket.io": "^3.0.5",
+		"uid": "^2.0.0"
 	}
 }

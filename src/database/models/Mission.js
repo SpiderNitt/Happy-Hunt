@@ -5,25 +5,30 @@ const MissionSchema = new Schema({
     type: String, // Picture/Video/Picture and Location /Text
     required: true,
   },
+  MissionName: {
+    type: String,
+  },
 
   clue: {
     type: String,
     required: true,
   },
   answer_Type: {
+    // Picture/Video/Picture and Location /Text
     type: String,
     required: true,
   },
-  answer: {
-    type: String,
-    required: true,
-  },
-  Location: {
-    Lat: {
+  answer: [
+    {
       type: String,
     },
+  ],
+  Location: {
+    Lat: {
+      type: Number,
+    },
     Long: {
-      type: String,
+      type: Number,
     },
   },
   Other_Info: {
@@ -39,5 +44,19 @@ const MissionSchema = new Schema({
     type: Number,
     required: true,
   },
+  Feed: {
+    type: Boolean, // 1-visible 0- hidden
+    required: true,
+  },
+  ServerEvaluation: {
+    type: Boolean,
+    required: true,
+  },
+  assignedTeams: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Team",
+    },
+  ],
 });
 module.exports = model("Mission", MissionSchema);
