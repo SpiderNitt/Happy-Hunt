@@ -3,7 +3,10 @@ const Team = require("../../database/models/Team");
 
 scoreboard.get("/", async (req, res) => {
   try {
-    const teamScore = await Team.find().sort("Points");
+    const teamScore = await Team.find()
+      .sort("points")
+      .populate("members", "name -_id")
+      .select("teamName points -_id members");
     return res.status(200).json(teamScore);
   } catch (error) {
     console.log(error);
