@@ -30,12 +30,13 @@ setInterval(async () => {
   const x = 500;
   // stage 0
   for (let index = 0; index < teams.length; index++) {
+    teams[index].maxPointsAssigned = 0;
     teams[index].assignedMissions = [];
-    teams[index].save();
+    await teams[index].save();
   }
   for (let index = 0; index < missions.length; index++) {
     missions[index].assignedTeams = [];
-    missions[index].save();
+    await missions[index].save();
   }
   // stage 1
   for (let index = 0; index < teams.length; index++) {
@@ -54,6 +55,7 @@ setInterval(async () => {
               longitude: missions[i].Location.Long,
             }
           );
+          // console.log(distance);
           if (distance < 1000) {
             // test 2
             if (missions[i].assignedTeams.length < 10) {
@@ -75,14 +77,15 @@ setInterval(async () => {
                   x
                 ) {
                   // all test passed
+                  console.log("all test passed");
                   teams[index].assignedMissions.push(missions[i]._id);
                   missions[i].assignedTeams.push(teams[index]._id);
                   teams[index].maxPointsAssigned += missions[i].maxPoints;
 
                   // adding the mission in history
                   teams[index].missionHistory.push(missions[i]._id);
-                  teams[index].save();
-                  missions[i].save();
+                  await teams[index].save();
+                  await missions[i].save();
                 }
               }
             }
@@ -91,69 +94,7 @@ setInterval(async () => {
       }
     }
   }
-
-  /* const teams = await team.find({});
-  const sets = await Set.find({});
-  let teamcount = teams.length;
-
-  for (let i = 0; i < sets.length; i++) {
-    console.log(i);
-    if (teamcount === 1) {
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      teams[teamcount - 1].AssignedSet = sets[i];
-
-      await teams[teamcount - 1].save();
-      await sets[i].save();
-
-      break;
-    }
-    if (teamcount === 3) {
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      sets[i].AssignedTeams.push(teams[teamcount - 2]);
-      sets[i].AssignedTeams.push(teams[teamcount - 3]);
-      teams[teamcount - 3].AssignedSet = sets[i];
-      teams[teamcount - 1].AssignedSet = sets[i];
-      teams[teamcount - 2].AssignedSet = sets[i];
-
-      await teams[teamcount - 3].save();
-      await teams[teamcount - 1].save();
-      await teams[teamcount - 2].save();
-      await sets[i].save();
-
-      break;
-    }
-    if (teamcount === 2) {
-      sets[i].AssignedTeams.push(teams[teamcount - 2]);
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      teams[teamcount - 2].AssignedSet = sets[i];
-      teams[teamcount - 1].AssignedSet = sets[i];
-
-      await teams[teamcount - 1].save();
-      await teams[teamcount - 2].save();
-      await sets[i].save();
-
-      break;
-    }
-    if (teamcount >= 4) {
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      sets[i].AssignedTeams.push(teams[teamcount - 2]);
-      sets[i].AssignedTeams.push(teams[teamcount - 3]);
-      sets[i].AssignedTeams.push(teams[teamcount - 4]);
-      teams[teamcount - 4].AssignedSet = sets[i];
-      teams[teamcount - 1].AssignedSet = sets[i];
-      teams[teamcount - 2].AssignedSet = sets[i];
-      teams[teamcount - 3].AssignedSet = sets[i];
-
-      await teams[teamcount - 4].save();
-      await teams[teamcount - 1].save();
-      await teams[teamcount - 2].save();
-      await teams[teamcount - 3].save();
-      await sets[i].save();
-
-      teamcount -= 4;
-    }
-  }
-  console.log("complete"); */
+  console.log("complete");
 }, 1800000);
 
 module.exports = { app, io };

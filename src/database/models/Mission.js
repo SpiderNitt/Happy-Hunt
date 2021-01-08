@@ -7,7 +7,6 @@ const MissionSchema = new Schema({
   },
   MissionName: {
     type: String,
-    required: true,
   },
 
   clue: {
