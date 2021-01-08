@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Avatar, CardHeader, IconButton } from '@material-ui/core';
-import { Favorite, PeopleAltOutlined } from '@material-ui/icons';
+import { Favorite, PeopleAltOutlined, Share } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,42 +38,43 @@ export default function Album() {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
-        <Container className={classes.cardGrid} maxWidth="md">
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card} item xs={3}>
-                    <CardHeader
-                        avatar={
-                        <Avatar >
-                            <PeopleAltOutlined />
-                        </Avatar>
-                        }
-                        title="Team D"
-                        subheader="35 mins ago"
-                    />
-                    <CardMedia
-                        className={classes.cardMedia}
-                        image="https://source.unsplash.com/random"
-                        title="Image title"
-                    />
-                    <CardContent className={classes.cardContent}>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        #tag #tag2 #yipee 
-                    </Typography>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                        <Favorite />
-                    </IconButton>
-                    </CardActions>
-                </Card>
-              </Grid>
-            ))}
+    <Container className={classes.cardGrid} maxWidth="md">
+      <Grid container spacing={4}>
+        {cards.map((card) => (
+          <Grid item key={card} xs={12} sm={6} md={4}>
+            <Card className={classes.card} item xs={3}>
+                <CardHeader
+                    avatar={
+                    <Avatar >
+                        <PeopleAltOutlined />
+                    </Avatar>
+                    }
+                    title="Team D"
+                    subheader="35 mins ago"
+                />
+                <CardMedia
+                    className={classes.cardMedia}
+                    image="https://source.unsplash.com/random"
+                    title="Image title"
+                />
+                <CardContent className={classes.cardContent}>
+                <Typography variant="body2" color="textSecondary" component="p">
+                    #tag #tag2 #yipee 
+                </Typography>
+                </CardContent>
+                <CardActions style={{display: 'flex', justifyContent: 'space-between' }}>
+                  <IconButton>
+                      <Favorite />
+                  </IconButton>
+                  <IconButton>
+                      <Share />
+                  </IconButton>
+                </CardActions>
+            </Card>
           </Grid>
-        </Container>
-    </React.Fragment>
+        ))}
+      </Grid>
+    </Container>
   );
 }
 

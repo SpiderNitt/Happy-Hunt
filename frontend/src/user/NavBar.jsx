@@ -4,6 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { BarChart, Notifications, Search, ShowChart } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import Routes from '../utils/routes';
 
 export default function NavBar({ select }) {
   const [value, setValue] = React.useState(select);
@@ -21,9 +22,9 @@ export default function NavBar({ select }) {
         onChange={handleChange}
         variant="fullWidth"
       >
-        <Tab icon={<Search />} component={Link} to={'/clue'} value="clue" />
-        <Tab icon={<ShowChart />} component={Link} value="activity" to={'/activity'} />
-        <Tab icon={<BarChart />} component={Link} value="scoreboard" to={'/scoreboard'} />
+        <Tab icon={<Search />} component={Link} to={Routes.USER_CLUES} value="clue" />
+        <Tab icon={<ShowChart />} component={Link} value="activity" to={Routes.USER_ACTIVITY} />
+        <Tab icon={<BarChart />} component={Link} value="scoreboard" to={Routes.USER_LEADERBOARD} />
         <Tab icon={<Notifications />} component={Link} value="notification" to={'/notification'} />
       </Tabs>
     </Paper>
