@@ -106,10 +106,15 @@ Router.post("/accept", AcceptValidator, async (req, res) => {
         await team.save();
         await activity.save();
       } else {
-        return res.status(403).json({ message: "answer is already accepted" });
+        return res.status(403).json({
+          message:
+            "answer is already accepted or team didn't made new submission",
+        });
       }
     } else {
-      await activity.deleteOne({ id: activityfeedId });
+      activity.isSubmitted = false;
+      await activity.save();
+      // await activity.deleteOne({ id: activityfeedId });
     }
     return res
       .status(200)
