@@ -2,7 +2,7 @@
 const Router = require("express").Router();
 const { validationResult } = require("express-validator");
 const Mission = require("../../database/models/Mission");
-const Set = require("../../database/models/Set");
+
 const Team = require("../../database/models/Team");
 const Activity = require("../../database/models/Activity");
 const Hint = require("../../database/models/Hint");
@@ -28,10 +28,8 @@ Router.get("/player/", async (req, res) => {
 
     const team = await Team.findById(teamId);
 
-    const set = await Set.findById(team.AssignedSet);
-    console.log(set._id);
     const arr = [];
-    const allMissions = set.Missions;
+    const allMissions = team.assignedMissions;
 
     for (let i = 0; i < allMissions.length; i++) {
       const activity = await Activity.findOne({
@@ -99,6 +97,8 @@ Router.post("/admin/add", MissionValidator, async (req, res) => {
       answer,
       Location,
       Other_Info,
+      Feed,
+      ServerEvaluation,
       maxPoints,
       Hints,
     } = req.body;
@@ -123,13 +123,12 @@ Router.post("/admin/add", MissionValidator, async (req, res) => {
       Location,
       Other_Info,
       maxPoints,
+      Feed,
+      ServerEvaluation,
+      assignedTeams: [],
       Hints: newHints,
     });
 
-    // const set = await Set.find({ Missions: { $size: { $lt: 5 } } });
-    // const set = await Set.find({$where:'this.Missions.length < 5'} );
-    // set.Missions.push(m._id);
-    // set.save();
     return res.status(200).json({ message: "mission added sucessfully" });
   } catch (e) {
     console.log(e);
@@ -175,15 +174,7 @@ Router.delete("/admin/delete/:id", async (req, res) => {
     hintarr.forEach(async (hint) => {
       await Hint.findByIdAndDelete(hint);
     });
-    const set = await Set.findOne({ Missions: id });
 
-    if (set) {
-      const setmissions = set.Missions;
-      const index = setmissions.indexOf(id);
-      setmissions.splice(index, 1);
-
-      set.save();
-    }
     mission.remove();
     return res.status(200).json({ message: "mission deleted sucessfully" });
   } catch (e) {

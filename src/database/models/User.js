@@ -20,6 +20,14 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
   },
+  Location: {
+    Lat: {
+      type: Number,
+    },
+    Long: {
+      type: Number,
+    },
+  },
   active: Boolean,
 });
 module.exports = mongoose.model("User", UserSchema);

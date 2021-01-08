@@ -14,16 +14,17 @@ const MissionSchema = new Schema({
     type: String,
     required: true,
   },
-  answer: {
-    type: String,
-    required: true,
-  },
-  Location: {
-    Lat: {
+  answer: [
+    {
       type: String,
     },
+  ],
+  Location: {
+    Lat: {
+      type: Number,
+    },
     Long: {
-      type: String,
+      type: Number,
     },
   },
   Other_Info: {
@@ -47,5 +48,11 @@ const MissionSchema = new Schema({
     type: Boolean,
     required: true,
   },
+  assignedTeams: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Team",
+    },
+  ],
 });
 module.exports = model("Mission", MissionSchema);
