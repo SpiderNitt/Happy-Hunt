@@ -9,76 +9,6 @@ const options = {
   /* ... */
 };
 const io = require("socket.io")(server, options);
-<<<<<<< HEAD
-const Set = require("../database/models/Set");
-const team = require("../database/models/Team");
-
-io.on("connection", (socket) => {
-  console.log("Socket connected successfully");
-});
-setInterval(async () => {
-  io.emit("missions");
-
-  const teams = await team.find({});
-  const sets = await Set.find({});
-  let teamcount = teams.length;
-
-  for (let i = 0; i < sets.length; i++) {
-    console.log(i);
-    if (teamcount === 1) {
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      teams[teamcount - 1].AssignedSet = sets[i];
-
-      await teams[teamcount - 1].save();
-      await sets[i].save();
-
-      break;
-    }
-    if (teamcount === 3) {
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      sets[i].AssignedTeams.push(teams[teamcount - 2]);
-      sets[i].AssignedTeams.push(teams[teamcount - 3]);
-      teams[teamcount - 3].AssignedSet = sets[i];
-      teams[teamcount - 1].AssignedSet = sets[i];
-      teams[teamcount - 2].AssignedSet = sets[i];
-
-      await teams[teamcount - 3].save();
-      await teams[teamcount - 1].save();
-      await teams[teamcount - 2].save();
-      await sets[i].save();
-
-      break;
-    }
-    if (teamcount === 2) {
-      sets[i].AssignedTeams.push(teams[teamcount - 2]);
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      teams[teamcount - 2].AssignedSet = sets[i];
-      teams[teamcount - 1].AssignedSet = sets[i];
-
-      await teams[teamcount - 1].save();
-      await teams[teamcount - 2].save();
-      await sets[i].save();
-
-      break;
-    }
-    if (teamcount >= 4) {
-      sets[i].AssignedTeams.push(teams[teamcount - 1]);
-      sets[i].AssignedTeams.push(teams[teamcount - 2]);
-      sets[i].AssignedTeams.push(teams[teamcount - 3]);
-      sets[i].AssignedTeams.push(teams[teamcount - 4]);
-      teams[teamcount - 4].AssignedSet = sets[i];
-      teams[teamcount - 1].AssignedSet = sets[i];
-      teams[teamcount - 2].AssignedSet = sets[i];
-      teams[teamcount - 3].AssignedSet = sets[i];
-
-      await teams[teamcount - 4].save();
-      await teams[teamcount - 1].save();
-      await teams[teamcount - 2].save();
-      await teams[teamcount - 3].save();
-      await sets[i].save();
-
-      teamcount -= 4;
-=======
 const { getDistance } = require("geolib");
 const Mission = require("../database/models/Mission");
 const Team = require("../database/models/Team");
@@ -86,8 +16,8 @@ const Team = require("../database/models/Team");
 io.on("connection", async (socket) => {
   const teams = await team.find({});
   for (const team of teams) {
-    socket.on("Admin " + team.id, (notification) => {
-      socket.emit("Notifications " + team.id, notification);
+    socket.on(`Admin ${team.id}`, (notification) => {
+      socket.emit(`Notifications ${team.id}`, notification);
     });
   }
   console.log("Socket connected successfully");
@@ -133,7 +63,7 @@ setInterval(async () => {
               const assignedmissions = teams[index].assignedMissions;
               let count = 0;
               for (let k = 0; k < assignedmissions.length; k++) {
-                let missionToCheck = await Mission.findById(
+                const missionToCheck = await Mission.findById(
                   assignedmissions[k]
                 );
                 if (missionToCheck.Category === missions[i].Category) {
@@ -162,14 +92,9 @@ setInterval(async () => {
           }
         }
       }
->>>>>>> 559c65d3157f73dfb4dcf3d1523c6e15320b4aee
     }
   }
   console.log("complete");
 }, 1800000);
 
-<<<<<<< HEAD
-module.exports = { app };
-=======
 module.exports = { app, io };
->>>>>>> 559c65d3157f73dfb4dcf3d1523c6e15320b4aee
