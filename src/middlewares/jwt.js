@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 
 // eslint-disable-next-line arrow-body-style
 const createJWTtoken = (user) => {
@@ -17,6 +16,7 @@ const createJWTtoken = (user) => {
 const jwtVerify = (req, res, next) => {
   try {
     const { token } = req.session;
+
     if (!token) return res.status(401).json({ message: "No token" });
     // console.log(process.env.TOKEN_SECRET)
     // console.log(token)
@@ -26,8 +26,6 @@ const jwtVerify = (req, res, next) => {
         return res
           .status(404)
           .json({ message: "Invalid Token or Token expired" });
-      if (!mongoose.Types.ObjectId.isValid(decoded.id))
-        return res.status(400).json({ message: "Invalid userId" });
       req.user = true;
       return next();
     });
