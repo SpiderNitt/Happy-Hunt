@@ -1,9 +1,11 @@
+/* eslint-disable no-await-in-loop */
 const multer = require("multer");
 const player = require("express").Router();
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
+const Hint = require("../../database/models/Hint");
 
 player.post(
   "/submission",
@@ -169,7 +171,7 @@ player.post(
   async (req, res) => {
     try {
       const { id } = req.jwt_payload;
-      let update = {};
+      const update = {};
       const userDetails = await User.findById(id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
@@ -196,4 +198,70 @@ player.post(
     }
   }
 );
+player.get("/mission", async (req, res) => {
+  try {
+    const teamId = req.jwt_payload.team;
+
+    const team = await Team.findById(teamId);
+
+    const arr = [];
+    const allMissions = team.assignedMissions;
+
+    for (let i = 0; i < allMissions.length; i++) {
+      const activity = await Activity.findOne({
+        team: req.jwt_payload.team,
+        mission: allMissions[i],
+      });
+
+      const mission = await Mission.findById(allMissions[i]).select({
+        clue: 1,
+        Category: 1,
+        maxPoints: 1,
+      });
+      arr.push(mission);
+
+      if (!activity) {
+        await Activity.create({
+          team: req.jwt_payload.team,
+          ShouldBeShown: false,
+          likes: 0,
+          mission: allMissions[i],
+
+          hintsTaken: 0,
+        });
+      }
+    }
+
+    return res.status(200).json({ missions: arr });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      message: "Server Error ",
+    });
+  }
+});
+player.get("/hint", async (req, res) => {
+  try {
+    const { MissionId } = req.body;
+    const mission = await Mission.findById(MissionId);
+    const hint = mission.Hints;
+    const activity = await Activity.findOne({
+      team: req.jwt_payload.team,
+      mission: MissionId,
+    });
+    const HintNumber = activity.hintsTaken;
+    if (HintNumber < 3) {
+      activity.hintsTaken += 1;
+      activity.save();
+      const hintStatement = await Hint.findById(hint[HintNumber]);
+      return res.status(200).json({ hint: hintStatement });
+    }
+    return res.status(403).json({ message: "No more hints available" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Server Error ",
+    });
+  }
+});
 module.exports = player;

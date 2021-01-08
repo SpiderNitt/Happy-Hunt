@@ -11,7 +11,7 @@ const {
   UpdateMissionValidator,
 } = require("../../middlewares/expressValidator");
 
-Router.get("/admin", async (req, res) => {
+Router.get("/", async (req, res) => {
   try {
     const TotalMissions = await Mission.find({});
     return res.status(200).json({ Missions: TotalMissions });
@@ -22,73 +22,8 @@ Router.get("/admin", async (req, res) => {
     });
   }
 });
-Router.get("/player/", async (req, res) => {
-  try {
-    const teamId = req.jwt_payload.team;
 
-    const team = await Team.findById(teamId);
-
-    const arr = [];
-    const allMissions = team.assignedMissions;
-
-    for (let i = 0; i < allMissions.length; i++) {
-      const activity = await Activity.findOne({
-        team: req.jwt_payload.team,
-        mission: allMissions[i],
-      });
-
-      const mission = await Mission.findById(allMissions[i]).select({
-        clue: 1,
-        Category: 1,
-        maxPoints: 1,
-      });
-      arr.push(mission);
-
-      if (!activity) {
-        await Activity.create({
-          team: req.jwt_payload.team,
-          ShouldBeShown: false,
-          likes: 0,
-          mission: allMissions[i],
-
-          hintsTaken: 0,
-        });
-      }
-    }
-
-    return res.status(200).json({ missions: arr });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      message: "Server Error ",
-    });
-  }
-});
-Router.get("/hint", async (req, res) => {
-  try {
-    const { MissionId } = req.body;
-    const mission = await Mission.findById(MissionId);
-    const hint = mission.Hints;
-    const activity = await Activity.findOne({
-      team: req.jwt_payload.team,
-      mission: MissionId,
-    });
-    const HintNumber = activity.hintsTaken;
-    if (HintNumber < 3) {
-      activity.hintsTaken += 1;
-      activity.save();
-      const hintStatement = await Hint.findById(hint[HintNumber]);
-      return res.status(200).json({ hint: hintStatement });
-    }
-    return res.status(403).json({ message: "No more hints available" });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({
-      message: "Server Error ",
-    });
-  }
-});
-Router.post("/admin/add", MissionValidator, async (req, res) => {
+Router.post("/add", MissionValidator, async (req, res) => {
   try {
     const {
       Category,
@@ -137,7 +72,7 @@ Router.post("/admin/add", MissionValidator, async (req, res) => {
     });
   }
 });
-Router.patch("/admin/update", UpdateMissionValidator, async (req, res) => {
+Router.patch("/update", UpdateMissionValidator, async (req, res) => {
   try {
     const { id } = req.body;
 
@@ -165,7 +100,7 @@ Router.patch("/admin/update", UpdateMissionValidator, async (req, res) => {
   }
 });
 
-Router.delete("/admin/delete/:id", async (req, res) => {
+Router.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
 

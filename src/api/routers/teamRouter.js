@@ -34,11 +34,11 @@ team.post("/create", jwtVerify, async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res
+    return res
       .status(500)
       .json({ Message: "Internal Server Error, Try again later!!" });
   }
-  return 0;
+  // return 0;
 });
 
 team.get("/join", jwtVerify, async (req, res) => {

@@ -1,10 +1,8 @@
 const auth = require("express").Router();
-const AdminRouter = require("./routers/Admin_auth");
-const player = require("./routers/Player_auth");
-const team = require("./routers/teamRouter");
+const AdminRouter = require("./routers/AdminAuth");
+const player = require("./routers/PlayerAuth");
 
 auth.use("/admin", AdminRouter);
 auth.use("/player", player);
-auth.use("/team", team);
 
 module.exports = auth;

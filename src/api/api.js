@@ -1,23 +1,26 @@
 const api = require("express").Router();
 const scoreboard = require("./routers/scoreboard");
-
-const admin = require("./routers/Admin_route");
-const missionroute = require("./routers/mission");
-
-const NewAdmin = require("./routers/Create_admin");
+const missionroute = require("./routers/AdminMission");
+const team = require("./routers/teamRouter");
+const Admin = require("./routers/AdminRoute");
 const GetActivities = require("./routers/activity");
-const deleteAdmin = require("./routers/delete_admin");
-const playerSubmission = require("./routers/Player_submission");
+const playerSubmission = require("./routers/PlayerSubmission");
 const { jwtVerify } = require("../middlewares/jwt");
 
 api.use("/", jwtVerify);
-api.use("/create_admin", NewAdmin);
-api.use("/delete_admin", deleteAdmin);
-api.use("/mission", missionroute);
-api.use("/scoreboard", scoreboard);
 
-api.use("/admin", admin);
+// comman route
+api.use("/scoreboard", scoreboard);
 api.use("/activity", GetActivities);
+
+// team routes
+api.use("/team", team);
+
+// only for admin
+api.use("/admin/mission", missionroute);
+api.use("/admin", Admin);
+
+// only for team
 api.use("/player", playerSubmission);
 
 module.exports = api;
