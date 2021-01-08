@@ -4,14 +4,14 @@ const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { jwtVerify } = require("../../middlewares/jwt");
 
-team.post("/create", jwtVerify, async (req, res) => {
+team.post("/create", async (req, res) => {
   try {
     const { teamName } = req.body;
     if (teamName == null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
 
-    const user = await User.findOne({ Id: req.jwt_payload.id });
+    const user = await User.findById(req.jwt_payload.id);
     console.log(user);
     user.Role = "TeamLeader";
     let teamId = uid();
@@ -41,14 +41,14 @@ team.post("/create", jwtVerify, async (req, res) => {
   // return 0;
 });
 
-team.get("/join", jwtVerify, async (req, res) => {
+team.get("/join", async (req, res) => {
   try {
     const { teamid } = req.query;
     if (teamid == null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
 
-    const user = await User.findOne({ Id: req.jwt_payload.id });
+    const user = await User.findById(req.jwt_payload.id);
     user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
     existingTeam.members.push(user);
