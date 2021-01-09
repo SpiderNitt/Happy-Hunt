@@ -82,7 +82,16 @@ player.post("/login", playerLoginValidator, async (req, res) => {
       return res.status(400).json({ message: "User does not exist" });
     const token = createJWTtoken(user);
     req.session.token = token;
-    return res.status(200).json({ JWTtoken: token });
+    return res.status(200).json(user);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
+player.get("/logout", async (req, res) => {
+  try {
+    req.session.destroy();
+    return res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
