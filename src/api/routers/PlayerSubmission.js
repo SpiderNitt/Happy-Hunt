@@ -114,7 +114,7 @@ player.post(
           let { points } = await Team.findById(team);
           const marks = maxPoints - hintsTaken * 20;
           points += marks;
-          const teamResult = await Team.findByIdAndUpdate(team, { points });
+          const teamResult = await Team.updateOne({ _id: team }, { points });
           if (teamResult.nModified !== 1)
             return res.status(404).json({ message: "Team score not updated" });
           result = await Activity.updateOne(

@@ -70,6 +70,10 @@ player.post("/verify", async (req, res) => {
 });
 player.post("/login", playerLoginValidator, async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const { userId, password } = req.body;
     if (!userId || !password)
       return res.status(400).json({ message: "Enter all fields" });
