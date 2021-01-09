@@ -14,7 +14,7 @@ module.exports = {
     body("phoneNo").isString().notEmpty(),
   ],
   playerLoginValidator: [
-    body("emailId").isEmail().notEmpty(),
+    body("userId").isEmail().notEmpty(),
     body("password").isString().notEmpty(),
   ],
   MissionValidator: [
