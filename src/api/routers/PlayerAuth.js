@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
 const {
   playerRegisterValidator,
+  playerLoginValidator,
 } = require("../../middlewares/expressValidator");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
@@ -67,7 +68,7 @@ player.post("/verify", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-player.post("/login", async (req, res) => {
+player.post("/login", playerLoginValidator, async (req, res) => {
   try {
     const { userId, password } = req.body;
     if (!userId || !password)
