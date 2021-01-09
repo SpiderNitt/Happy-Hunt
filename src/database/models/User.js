@@ -37,6 +37,7 @@ const UserSchema = new mongoose.Schema({
       type: Number,
     },
   },
+  otpId: String,
   active: Boolean,
 });
 module.exports = mongoose.model("User", UserSchema);

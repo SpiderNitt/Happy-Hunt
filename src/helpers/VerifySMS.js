@@ -4,7 +4,7 @@ const options = (data) => ({
   method: "POST",
   url: "https://d7networks.com/api/verifier/verify",
   headers: {
-    Authorization: "Token e502106fa304c9d842f357ceee0bc500b6393109",
+    Authorization: `Token ${process.env.D7_TOKEN}`,
   },
   formData: data,
 });
@@ -16,18 +16,23 @@ const body = (OtpID, OtpCode) => ({
 });
 
 const apiAction = async (option) => {
-  request(option, (error, response) => {
-    if (error) throw new Error(error);
-    console.log(response.body);
-  });
+  try {
+    await request(option, async (err, response) => {
+      const result = JSON.parse(response.body);
+      if (result.status !== "success") {
+        return true;
+      }
+      return false;
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 const VerifyOtp = async (OtpID, OtpCode) => {
   const userbody = body(OtpID, OtpCode);
-
-  await apiAction(options(userbody.data));
+  const result = await apiAction(options(userbody.data));
+  console.log(result);
+  return result;
 };
-VerifyOtp("23d33259-77fe-4f94-a6e6-443d11097e6c", 194691);
 
-/* module.exports = {
-  VerifyOtp,
-}; */
+module.exports = VerifyOtp;
