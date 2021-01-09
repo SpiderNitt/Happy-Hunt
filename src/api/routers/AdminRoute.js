@@ -1,5 +1,6 @@
 const Router = require("express").Router();
 const cryptoRandomString = require("crypto-random-string");
+const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const User = require("../../database/models/User");
 const {
@@ -34,11 +35,12 @@ Router.post("/createAdmin", AdminCreateValidator, async (req, res) => {
         type: "alphanumeric",
       });
       console.log("password", adminpassword);
+      const password = bcrypt.hash(adminpassword, process.env.TOKEN_SECRET);
 
       await User.create({
         Id: emailId,
         Role: "admin",
-        password: adminpassword,
+        password,
         active: true,
       });
       return res

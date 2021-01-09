@@ -1,5 +1,6 @@
 const commonAuth = require("express").Router();
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcrypt");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { loginValidator } = require("../../middlewares/expressValidator");
@@ -13,12 +14,14 @@ commonAuth.post("/login", loginValidator, async (req, res) => {
     const { id, password } = req.body;
     if (!id || !password)
       return res.status(400).json({ message: "Enter all fields" });
-    const user = await User.findOne({ Id: id, password, active: true });
+    const user = await User.findOne({ Id: id, active: true });
     if (user === undefined || user === null)
       return res.status(400).json({ message: "User does not exist" });
+    if (!bcrypt.compare(password, user.password))
+      return res.status(400).json({ message: "Incorrect password" });
     const token = createJWTtoken(user);
     req.session.token = token;
-    return res.status(200).json(user);
+    return res.status(200).json({ JWTToken: token });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
