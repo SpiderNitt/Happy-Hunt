@@ -1,10 +1,11 @@
 const request = require("request");
+const User = require("../database/models/User");
 
 const options = (data) => ({
   method: "POST",
   url: "https://d7networks.com/api/verifier/send",
   headers: {
-    Authorization: `Token 20b6a5a40e2cbed784bcbc2932b40cfa7c50296c`,
+    Authorization: `Token ${process.env.D7_TOKEN}`,
   },
   formData: data,
 });
@@ -16,20 +17,22 @@ const body = (mobileNo) => ({
     expiry: "900",
   },
 });
-const apiAction = async (option) => {
-  request(option, (error, response) => {
+const apiAction = async (option, mobileNo) => {
+  request(option, async (error, response) => {
     if (error) throw new Error(error);
-    console.log(response.body);
+    const result = JSON.parse(response.body);
+    const res = await User.updateOne(
+      { phoneNo: mobileNo },
+      { otpId: result.otp_id }
+    );
+    if (result.status === "open" && res.nModified === 1) return true;
+    return false;
   });
 };
 
 const sendOtp = async (mobileNo) => {
   const userbody = body(mobileNo);
-
-  await apiAction(options(userbody.data));
+  await apiAction(options(userbody.data), mobileNo);
 };
-sendOtp(7768089260);
 
-/* module.exports = {
-  sendOtp,
-}; */
+module.exports = sendOtp;
