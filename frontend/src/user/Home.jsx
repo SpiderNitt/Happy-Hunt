@@ -5,7 +5,6 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Rules from './Rules';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import Routes from '../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     flexDirection: 'column',
   },
+  video: {
+    width: '100%',
+    height: 200,
+  }
 }));
 
 
@@ -41,20 +44,20 @@ function Home(props) {
     };
   
     return (
-        <div className={classes.welcome}>
-            <h1>Welcome!</h1>
-            <div>
-          <h3>Happy Hunt Challenge</h3>
-            {/* <Button href="/register" variant="outlined" color="secondary">Register</Button> */}
-         
-            <Button variant="outlined" color="secondary" onClick={handleOpen}>start</Button>
-            <br/>
-            <br/>
-             {/* this will show a video */}
-             <Button style={{margin:25}}>
-              <PlayCircleFilledIcon style={{fontSize:60, color:"#F96377"}}/>
-            </Button>
-            <p style={{margin:5, fontFamily:"tahoma", fontStyle:"italic", color:"gray"}}>How to play?</p>
+    <div className={classes.welcome}>
+      <h1>Welcome!</h1>
+      <div>
+      <h3>Happy Hunt Challenge</h3>
+      <Button variant="outlined" color="secondary" onClick={handleOpen}>start</Button>
+      <br/>
+      <br/>
+      <iframe 
+      title="howToPlay"
+      className={classes.video} 
+      src="https://www.youtube.com/embed/4FGj5MTLGFs" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen></iframe>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -73,13 +76,12 @@ function Home(props) {
             <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
                 Start Game !
             </Button>
-            
           </div>
         </Fade>
       </Modal>
     </div>
-    </div>
-    );
+  </div>
+  );
 }
 
 export default Home;
