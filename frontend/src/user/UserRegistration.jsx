@@ -7,12 +7,15 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 import ErrorMessage from '../components/ErrorMessage';
 import { userRegister } from '../api/auth';
 import AlertMessage from '../components/AlertMessage';
+import { withRouter } from 'react-router-dom';
+import Routes from '../utils/routes';
 
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label("User name"),
   email: Yup.string().required().email().label("Email"),
   phoneNo: Yup.number().required().label("Mobile Number"),
+  password: Yup.string().required().min(6).label("Password")
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -47,15 +50,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function UserRegistration() {
+export default function UserRegistration(props) {
   const [info, setInfo] = useState('');
   const classes = useStyles();
 
-  const handleSubmit = async ({ username, email, phoneNo },{ resetForm }) => {
+  const handleSubmit = async ({ username, email, phoneNo, password },{ resetForm }) => {
     const body = {
       name:username,
       emailId:email, 
-      phoneNo:phoneNo
+      phoneNo:phoneNo,
+      password:password,
     }
     const response = await userRegister(body);
     if(!response.ok){
@@ -67,6 +71,7 @@ export default function UserRegistration() {
     console.log(response.data.message);
     setInfo(response.data.message);
     resetForm();
+    props.history.push(`${Routes.USER_VERIFY}?mobileNo=${phoneNo}`);
   }
 
   return (
@@ -81,7 +86,7 @@ export default function UserRegistration() {
           Register
         </Typography>
         <Formik
-        initialValues={{ username: '', email: '', phoneNo: 0 }}
+        initialValues={{ username: '', email: '', phoneNo: '', password: '' }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         >
@@ -124,6 +129,18 @@ export default function UserRegistration() {
                 />
                 <ErrorMessage visible={touched.phoneNo} error={errors.phoneNo} />
               </Grid>
+              <Grid item xs={12}>
+                <TextField 
+                  type="password" 
+                  name="password" 
+                  label="Password"
+                  variant="outlined"
+                  value={values.password}
+                  onChange={e => setFieldValue( "password", e.target.value)}
+                  className={classes.TextField} 
+                />
+                <ErrorMessage visible={touched.password} error={errors.password} />
+              </Grid>
             </Grid>
             <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
               Register
@@ -135,3 +152,5 @@ export default function UserRegistration() {
     </Container>
   );
 }
+
+const UserRegistrationRoute = withRouter(UserRegistration);

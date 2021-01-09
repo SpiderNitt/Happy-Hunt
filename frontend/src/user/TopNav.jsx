@@ -3,12 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Home } from '@material-ui/icons';
 import Button from "@material-ui/core/Button";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Routes from '../utils/routes';
+import { HeadsetMicOutlined } from '@material-ui/icons';
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,8 +16,9 @@ const useStyles = makeStyles((theme) => ({
 
   title: {
     flexGrow: 1,
-    fontWeight: 800,
-    color: "#95B9C7"
+    fontWeight: 600,
+    textAlign: 'left',
+    color: 'white',
   },
   modal: {
     display: "flex",
@@ -42,47 +42,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   return (
     <div className={classes.root}>
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} component={Link} href={Routes.HOME}>
             Happy Hunt
           </Typography>
-          <Button onClick={handleOpen} color="inherit">
+          <Button href={Routes.USER_PROFILE} color="inherit">
             <AccountCircleIcon />
           </Button>
+          <Button href='https://wa.me/message/7QS3UAEIVPFVC1' target="_blank" color="inherit">
+            <HeadsetMicOutlined />
+          </Button>
         </Toolbar>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          className={classes.modal}
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500
-          }}
-        >
-          <Fade in={open}>
-            <div className={classes.paper}>
-
-            <Button href="/profile" className={classes.button}>Profile</Button>
-              <Button href="/exit" className={classes.button}>Exit Game</Button>
-
-            </div>
-          </Fade>
-        </Modal>
       </AppBar>
     </div>
   );

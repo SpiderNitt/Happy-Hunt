@@ -12,7 +12,6 @@ const RenderClues=(clue , index)=> {
    const classes= useStyles();
    
     return (
-      
       <Card key={index} style={{ marginBottom: 10, padding: 10 }}>
         <CardContent>
           <div className={classes.container}>
@@ -22,8 +21,6 @@ const RenderClues=(clue , index)=> {
             
             <Chip size="small" label={clue.isSolved? "solved" : "unsolved" } />
           </div>
-
-          
         </CardContent>
         <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
           <Button variant="contained" size="small" href="/photo-clue">View</Button>
@@ -38,9 +35,6 @@ const RenderClues=(clue , index)=> {
 function Clues() {
     return (
       <Container maxWidth="md">
-        {/* <div className="grid">
-            {clueData.map(RenderClues)}
-        </div>  */}
         <Grid item xs={12}>
           {clueData.map(RenderClues)}
         </Grid>
