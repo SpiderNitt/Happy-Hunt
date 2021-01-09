@@ -1,8 +1,8 @@
 const auth = require("express").Router();
-const AdminRouter = require("./routers/AdminAuth");
 const player = require("./routers/PlayerAuth");
+const commonAuth = require("./routers/common_auth");
 
-auth.use("/admin", AdminRouter);
 auth.use("/player", player);
+auth.use("/", commonAuth);
 
 module.exports = auth;
