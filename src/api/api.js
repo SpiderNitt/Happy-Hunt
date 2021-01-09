@@ -5,6 +5,7 @@ const team = require("./routers/teamRouter");
 const Admin = require("./routers/AdminRoute");
 const GetActivities = require("./routers/activity");
 const playerSubmission = require("./routers/PlayerSubmission");
+const countDown = require("./routers/countdown");
 const { jwtVerify } = require("../middlewares/jwt");
 
 api.use("/", jwtVerify);
@@ -12,7 +13,7 @@ api.use("/", jwtVerify);
 // comman route
 api.use("/scoreboard", scoreboard);
 api.use("/activity", GetActivities);
-
+api.use("/countdown", countDown);
 // team routes
 api.use("/team", team);
 
