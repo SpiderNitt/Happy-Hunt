@@ -39,6 +39,7 @@ Router.post("/createAdmin", AdminCreateValidator, async (req, res) => {
         Id: emailId,
         Role: "admin",
         password: adminpassword,
+        active: true,
       });
       return res
         .status(200)

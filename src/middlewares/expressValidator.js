@@ -2,10 +2,6 @@ const { body } = require("express-validator");
 const { isValidObjectId } = require("mongoose");
 
 module.exports = {
-  AdminLoginValidator: [
-    body("emailId").isEmail().notEmpty(),
-    body("password").isString().notEmpty(),
-  ],
   AdminCreateValidator: [body("emailId").isEmail().notEmpty()],
   playerRegisterValidator: [
     body("name").isString().notEmpty(),
@@ -13,8 +9,8 @@ module.exports = {
     body("password").isString().notEmpty(),
     body("phoneNo").isString().notEmpty(),
   ],
-  playerLoginValidator: [
-    body("emailId").isEmail().notEmpty(),
+  loginValidator: [
+    body("id").isEmail().notEmpty(),
     body("password").isString().notEmpty(),
   ],
   MissionValidator: [

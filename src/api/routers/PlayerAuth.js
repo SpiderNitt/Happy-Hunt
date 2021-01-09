@@ -1,12 +1,10 @@
 const player = require("express").Router();
 const { validationResult } = require("express-validator");
-const nodemailer = require("nodemailer");
 const {
   playerRegisterValidator,
 } = require("../../middlewares/expressValidator");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
-const { async } = require("crypto-random-string");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
@@ -67,20 +65,5 @@ player.post("/verify", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-player.post("/login", async (req, res) => {
-  try {
-    const { userId, password } = req.body;
-    if (!userId || !password)
-      return res.status(400).json({ message: "Enter all fields" });
-    const user = await User.findOne({ Id: userId, password, active: true });
-    if (user === undefined || user === null)
-      return res.status(400).json({ message: "User does not exist" });
-    const token = createJWTtoken(user);
-    req.session.token = token;
-    return res.status(200).json({ JWTtoken: token });
-  } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
-  }
-});
+
 module.exports = player;

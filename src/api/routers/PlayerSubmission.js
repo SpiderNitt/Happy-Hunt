@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const multer = require("multer");
 const player = require("express").Router();
+const geolib = require("geolib");
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
 const Team = require("../../database/models/Team");
@@ -17,8 +18,7 @@ player.post(
       if (!mission) return res.status(400).json({ message: "Fill all fields" });
       const submit = await Mission.findById(mission);
       const answerType = submit.answer_Type;
-      const { Category, visibility, serverEvaluation, maxMarks } = submit;
-      console.log(req.file);
+      const { Category, visibility, ServerEvaluation, maxPoints } = submit;
       if (answerType === undefined || answerType === null) {
         return res.status(404).json({ message: "Mission not found" });
       }
@@ -26,7 +26,7 @@ player.post(
       try {
         switch (answerType) {
           case "Picture": {
-            if (req.file.buffer === undefined || req.file.buffer == null)
+            if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No picture submission" });
             answer = req.file.buffer.toString("base64");
             break;
@@ -39,28 +39,27 @@ player.post(
             break;
           }
           case "Video": {
-            if (req.file.buffer === undefined || req.file.buffer == null)
+            if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
             answer = req.file.buffer.toString("base64");
             break;
           }
           case "Picture and Location": {
-            if (req.file.buffer === undefined || req.file.buffer == null)
+            if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No picture submission" });
-            const { lat, lon } = submit.location;
+            const { Lat, Long } = submit.Location;
+            const lat = Lat.toString();
+            const lon = Long.toString();
             const { latSub, lonSub } = req.body;
-            const distance =
-              3963.0 *
-              Math.acos(
-                Math.sin(lat / 57.295) * Math.sin(latSub / 57.295) +
-                  Math.cos(lat / 57.295) *
-                    Math.cos(latSub / 57.295) *
-                    Math.cos((lon - lonSub) / 57.295)
-              );
-            if (distance < 0.5)
+            const distance = geolib.getDistance(
+              { latitude: lat, longitude: lon },
+              { latitude: latSub, longitude: lonSub }
+            );
+            console.log(distance);
+            if (distance > 5000)
               return res
                 .status(200)
-                .json({ message: "U havent reached the location" });
+                .json({ message: "You haven't reached the location" });
             answer = req.file.buffer.toString("base64");
             break;
           }
@@ -71,7 +70,7 @@ player.post(
           }
         }
         let result;
-        if (serverEvaluation && answerType === "Text") {
+        if (ServerEvaluation && answerType === "Text") {
           const originalAnswer = submit.answer;
           let rightAnswer = false;
           for (let i = 0; i < originalAnswer.length; i += 1) {
@@ -80,13 +79,15 @@ player.post(
             }
           }
           if (rightAnswer) {
-            const { hintsTaken } = await Activity.findOne(mission, team, {
+            const { hintsTaken } = await Activity.findOne({
+              mission,
+              team,
               isSubmitted: false,
             });
             let { points } = await Team.findById(team);
-            const marks = maxMarks - hintsTaken * 20;
+            const marks = maxPoints - hintsTaken * 20;
             points += marks;
-            const teamResult = await Team.findByIdAndUpdate(team, { points });
+            const teamResult = await Team.updateOne({ _id: team }, { points });
             if (teamResult.nModified !== 1)
               return res
                 .status(404)
@@ -104,14 +105,16 @@ player.post(
           } else {
             return res.status(200).json({ message: "Your answer is wrong" });
           }
-        } else if (serverEvaluation) {
-          const { hintsTaken } = await Activity.findOne(mission, team, {
+        } else if (ServerEvaluation) {
+          const { hintsTaken } = await Activity.findOne({
+            mission,
+            team,
             isSubmitted: false,
           });
           let { points } = await Team.findById(team);
-          const marks = maxMarks - hintsTaken * 20;
+          const marks = maxPoints - hintsTaken * 20;
           points += marks;
-          const teamResult = await Team.findByIdAndUpdate(team, { points });
+          const teamResult = await Team.updateOne({ _id: team }, { points });
           if (teamResult.nModified !== 1)
             return res.status(404).json({ message: "Team score not updated" });
           result = await Activity.updateOne(
@@ -144,8 +147,8 @@ player.post(
         }
         return res.status(404).json({ message: "Activity not found" });
       } catch (error) {
-        console.log(error.message);
-        return res.status(416).json({ message: "File upload issue" });
+        console.log(error);
+        return res.status(416).json({ message: "Cannot submit answer" });
       }
     } catch (error) {
       console.log(error);
@@ -226,10 +229,9 @@ player.get("/mission", async (req, res) => {
       if (!activity) {
         await Activity.create({
           team: req.jwt_payload.team,
-          ShouldBeShown: false,
+          isSubmitted: false,
           likes: 0,
           mission: allMissions[i],
-
           hintsTaken: 0,
         });
       }
