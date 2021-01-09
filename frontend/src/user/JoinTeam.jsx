@@ -1,15 +1,14 @@
-import { Button, Container, Grid, Link, makeStyles, TextField, Typography } from '@material-ui/core';
-import { MessageOutlined } from '@material-ui/icons';
+import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core';
+import { GroupAdd } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import ErrorMessage from '../components/ErrorMessage';
 import * as Yup from "yup";
 import { userMobileNoVerify } from '../api/auth';
 import Routes from '../utils/routes';
-const queryString = require('query-string');
 
 const validationSchema = Yup.object().shape({
-    otp: Yup.string().required().label("OTP"),
+    teamId: Yup.string().required().label("Team ID"),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -38,13 +37,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function VerificationEmail(props) {
+function JoinTeam(props) {
     const styles = useStyles();
-    const parsed = queryString.parse(props.location.search);
-    const handleSubmit = async({otp}, { resetForm }) => {
-        const body = {
-            mobileNo:parsed.mobileNo,   
-            otp:otp
+    const handleSubmit = async({teamId}, { resetForm }) => {
+        const body = {   
+            teamId:teamId
         }
         const response = await userMobileNoVerify(body);
         if(!response.ok){
@@ -54,15 +51,15 @@ function VerificationEmail(props) {
         }
         console.log(response.data);
         resetForm();
-        props.history.push(Routes.HOME);
+        props.history.push(Routes.USER_PROFILE);
     }
     return (
         <Container className={styles.root}>
             <div style={{ fontSize: 50 }}>
-                <MessageOutlined fontSize="inherit" />
+                <GroupAdd fontSize="inherit" />
             </div>
             <Formik
-            initialValues={{ otp: '' }}
+            initialValues={{ teamId: '' }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             >
@@ -72,36 +69,24 @@ function VerificationEmail(props) {
                     <Grid item xs={12}>
                     <TextField 
                         type="text" 
-                        name="otp" 
-                        label="OTP" 
+                        name="teamId" 
+                        label="Team ID" 
                         variant="outlined" 
                         value={values.otp}
-                        onChange={e => setFieldValue( "otp", e.target.value)}
+                        onChange={e => setFieldValue( "teamId", e.target.value)}
                         className={styles.TextField} 
                     />
-                    <ErrorMessage visible={touched.otp} error={errors.otp} />
+                    <ErrorMessage visible={touched.teamId} error={errors.teamId} />
                     </Grid>
                 </Grid>
                 <Button type="submit" variant="outlined" color="secondary" fullWidth className={styles.submit}>
-                Verify
+                Join
                 </Button>
                 </Form>
             )}
             </Formik>
-            <Typography variant="button" style={{ marginTop: 30, fontWeight: 'bold' }}>
-                Verify your Mobile Number
-            </Typography>
-            <Link
-            component="button"
-            variant="body1"
-            onClick={() => {
-                console.info("resent email!!");
-            }}
-            >
-                resend OTP
-            </Link>
         </Container>
     );
 }
 
-export default VerificationEmail;
+export default JoinTeam;

@@ -1,11 +1,14 @@
 const Routes = {
   WELCOME: "/",
   USER_REGISTER: "/user/register",
+  USER_VERIFY: "/user/verify",
   USER_LOGIN: "/user/login",
   HOME: "/user/home",
   USER_PROFILE: "/user/profile",
   USER_CLUES: "/user/happy-hunt/clues",
   USER_ACTIVITY: "/user/happy-hunt/activities",
+  USER_REGISTER_TEAM: "/user/happy-hunt/register/team",
+  USER_JOIN_TEAM: "/user/happy-hunt/join/team",
   USER_LEADERBOARD: "/user/happy-hunt/leaderboard",
   ADMIN_LOGIN: "/admin/login",
   ADMIN_ADD: "/admin/add-admin",
@@ -16,7 +19,7 @@ const Routes = {
   ADMIN_MISSION_EDIT: "/admin/mission/edit",
   ADMIN_NOTIFICATION: "/admin/notification",
   ADMIN_NEW_MISSION: "/admin/mission/new",
-  ADMIN_ACTIVITY_FEED: "/admin/activity"
+  ADMIN_ACTIVITY_FEED: "/admin/activity",
 };
 
 export default Routes;
