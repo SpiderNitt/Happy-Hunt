@@ -7,3 +7,5 @@ const Notification = async (rec, notification, id) => {
     io.emit(`Admin ${id}`, { notification });
   }
 };
+
+module.exports = Notification;
