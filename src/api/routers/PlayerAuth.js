@@ -8,6 +8,8 @@ const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const sendSMS = require("../../helpers/SendSMS");
 const verifySMS = require("../../helpers/VerifySMS");
+const VerifyOtp = require("../../helpers/verify");
+const { async } = require("crypto-random-string");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
@@ -62,10 +64,37 @@ player.post("/verify", async (req, res) => {
     const user = await User.findOne({ phoneNo: mobileNo });
     if (!user) return res.status(400).json({ message: "User not registered" });
     // console.log(await verifySMS(user.otpId, otp));
-    if (!(await verifySMS(user.otpId, otp))) {
+    const finaldata = { value: "" };
+    const someCallBack = async (data) => {
+      finaldata.value = data;
+      console.log(finaldata, "from auth");
+      const result1 = JSON.parse(finaldata.value);
+      console.log(result1.status);
+      if (result1.status !== "success") {
+        return res.status(400).json({ message: "OTP incorrect" });
+      }
+      const result = await User.findOneAndUpdate(
+        { phoneNo: mobileNo },
+        { active: true },
+        { new: true }
+      );
+      if (result === null) {
+        return res.status(400).json({ message: "User not found" });
+      }
+      if (result.active === false) {
+        return res.status(400).json({ message: "User unable to verify" });
+      }
+      const token = createJWTtoken(result);
+      req.session.token = token;
+      return res.status(200).json({ JWTtoken: token });
+    };
+
+    await VerifyOtp(user.otpId, otp, someCallBack);
+
+    /* if (!(await verifySMS(user.otpId, otp))) {
       return res.status(400).json({ message: "OTP incorrect" });
-    }
-    const result = await User.findOneAndUpdate(
+    } */
+    /* const result = await User.findOneAndUpdate(
       { phoneNo: mobileNo },
       { active: true },
       { new: true }
@@ -78,7 +107,7 @@ player.post("/verify", async (req, res) => {
     }
     const token = createJWTtoken(result);
     req.session.token = token;
-    return res.status(200).json({ JWTtoken: token });
+    return res.status(200).json({ JWTtoken: token }); */
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });

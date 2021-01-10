@@ -1,4 +1,5 @@
 const request = require("request");
+const { https } = require("follow-redirects");
 
 const options = (data) => ({
   method: "POST",
@@ -17,7 +18,7 @@ const body = (OtpID, OtpCode) => ({
 
 const apiAction = async (option) => {
   try {
-    await request(option, async (err, response) => {
+    request(option, async (err, response) => {
       const result = JSON.parse(response.body);
       if (result.status !== "success") {
         return true;
