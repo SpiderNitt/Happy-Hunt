@@ -21,7 +21,6 @@ import UserLogin from "../UserLogin";
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
 import ProfilePage from "../user/ProfilePage";
-import JoinTeam from "../user/JoinTeam";
 
 
 function UserNav() {
@@ -31,27 +30,21 @@ function UserNav() {
       <div>
         <Switch>
           <Route path={Routes.WELCOME} exact component={GameIntro}/>
-          
+          <Route path={Routes.HOME} exact component={Home}/>
           <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
           <Route path={Routes.USER_LOGIN} component={UserLogin}/>
-          <Route path={Routes.USER_VERIFY} component={VerificationEmail}/>
-          <Route path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>
-          <Route path={Routes.USER_JOIN_TEAM} component={JoinTeam}/>
+          <Route path="/verify" component={VerificationEmail}/>
+          <Route path="/register-team" component={CreateTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>
           <Route path="/photo" exact component={Capture}/>
           <Route path="/location-clue" component={LocationClues}/>
           <Route path="/text-clue" component={TextClues}/>
-          <Route path={Routes.HOME} exact>
-            <TopNav />
-            <div style={{ marginTop: 70 }}>
-                <Home />
-            </div>
-          </Route>
-          <Route path={Routes.USER_PROFILE} exact>
+          <Route path="/profile" exact>
             <TopNav />
             <div style={{ marginTop: 70 }}>
                 <ProfilePage />
             </div>
+
           </Route>
           <Route path="/happy-hunt" exact>
               <TopNav />
