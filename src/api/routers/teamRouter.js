@@ -69,9 +69,9 @@ team.get("/join", async (req, res) => {
 
 team.post("/location", async (req, res) => {
   try {
-    const user = await User.findOne({ Id: req.jwt_payload.id });
+    const user = await User.findById(req.jwt_payload.id);
     if (user.Role === "TeamLeader") {
-      const theTeam = await Team.findOne({ Id: req.jwt_payload.Team });
+      const theTeam = await Team.findById(req.jwt_payload.team);
       //       GeolocationPosition {coords: GeolocationCoordinates, timestamp: 1610034540979}
       // coords: GeolocationCoordinates
       // accuracy: 215723

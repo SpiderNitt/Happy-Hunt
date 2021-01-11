@@ -10,7 +10,7 @@ module.exports = {
     body("phoneNo").isString().notEmpty(),
   ],
   loginValidator: [
-    body("id").isEmail().notEmpty(),
+    body("emailId").isEmail().notEmpty(),
     body("password").isString().notEmpty(),
   ],
   MissionValidator: [

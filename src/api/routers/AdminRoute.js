@@ -25,7 +25,7 @@ Router.post("/createAdmin", AdminCreateValidator, async (req, res) => {
     }
     if (emailId !== undefined) {
       // creating random password
-      const user = await User.findOne({ Id: emailId });
+      const user = await User.findOne({ emailId });
       if (user) {
         return res.status(403).json({ message: "user already exists" });
       }
@@ -36,7 +36,7 @@ Router.post("/createAdmin", AdminCreateValidator, async (req, res) => {
       console.log("password", adminpassword);
 
       await User.create({
-        Id: emailId,
+        emailId,
         Role: "admin",
         password: adminpassword,
         active: true,
@@ -67,11 +67,11 @@ Router.delete("/deleteAdmin", AdminCreateValidator, async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
     if (emailId !== undefined) {
-      if (!(await User.findOne({ Id: emailId }))) {
+      if (!(await User.findOne({ emailId }))) {
         return res.status(404).json({ message: "no such user found" });
       }
 
-      await User.deleteOne({ Id: emailId });
+      await User.deleteOne({ emailId });
       return res.status(200).json({ message: "user deleted sucessfully" });
     }
     return res.status(401).json({ message: "emailId provided was undefined" });

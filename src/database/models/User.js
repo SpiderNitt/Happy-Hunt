@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   Role: { type: String, required: true }, // TeamLeader , TeamMember , Admin , SuperAdmin,
-  Id: {
+  emailId: {
     type: String,
     required: true,
     unique: true,
