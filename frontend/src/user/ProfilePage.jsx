@@ -1,6 +1,8 @@
 import { Avatar, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
-import { Edit, ExitToApp } from '@material-ui/icons';
+import { Add, Edit, ExitToApp, GroupAdd } from '@material-ui/icons';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Routes from '../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,7 +72,19 @@ function ProfilePage(props) {
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
-                <ListItem style={{ marginTop: 20, marginBottom: 20 }}>
+                <ListItem style={{ marginTop: 20 }} component={Link} to={Routes.USER_REGISTER_TEAM}>
+                    <ListItemIcon>
+                        <Add />
+                    </ListItemIcon>
+                        <ListItemText primary="Create Team" />
+                    </ListItem>
+                <ListItem component={Link} to={Routes.USER_JOIN_TEAM}>
+                <ListItemIcon>
+                    <GroupAdd />
+                </ListItemIcon>
+                    <ListItemText primary="Join Team" />
+                </ListItem>
+                <ListItem style={{ marginBottom: 20 }} component={Link} to={Routes.WELCOME}>
                 <ListItemIcon>
                     <ExitToApp />
                 </ListItemIcon>
