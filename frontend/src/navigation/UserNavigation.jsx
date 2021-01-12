@@ -17,10 +17,11 @@ import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
 
 import VerificationEmail from "../user/VerificationEmail";
-import UserLogin from "../UserLogin";
+import UserLogin from "../user/UserLogin";
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
 import ProfilePage from "../user/ProfilePage";
+import JoinTeam from "../user/JoinTeam";
 
 
 function UserNav() {
@@ -33,13 +34,14 @@ function UserNav() {
           <Route path={Routes.HOME} exact component={Home}/>
           <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
           <Route path={Routes.USER_LOGIN} component={UserLogin}/>
-          <Route path="/verify" component={VerificationEmail}/>
-          <Route path="/register-team" component={CreateTeam}/>
+          <Route path={Routes.USER_VERIFY} component={VerificationEmail}/>
+          <Route path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>
+          <Route path={Routes.USER_JOIN_TEAM} component={JoinTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>
           <Route path="/photo" exact component={Capture}/>
           <Route path="/location-clue" component={LocationClues}/>
           <Route path="/text-clue" component={TextClues}/>
-          <Route path="/profile" exact>
+          <Route path={Routes.USER_PROFILE} exact>
             <TopNav />
             <div style={{ marginTop: 70 }}>
                 <ProfilePage />
@@ -74,10 +76,9 @@ function UserNav() {
                   <Leaderboard />
               </Container>
           </Route>
-          <Route path="/notification" exact>
+          <Route path={Routes.USER_NOTIFICATION} exact>
               <TopNav />
-              <div style={{ marginTop: 70 }}><NavBar select="notification" /></div>
-              <Container style={{ marginTop: 10 }}>
+              <Container style={{ marginTop: 70 }}>
                   <Notifications />
               </Container>
           </Route>

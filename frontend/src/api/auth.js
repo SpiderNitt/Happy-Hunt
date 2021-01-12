@@ -6,5 +6,7 @@ export const userRegister = (body) =>
 export const userMobileNoVerify = (body) =>
   client.post("/auth/player/verify", body);
 
+export const userLogin = (body) => client.post("/auth/login", body);
+
 export const AdminRegister = (email) =>
   client.post("/auth/create_admin", { emailId: email });

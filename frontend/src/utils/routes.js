@@ -7,6 +7,7 @@ const Routes = {
   USER_PROFILE: "/user/profile",
   USER_CLUES: "/user/happy-hunt/clues",
   USER_ACTIVITY: "/user/happy-hunt/activities",
+  USER_NOTIFICATION: "/user/happy-hunt/notifications",
   USER_REGISTER_TEAM: "/user/happy-hunt/register/team",
   USER_JOIN_TEAM: "/user/happy-hunt/join/team",
   USER_LEADERBOARD: "/user/happy-hunt/leaderboard",
