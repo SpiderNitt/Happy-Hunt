@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowForward } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
 import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography, Avatar } from '@material-ui/core';
 
-import ErrorMessage from './components/ErrorMessage';
+import ErrorMessage from '../components/ErrorMessage';
+import { userLogin } from '../api/auth';
+import AlertMessage from '../components/AlertMessage';
+import Routes from '../utils/routes';
+import { withRouter } from 'react-router';
 
 
 const validationSchema = Yup.object().shape({
@@ -40,13 +44,30 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function UserLogin() {
+export default function UserLogin(props) {
+  const [info, setInfo] = useState('');
   const classes = useStyles();
-
-
+  const handleSubmit = async({ email, password },{ resetForm }) => {
+    const body = {
+      id:email,
+      password:password
+    }
+    const response = await userLogin(body);
+    if(!response.ok){
+      console.log(response.problem);
+      console.log(response.data);
+      // setInfo(response.data);
+      return;
+    }
+    console.log(response.data);
+    // setInfo(response.data);
+    resetForm();
+    props.history.push(Routes.HOME);
+  }
   return (
     <Container component="main" maxWidth="xs">
     <CssBaseline />
+    {info && <AlertMessage message={info} setInfo={setInfo} />}
     <div className={classes.paper}>
         <Avatar className={classes.avatar} sizes='large' >
           <ArrowForward style={{ fontSize: 40 }} />
@@ -57,7 +78,7 @@ export default function UserLogin() {
         <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         >
         {({ setFieldValue, errors, touched, values }) => (
           <Form className={classes.form}>
@@ -97,3 +118,5 @@ export default function UserLogin() {
     </Container>
   );
 }
+
+const UserLoginRoute = withRouter(UserLogin);
