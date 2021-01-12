@@ -1,5 +1,6 @@
 const player = require("express").Router();
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcrypt");
 const {
   playerRegisterValidator,
 } = require("../../middlewares/expressValidator");
@@ -9,6 +10,7 @@ const { createJWTtoken } = require("../../middlewares/jwt");
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
     const { name, emailId, phoneNo, password } = req.body;
+    const pwd = bcrypt.hash(password, process.env.TOKEN_SECRET);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -22,7 +24,7 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       emailId,
       phoneNo,
       name,
-      password,
+      password: pwd,
       active: false,
       Role: "Player",
     });
