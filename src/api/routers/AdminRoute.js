@@ -35,7 +35,10 @@ Router.post("/createAdmin", AdminCreateValidator, async (req, res) => {
         type: "alphanumeric",
       });
       console.log("password", adminpassword);
-      const password = bcrypt.hash(adminpassword, process.env.TOKEN_SECRET);
+      const password = await bcrypt.hash(
+        adminpassword,
+        parseInt(10, process.env.TOKEN_SECRET)
+      );
 
       await User.create({
         emailId,
