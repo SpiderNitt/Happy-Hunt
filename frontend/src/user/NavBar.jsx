@@ -25,7 +25,6 @@ export default function NavBar({ select }) {
         <Tab icon={<Search />} component={Link} to={Routes.USER_CLUES} value="clue" />
         <Tab icon={<ShowChart />} component={Link} value="activity" to={Routes.USER_ACTIVITY} />
         <Tab icon={<BarChart />} component={Link} value="scoreboard" to={Routes.USER_LEADERBOARD} />
-        <Tab icon={<Notifications />} component={Link} value="notification" to={'/notification'} />
       </Tabs>
     </Paper>
   );

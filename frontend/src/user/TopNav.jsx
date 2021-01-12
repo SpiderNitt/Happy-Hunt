@@ -6,8 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from "@material-ui/core/Button";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Routes from '../utils/routes';
-import { HeadsetMicOutlined } from '@material-ui/icons';
-import { Link } from '@material-ui/core';
+import { HeadsetMicOutlined, Notifications } from '@material-ui/icons';
+import { Link, Tab } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,8 +52,8 @@ export default function ButtonAppBar() {
           <Button href={Routes.USER_PROFILE} color="inherit">
             <AccountCircleIcon />
           </Button>
-          <Button href='https://wa.me/message/7QS3UAEIVPFVC1' target="_blank" color="inherit">
-            <HeadsetMicOutlined />
+          <Button href={Routes.USER_NOTIFICATION} color="inherit">
+            <Notifications />
           </Button>
         </Toolbar>
       </AppBar>
