@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import React, { useContext } from "react";
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import Home from "../user/Home";
 import UserRegistration from "../user/UserRegistration";
 import TopNav from "../user/TopNav";
@@ -22,19 +22,25 @@ import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
 import ProfilePage from "../user/ProfilePage";
 import JoinTeam from "../user/JoinTeam";
+import AuthContext from "../api/authContext";
+import { getToken } from "../api/storage";
 
 
 function UserNav() {
-
+    const authContext = useContext(AuthContext);
+    console.log(authContext)
     return (
     <Router>
       <div>
         <Switch>
-          <Route path={Routes.WELCOME} exact component={GameIntro}/>
-          <Route path={Routes.HOME} exact component={Home}/>
+
           <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
           <Route path={Routes.USER_LOGIN} component={UserLogin}/>
           <Route path={Routes.USER_VERIFY} component={VerificationEmail}/>
+          <Route path={Routes.WELCOME} exact component={GameIntro}/>
+          {getToken() ? (
+        <>
+          <Route path={Routes.HOME} exact component={Home}/>
           <Route path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>
           <Route path={Routes.USER_JOIN_TEAM} component={JoinTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>
@@ -82,6 +88,8 @@ function UserNav() {
                   <Notifications />
               </Container>
           </Route>
+        </>
+        ) : <Redirect to={Routes.WELCOME} />}
       </Switch>
       </div>
     </Router>

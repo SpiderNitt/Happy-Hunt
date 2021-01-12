@@ -1,8 +1,10 @@
 import { Avatar, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
 import { Add, Edit, ExitToApp, GroupAdd } from '@material-ui/icons';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Routes from '../utils/routes';
+import AuthContext from '../api/authContext.js';
+import useAuth from '../hooks/useAuth';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function ProfilePage(props) {
+    const { logOut } = useAuth();
     const classes = useStyles();
     return (
         <Container maxWidth="md" >
@@ -88,7 +91,7 @@ function ProfilePage(props) {
                 <ListItemIcon>
                     <ExitToApp />
                 </ListItemIcon>
-                    <ListItemText primary="Logout" />
+                    <ListItemText primary="Logout" onClick={logOut} />
                 </ListItem>
             </List>
         </Container>

@@ -6,6 +6,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import * as Yup from "yup";
 import { userMobileNoVerify } from '../api/auth';
 import Routes from '../utils/routes';
+import useAuth from '../hooks/useAuth';
 const queryString = require('query-string');
 
 const validationSchema = Yup.object().shape({
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 function VerificationEmail(props) {
     const styles = useStyles();
+    const { logIn } = useAuth();
     const parsed = queryString.parse(props.location.search);
     const handleSubmit = async({otp}, { resetForm }) => {
         const body = {
@@ -53,6 +55,7 @@ function VerificationEmail(props) {
         return;
         }
         console.log(response.data);
+        logIn(response.data.token);
         resetForm();
         props.history.push(Routes.HOME);
     }

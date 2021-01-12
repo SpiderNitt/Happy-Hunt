@@ -8,7 +8,7 @@ const client = apisauce.create({
 client.addAsyncRequestTransform(async (request) => {
   const authToken = await getToken();
   if (!authToken) return;
-  request.headers["Auth-Token"] = authToken;
+  request.headers["token"] = authToken;
 });
 
 export default client;
