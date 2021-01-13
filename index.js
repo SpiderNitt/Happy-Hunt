@@ -26,6 +26,6 @@ app.use(cors());
 app.use("/auth", authRouter);
 app.use("/api", apiRouter);
 global.appRoot = path.resolve(__dirname);
-const port = 3000;
+const port = 5000;
 
 app.listen(port, () => console.log(`server started at port ${port}`));
