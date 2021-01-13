@@ -2,7 +2,7 @@ const team = require("express").Router();
 const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
-const { jwtVerify } = require("../../middlewares/jwt");
+const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
 
 team.post("/create", async (req, res) => {
   try {
@@ -28,9 +28,11 @@ team.post("/create", async (req, res) => {
     newTeam.members.push(user);
     await newTeam.save();
     await user.save();
+    const token = createJWTtoken(user);
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
       TeamId: newTeam.teamId,
+      JWTtoken: token,
     });
   } catch (error) {
     console.log(error);
@@ -55,9 +57,12 @@ team.get("/join", async (req, res) => {
     existingTeam.members.push(user);
     existingTeam.save();
     user.save();
-    return res
-      .status(200)
-      .json({ Message: "joined to the Team Successfully. Happy Hunting!!" });
+    const token = createJWTtoken(user);
+
+    return res.status(200).json({
+      Message: "joined to the Team Successfully. Happy Hunting!!",
+      JWTtoken: token,
+    });
   } catch (error) {
     console.log(error);
     res

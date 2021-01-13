@@ -6,7 +6,6 @@ const createJWTtoken = (user) => {
     {
       id: user._id,
       team: user.team,
-      Role: user.Role,
     },
     process.env.TOKEN_SECRET,
 
