@@ -60,10 +60,9 @@ export default function UserLogin(props) {
       console.log(response.data);
       return;
     }
-    console.log(response.data);
     logIn(response.data.token);
     resetForm();
-    return response.data.user.role === "player" ? props.history.push(Routes.HOME) : props.history.push(Routes.ADMIN_MISSIONS);
+    response.data.user.Role === "Player" ? props.history.push(Routes.HOME) : props.history.push(Routes.ADMIN_MISSIONS);
   }
   return (
     <Container component="main" maxWidth="xs">

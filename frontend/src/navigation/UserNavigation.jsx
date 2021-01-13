@@ -24,14 +24,23 @@ import ProfilePage from "../user/ProfilePage";
 import JoinTeam from "../user/JoinTeam";
 import AuthContext from "../api/authContext";
 import { getToken } from "../api/storage";
+import useScript from "../hooks/useScript";
 
 
 function UserNav() {
+  useScript(
+    "https://embed.tawk.to/5ffc4538c31c9117cb6d70dc/1eromsq55",
+    "user",
+    {
+      key: "crossorigin",
+      value: "*"
+    }
+  );
     const authContext = useContext(AuthContext);
     console.log(authContext)
     return (
     <Router>
-      <div>
+      <div className="user">
         <Switch>
 
           <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
@@ -40,13 +49,18 @@ function UserNav() {
           <Route path={Routes.WELCOME} exact component={GameIntro}/>
           {getToken() ? (
         <>
-          <Route path={Routes.HOME} exact component={Home}/>
           <Route path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>
           <Route path={Routes.USER_JOIN_TEAM} component={JoinTeam}/>
           <Route path="/photo-clue" component={PictureClues}/>
           <Route path="/photo" exact component={Capture}/>
           <Route path="/location-clue" component={LocationClues}/>
           <Route path="/text-clue" component={TextClues}/>
+          <Route path={Routes.HOME} exact>
+            <TopNav />
+            <div style={{ marginTop: 70 }}>
+                <Home />
+            </div>
+          </Route>
           <Route path={Routes.USER_PROFILE} exact>
             <TopNav />
             <div style={{ marginTop: 70 }}>

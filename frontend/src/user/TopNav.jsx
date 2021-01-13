@@ -44,7 +44,7 @@ export default function ButtonAppBar() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <AppBar>
+      <AppBar color="secondary">
         <Toolbar>
           <Typography variant="h6" className={classes.title} component={Link} href={Routes.HOME}>
             Happy Hunt
