@@ -24,9 +24,10 @@ team.post("/create", async (req, res) => {
       teamName,
       members: [],
     });
-    user.team = newTeam;
+
     newTeam.members.push(user);
     await newTeam.save();
+    user.team = newTeam._id;
     await user.save();
     const token = createJWTtoken(user);
     return res.status(200).json({
@@ -53,7 +54,8 @@ team.get("/join", async (req, res) => {
     const user = await User.findById(req.jwt_payload.id);
     user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
-    user.team = existingTeam;
+
+    user.team = existingTeam._id;
     existingTeam.members.push(user);
     existingTeam.save();
     user.save();
