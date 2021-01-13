@@ -10,23 +10,21 @@ import Routes from '../utils/routes'
 const MissionCard = (props) => {
     const { history } = props;
     const renderType = (type) => {
-        if (type === "1") {
-            return (<CameraAltIcon fontSize="large" color="secondary" />);
+        const object = {
+            'Picture': <CameraAltIcon fontSize="large" color="primary" />,
+            'Text': <TextFormatIcon fontSize="large" color="primary" />,
+            'Picture and Location': <LocationOnIcon fontSize="large" color="secondary" />,
+            'Video': <CameraAltIcon fontSize="large" color="secondary" />
         }
-        else if (type === "2") {
-            return (<LocationOnIcon fontSize="large" />);
-        }
-        else {
-            return (<TextFormatIcon fontSize="large" color="primary" />);
-        }
+        return object[type];
     }
     return (
         <div className='mission-card' onClick={() => { history.push(Routes.ADMIN_MISSION_DETAILS) }}>
             <div className='mission-card-img'>
-                {renderType(props.type)}
+                {renderType(props.values.Category)}
             </div>
             <div className='mission-card-name'>
-                <p>Mission 1</p>
+                <p>{`Mission ${props.index}`}</p>
             </div>
         </div>
     );
