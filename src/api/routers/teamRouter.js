@@ -24,7 +24,6 @@ team.post("/create", async (req, res) => {
       teamName,
       members: [],
     });
-
     newTeam.members.push(user);
     await newTeam.save();
     user.team = newTeam._id;
@@ -54,7 +53,6 @@ team.get("/join", async (req, res) => {
     const user = await User.findById(req.jwt_payload.id);
     user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
-
     user.team = existingTeam._id;
     existingTeam.members.push(user);
     existingTeam.save();
