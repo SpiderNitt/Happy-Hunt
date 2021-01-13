@@ -154,7 +154,6 @@ export default function AdminNav() {
                     <Route exact path={Routes.ADMIN_NEW_MISSION} component={NewMission} />
                     <Route exact path={Routes.ADMIN_NOTIFICATION} component={Notification} />
                 </Switch>
-
             </div>
         </Router>
     );

@@ -9,6 +9,7 @@ import { userLogin } from '../api/auth';
 import AlertMessage from '../components/AlertMessage';
 import Routes from '../utils/routes';
 import { withRouter } from 'react-router';
+import useAuth from '../hooks/useAuth';
 
 
 const validationSchema = Yup.object().shape({
@@ -46,23 +47,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserLogin(props) {
   const [info, setInfo] = useState('');
+  const { logIn } = useAuth();
   const classes = useStyles();
   const handleSubmit = async({ email, password },{ resetForm }) => {
     const body = {
-      id:email,
+      emailId:email,
       password:password
     }
     const response = await userLogin(body);
     if(!response.ok){
       console.log(response.problem);
       console.log(response.data);
-      // setInfo(response.data);
       return;
     }
     console.log(response.data);
-    // setInfo(response.data);
+    logIn(response.data.token);
     resetForm();
-    props.history.push(Routes.HOME);
+    return response.data.user.role === "player" ? props.history.push(Routes.HOME) : props.history.push(Routes.ADMIN_MISSIONS);
   }
   return (
     <Container component="main" maxWidth="xs">
