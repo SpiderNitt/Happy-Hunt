@@ -8,7 +8,9 @@ const MissionSchema = new Schema({
   MissionName: {
     type: String,
   },
-
+  isBonus: {
+    type: Boolean,
+  },
   clue: {
     type: String,
     required: true,

@@ -5,6 +5,10 @@ const TeamSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Paid: {
+    type: Number,
+    default: 0,
+  },
   teamName: {
     type: String,
     require: true,
@@ -15,6 +19,12 @@ const TeamSchema = new mongoose.Schema({
     default: 0, // for intialization
   },
   assignedMissions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Mission",
+    },
+  ],
+  assignedBonus: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Mission",
