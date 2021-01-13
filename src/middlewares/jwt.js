@@ -17,7 +17,7 @@ const jwtVerify = (req, res, next) => {
   try {
     // console.log(req.headers);
     // const { token } = req.headers;
-    const { token } = req.header("token");
+    const { token } = req.headers;
 
     if (!token) return res.status(401).json({ message: "No token" });
     // console.log(process.env.TOKEN_SECRET)
