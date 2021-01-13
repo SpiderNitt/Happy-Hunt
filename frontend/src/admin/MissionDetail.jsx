@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import MissionListItem from './MissionListItem'
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
 
 function MissionDetail(props) {
     const classes = useStyles();
+    useEffect(() => {
+        console.log(props.match.params.id);
+    }, []);
     return (
         <div style={{
             position: 'absolute',

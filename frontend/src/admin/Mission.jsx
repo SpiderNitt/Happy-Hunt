@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MissionCard from './MissionCard'
 import client from '../api/client';
+import { Link } from 'react-router-dom';
 
 const Mission = () => {
     const [data, setData] = useState([]);
@@ -14,7 +15,7 @@ const Mission = () => {
     return (
         <div className="mission-container">
             {data.map((mission, index) => (
-                <MissionCard type="1" key={mission._id} values={mission} index={index + 1} />
+                <Link to={`/admin/missiondetail/${mission._id}`}><MissionCard type="1" key={mission._id} values={mission} index={index + 1} /></Link>
             ))}
         </div>
     );

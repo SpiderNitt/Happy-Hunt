@@ -8,11 +8,10 @@ import AuthContext from "./api/authContext";
 function App() {
   const [user, setUser] = useState();
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <div className='App'>
-        <UserNav />
-      </div>
-    </AuthContext.Provider>
+    <div className='App'>
+      <AdminNav />
+    </div>
+
   );
 }
 
