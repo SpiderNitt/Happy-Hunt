@@ -1,5 +1,5 @@
 const api = require("express").Router();
-const scoreboard = require("./routers/scoreboard");
+const openApi = require("./routers/openApi");
 const missionroute = require("./routers/AdminMission");
 const team = require("./routers/teamRouter");
 const Admin = require("./routers/AdminRoute");
@@ -11,7 +11,7 @@ const { jwtVerify } = require("../middlewares/jwt");
 api.use("/", jwtVerify);
 
 // comman route
-api.use("/scoreboard", scoreboard);
+api.use("/", openApi);
 api.use("/activity", GetActivities);
 api.use("/countdown", countDown);
 // team routes
