@@ -26,7 +26,9 @@ io.on("connection", async (socket) => {
 setInterval(async () => {
   io.emit("missions");
   const teams = await Team.find({});
-  const missions = await Mission.find({});
+  const missions = await Mission.find({ isBonus: false });
+  const Bmissions = await Mission.find({ isBonus: true });
+
   const x = 500;
   // stage 0
   for (let index = 0; index < teams.length; index++) {
@@ -96,6 +98,18 @@ setInterval(async () => {
   }
   console.log("complete");
   // bonus distribution
+  nOfBonus = (3 * teams.length) / Bmissions.length;
+  i = 0;
+  while (i < Bmissions.length) {
+    if (!teams[index].assignedBonus.includes(Bmissions[i]._id)) {
+      if (!Bmissions[i].assignedTeams.length <= nOfBonus) {
+        teams[index].assignedBonus.push(Bmissions[i])._id;
+        Bmissions[i].assignedTeams.push(teams[index]._id);
+        teams[index].save();
+        Bmissions[i].save();
+      }
+    }
+  }
 }, 1800000);
 
 module.exports = { app, io };

@@ -206,7 +206,9 @@ player.patch(
 );
 player.get("/mission", async (req, res) => {
   try {
+    let a = new Date();
     const teamId = req.jwt_payload.team;
+    // const teamId = "5ff7f031a8b392448486166e";
 
     const team = await Team.findById(teamId);
 
@@ -214,10 +216,13 @@ player.get("/mission", async (req, res) => {
     const allMissions = team.assignedMissions;
 
     for (let i = 0; i < allMissions.length; i++) {
-      const activity = await Activity.findOne({
-        team: req.jwt_payload.team,
-        mission: allMissions[i],
-      });
+      const activity = await Activity.findOne(
+        {
+          team: req.jwt_payload.team,
+          mission: allMissions[i],
+        },
+        { _id: 1 }
+      );
 
       const mission = await Mission.findById(allMissions[i]).select({
         clue: 1,
@@ -236,7 +241,8 @@ player.get("/mission", async (req, res) => {
         });
       }
     }
-
+    let b = new Date();
+    console.log(b - a);
     return res.status(200).json({ missions: arr });
   } catch (e) {
     console.log(e);
@@ -264,6 +270,73 @@ player.get("/hint", async (req, res) => {
     return res.status(403).json({ message: "No more hints available" });
   } catch (err) {
     console.log(err);
+    return res.status(500).json({
+      message: "Server Error ",
+    });
+  }
+});
+player.get("/bonus", async (req, res) => {
+  try {
+    const teamId = req.jwt_payload.team;
+    // const teamId = "5ff7f031a8b392448486166e";
+    const team = await Team.findById(teamId).populate("assignedBonus").exec();
+    console.log("team");
+    const arr = [];
+    let allMissions = team.assignedBonus;
+    for (let i = 0; i < allMissions.length; i++) {
+      arr.push(allMissions[i]._id);
+    }
+    const activity = await Activity.find(
+      {
+        team: teamId,
+        mission: { $in: arr },
+      },
+      { _id: 1 }
+    );
+    const handler = {
+      get(target, name) {
+        return Object.prototype.hasOwnProperty.call(target, name)
+          ? target[name]
+          : 0;
+      },
+    };
+
+    let flag = new Proxy({}, handler);
+
+    for (let j = 0; j < activity.length; j += 1) {
+      for (let i = 0; i < allMissions.length; i += 1) {
+        if (activity[j].mission === allMissions[i]._id) {
+          flag["allMissions[i]._id"] += 1;
+        }
+      }
+    }
+    flag = Object.entries(flag);
+    for (let i = 0; i < flag.length; i++) {
+      const flagid = flag[i];
+      if (flagid[1] !== 0) {
+        await Activity.create({
+          team: teamId,
+          isSubmitted: false,
+          likes: 0,
+          mission: flagid[0],
+          hintsTaken: 0,
+        });
+      }
+    }
+    allMissions = allMissions.toObject();
+    const validKeys = ["clue", "maxPoints", "Category"];
+    const result = allMissions.map((mission) => {
+      mission = mission.toObject();
+      Object.keys(mission).forEach((key) => {
+        if (!validKeys.includes(key)) {
+          delete mission[key];
+        }
+      });
+      return mission;
+    });
+    return res.status(200).json({ "Bonus Missions": result });
+  } catch (e) {
+    console.log(e);
     return res.status(500).json({
       message: "Server Error ",
     });
