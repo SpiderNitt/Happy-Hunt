@@ -2,7 +2,7 @@ const team = require("express").Router();
 const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
-const { jwtVerify } = require("../../middlewares/jwt");
+const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
 
 team.post("/create", async (req, res) => {
   try {
@@ -24,13 +24,15 @@ team.post("/create", async (req, res) => {
       teamName,
       members: [],
     });
-    user.team = newTeam;
     newTeam.members.push(user);
     await newTeam.save();
+    user.team = newTeam._id;
     await user.save();
+    const token = createJWTtoken(user);
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
       TeamId: newTeam.teamId,
+      JWTtoken: token,
     });
   } catch (error) {
     console.log(error);
@@ -51,13 +53,16 @@ team.get("/join", async (req, res) => {
     const user = await User.findById(req.jwt_payload.id);
     user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
-    user.team = existingTeam;
+    user.team = existingTeam._id;
     existingTeam.members.push(user);
     existingTeam.save();
     user.save();
-    return res
-      .status(200)
-      .json({ Message: "joined to the Team Successfully. Happy Hunting!!" });
+    const token = createJWTtoken(user);
+
+    return res.status(200).json({
+      Message: "joined to the Team Successfully. Happy Hunting!!",
+      JWTtoken: token,
+    });
   } catch (error) {
     console.log(error);
     res

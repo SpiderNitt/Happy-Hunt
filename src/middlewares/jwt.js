@@ -6,6 +6,7 @@ const createJWTtoken = (user) => {
     {
       id: user._id,
       team: user.team,
+      Role: user.Role,
     },
     process.env.TOKEN_SECRET,
 
@@ -15,8 +16,6 @@ const createJWTtoken = (user) => {
 
 const jwtVerify = (req, res, next) => {
   try {
-    // console.log(req.headers);
-    // const { token } = req.headers;
     const { token } = req.headers;
 
     if (!token) return res.status(401).json({ message: "No token" });
