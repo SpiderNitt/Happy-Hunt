@@ -64,12 +64,9 @@ export default function UserRegistration(props) {
     const response = await userRegister(body);
     if(!response.ok){
       console.log(response.problem);
-      console.log(response.data.message);
       setInfo(response.data.message);
       return;
     }
-    console.log(response.data.message);
-    setInfo(response.data.message);
     resetForm();
     props.history.push(`${Routes.USER_VERIFY}?mobileNo=${phoneNo}`);
   }

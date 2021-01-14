@@ -10,6 +10,7 @@ function App() {
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <div className='App'>
+        <UserNav />
         <AdminNav />
       </div>
     </AuthContext.Provider>
