@@ -14,7 +14,7 @@ const Routes = {
   ADMIN_LOGIN: "/admin/login",
   ADMIN_ADD: "/admin/add-admin",
   ADMIN_MISSIONS: "/admin",
-  ADMIN_MISSION_DETAILS: "/admin/missiondetail",
+  ADMIN_MISSION_DETAILS: "/admin/missiondetail/:id",
   ADMIN_LEADERBOARD: "/admin/scoreboard",
   ADMIN_LIST: "/admin/list",
   ADMIN_MISSION_EDIT: "/admin/mission/edit",

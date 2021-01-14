@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import colors from '../utils/colors';
 import Routes from '../utils/routes'
+import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,4 +62,4 @@ function AdminMission(props) {
     )
 }
 
-export default AdminMission;
+export default withRouter(AdminMission);
