@@ -74,7 +74,7 @@ teamLoop: for (let index = 0; index < teams.length; index++) {
   for (let i = 0; i < Bmissions.length; i++) {
     if (!teams[index].assignedBonus.includes(Bmissions[i]._id)) {
       if (!Bmissions[i].assignedTeams.length <= nOfBonus) {
-        teams[index].assignedBonus.push(Bmissions[i])._id;
+        teams[index].assignedBonus.push(Bmissions[i]._id);
         Bmissions[i].assignedTeams.push(teams[index]._id);
         teams[index].save();
         Bmissions[i].save();

@@ -31,18 +31,18 @@ setInterval(async () => {
 
   const x = 500;
   // stage 0
-  for (let index = 0; index < teams.length; index++) {
+  for (let index = 0; index < teams.length; index += 1) {
     teams[index].maxPointsAssigned = 0;
     teams[index].assignedMissions = [];
     await teams[index].save();
   }
-  for (let index = 0; index < missions.length; index++) {
+  for (let index = 0; index < missions.length; index += 1) {
     missions[index].assignedTeams = [];
     await missions[index].save();
   }
   // stage 1
-  for (let index = 0; index < teams.length; index++) {
-    for (let i = 0; i < missions.length; i++) {
+  for (let index = 0; index < teams.length; index += 1) {
+    for (let i = 0; i < missions.length; i += 1) {
       if (teams[index].assignedMissions.length < 5) {
         // test 0
         if (!teams[index].missionHistory.includes(missions[i]._id)) {
@@ -64,12 +64,12 @@ setInterval(async () => {
               // test 3
               const assignedmissions = teams[index].assignedMissions;
               let count = 0;
-              for (let k = 0; k < assignedmissions.length; k++) {
+              for (let k = 0; k < assignedmissions.length; k += 1) {
                 const missionToCheck = await Mission.findById(
                   assignedmissions[k]
                 );
                 if (missionToCheck.Category === missions[i].Category) {
-                  count++;
+                  count += 1;
                 }
               }
               if (count < 2) {
@@ -95,21 +95,22 @@ setInterval(async () => {
         }
       }
     }
+    const nOfBonus = (3 * teams.length) / Bmissions.length;
+    let i = 0;
+    while (i < Bmissions.length) {
+      if (!teams[index].assignedBonus.includes(Bmissions[i]._id)) {
+        if (!Bmissions[i].assignedTeams.length <= nOfBonus) {
+          teams[index].assignedBonus.push(Bmissions[i]._id);
+          Bmissions[i].assignedTeams.push(teams[index]._id);
+          teams[index].save();
+          Bmissions[i].save();
+        }
+      }
+      i += 1;
+    }
   }
   console.log("complete");
   // bonus distribution
-  nOfBonus = (3 * teams.length) / Bmissions.length;
-  i = 0;
-  while (i < Bmissions.length) {
-    if (!teams[index].assignedBonus.includes(Bmissions[i]._id)) {
-      if (!Bmissions[i].assignedTeams.length <= nOfBonus) {
-        teams[index].assignedBonus.push(Bmissions[i])._id;
-        Bmissions[i].assignedTeams.push(teams[index]._id);
-        teams[index].save();
-        Bmissions[i].save();
-      }
-    }
-  }
 }, 1800000);
 
 module.exports = { app, io };
