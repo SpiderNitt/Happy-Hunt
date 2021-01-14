@@ -45,7 +45,6 @@ const Drawer = props => {
             text: "Mission",
             icon: <DashboardIcon />,
             onClick: () => {
-                props.onTitleChange('Missions')
                 history.push(Routes.ADMIN_MISSIONS);
             }
         },
@@ -53,7 +52,6 @@ const Drawer = props => {
             text: "Activity",
             icon: <DynamicFeedIcon />,
             onClick: () => {
-                props.onTitleChange('Activity feed')
                 history.push(Routes.ADMIN_ACTIVITY_FEED);
             }
         },
@@ -61,7 +59,6 @@ const Drawer = props => {
             text: "Score Board",
             icon: <ScoreIcon />,
             onClick: () => {
-                props.onTitleChange('Score Board')
                 history.push(Routes.ADMIN_LEADERBOARD)
             }
         },
@@ -76,7 +73,6 @@ const Drawer = props => {
             text: "Admin List",
             icon: <ListIcon />,
             onClick: () => {
-                props.onTitleChange('Admin List');
                 history.push(Routes.ADMIN_LIST);
             }
         },
@@ -84,7 +80,6 @@ const Drawer = props => {
             text: "Missions",
             icon: <EditIcon />,
             onClick: () => {
-                props.onTitleChange('Missions');
                 history.push(Routes.ADMIN_MISSION_EDIT);
             }
         }
