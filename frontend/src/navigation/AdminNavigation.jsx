@@ -18,50 +18,50 @@ export default function AdminNav() {
         <Router>
             <div>
                 <Switch>
-                    { getToken() ? (
+                    {getToken() ? (
                         <>
-                        <Route path={Routes.ADMIN_MISSIONS} exact>
-                            <DrawerHeader title="Missions" />
-                            <Drawer />
-                            <div style={{ marginLeft: '10%' }}>
-                                <Mission />
-                            </div> 
-                        </Route>
-                        <Route path={Routes.ADMIN_ACTIVITY_FEED} exact>
-                            <DrawerHeader title="Activity Feed" />
-                            <Drawer />
-                            <Activity />
-                        </Route>
-                        <Route path={Routes.ADMIN_LEADERBOARD} exact>
-                            <DrawerHeader title="Score Board" />
-                            <Drawer />
-                            <ScoreBoard />
-                        </Route>
-                        <Route path={Routes.ADMIN_LIST} exact>
-                            <DrawerHeader title="Admin List" />
-                            <Drawer />
-                            <AdminList />
-                        </Route>
-                        <Route path={Routes.ADMIN_MISSION_DETAILS} exact>
-                            <DrawerHeader title="Mission Detail" />
-                            <Drawer />
-                            <MissionDetail />
-                        </Route>
-                        <Route path={Routes.ADMIN_MISSION_EDIT} exact>
-                            <DrawerHeader title="Admin Mission" />
-                            <Drawer />
-                            <AdminMission />
-                        </Route>
-                        <Route path={Routes.ADMIN_NOTIFICATION} exact>
-                            <DrawerHeader title="Notifications" />
-                            <Drawer />
-                            <Notification />
-                        </Route>
-                        <Route path={Routes.ADMIN_NEW_MISSION} exact>
-                            <DrawerHeader title="ADD MISSION" />
-                            <Drawer />
-                            <NewMission />
-                        </Route>
+                            <Route path={Routes.ADMIN_MISSIONS} exact>
+                                <DrawerHeader title="Missions" />
+                                <Drawer />
+                                <div style={{ marginLeft: '10%' }}>
+                                    <Mission />
+                                </div>
+                            </Route>
+                            <Route path={Routes.ADMIN_ACTIVITY_FEED} exact>
+                                <DrawerHeader title="Activity Feed" />
+                                <Drawer />
+                                <Activity />
+                            </Route>
+                            <Route path={Routes.ADMIN_LEADERBOARD} exact>
+                                <DrawerHeader title="Score Board" />
+                                <Drawer />
+                                <ScoreBoard />
+                            </Route>
+                            <Route path={Routes.ADMIN_LIST} exact>
+                                <DrawerHeader title="Admin List" />
+                                <Drawer />
+                                <AdminList />
+                            </Route>
+                            <Route path={Routes.ADMIN_MISSION_DETAILS} exact>
+                                <DrawerHeader title="Mission Detail" />
+                                <Drawer />
+                                <MissionDetail />
+                            </Route>
+                            <Route path={Routes.ADMIN_MISSION_EDIT} exact>
+                                <DrawerHeader title="Admin Mission" />
+                                <Drawer />
+                                <AdminMission />
+                            </Route>
+                            <Route path={Routes.ADMIN_NOTIFICATION} exact>
+                                <DrawerHeader title="Notifications" />
+                                <Drawer />
+                                <Notification />
+                            </Route>
+                            <Route path={Routes.ADMIN_NEW_MISSION} exact>
+                                <DrawerHeader title="ADD MISSION" />
+                                <Drawer />
+                                <NewMission />
+                            </Route>
                         </>
                     ) : <Redirect to={Routes.WELCOME} />}
                 </Switch>

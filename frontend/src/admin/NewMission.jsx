@@ -10,12 +10,11 @@ import Select from '@material-ui/core/Select';
 const NewMission = () => {
     const formik = useFormik({
         initialValues: {
-            category: '',
+            Category: '',
             clue: '',
-            password: '',
             answer: '',
-            otherinfo: '',
-            answertype: '',
+            Other_Info: '',
+            answer_Type: '',
         },
         onSubmit: (values) => {
             console.log(values);
@@ -35,13 +34,13 @@ const NewMission = () => {
             <form onSubmit={formik.handleSubmit}>
                 <TextField
                     fullWidth
-                    id="category"
-                    name="category"
+                    id="Category"
+                    name="Category"
                     label="Category"
-                    value={formik.values.category}
+                    value={formik.values.Category}
                     onChange={formik.handleChange}
-                    error={formik.touched.category && Boolean(formik.errors.category)}
-                    helperText={formik.touched.category && formik.errors.category}
+                    error={formik.touched.Category && Boolean(formik.errors.Category)}
+                    helperText={formik.touched.Category && formik.errors.Category}
                 />
                 <TextField
                     fullWidth
@@ -65,12 +64,12 @@ const NewMission = () => {
                 />
                 <Select
                     onChange={formik.handleChange}
-                    id="answertype"
-                    name='answertype'
+                    id="answer_Type"
+                    name='answer_Type'
                     label="Answer Type"
-                    value={formik.values.answertype}
-                    error={formik.touched.answertype && Boolean(formik.errors.answertype)}
-                    helperText={formik.touched.answertype && formik.errors.answertype}
+                    value={formik.values['answer_Type']}
+                    error={formik.touched['answer_Type'] && Boolean(formik.errors['answer_Type'])}
+                    helperText={formik.touched['answer_Type'] && formik.errors['answer_Type']}
                     fullWidth
                 >
                     <option value='picture'>Picture</option>
@@ -79,44 +78,44 @@ const NewMission = () => {
                 </Select>
                 <TextField
                     fullWidth
-                    id="latitude"
-                    name="latitude"
+                    id="Lat"
+                    name="Lat"
                     label="Latitude"
-                    value={formik.values.latitude}
+                    value={formik.values.Lat}
                     onChange={formik.handleChange}
-                    error={formik.touched.latitude && Boolean(formik.errors.latitude)}
-                    helperText={formik.touched.latitude && formik.errors.latitude}
+                    error={formik.touched.Lat && Boolean(formik.errors.Lat)}
+                    helperText={formik.touched.Lat && formik.errors.Lat}
                 />
                 <TextField
                     fullWidth
-                    id="longitude"
-                    name="longitude"
+                    id="Long"
+                    name="Long"
                     label="Longitude"
-                    value={formik.values.longitude}
+                    value={formik.values.Long}
                     onChange={formik.handleChange}
-                    error={formik.touched.longitude && Boolean(formik.errors.longitude)}
-                    helperText={formik.touched.longitude && formik.errors.longitude}
+                    error={formik.touched.Long && Boolean(formik.errors.Long)}
+                    helperText={formik.touched.Long && formik.errors.Long}
                 />
                 <TextField
                     fullWidth
-                    id="otherinfo"
-                    name="otherinfo"
+                    id="Other_Info"
+                    name="Other_Info"
                     label="Other Info"
-                    value={formik.values.otherinfo}
+                    value={formik.values['Other_Info']}
                     onChange={formik.handleChange}
-                    error={formik.touched.otherinfo && Boolean(formik.errors.otherinfo)}
-                    helperText={formik.touched.otherinfo && formik.errors.otherinfo}
+                    error={formik.touched['Other_Info'] && Boolean(formik.errors['Other_Info'])}
+                    helperText={formik.touched['Other_Info'] && formik.errors['Other_Info']}
                 />
                 <TextField
                     fullWidth
-                    id="maxpoints"
-                    name="maxpoints"
+                    id="maxPoints"
+                    name="maxPoints"
                     label="Maximum points"
                     type="number"
-                    value={formik.values.maxpoints}
+                    value={formik.values.maxPoints}
                     onChange={formik.handleChange}
-                    error={formik.touched.maxpoints && Boolean(formik.errors.maxpoints)}
-                    helperText={formik.touched.maxpoints && formik.errors.maxpoints}
+                    error={formik.touched.maxPoints && Boolean(formik.errors.maxPoints)}
+                    helperText={formik.touched.maxPoints && formik.errors.maxPoints}
                 />
                 <Button color="primary" variant="contained" fullWidth type="submit">
                     Submit
