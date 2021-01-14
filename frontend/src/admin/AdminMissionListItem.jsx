@@ -15,24 +15,23 @@ import colors from '../utils/colors';
 function AdminMissionListItem(props) {
     const [secondary, setSecondary] = React.useState(false);
     const renderType = (type) => {
-        if (type === "1") {
-            return (<CameraAltIcon />);
+        const object = {
+            'Picture': <CameraAltIcon />,
+            'Text': <TextFormatIcon />,
+            'Picture and Location': <LocationOnIcon />,
+            'Video': <CameraAltIcon />
         }
-        else if (type === "2") {
-            return (<LocationOnIcon />);
-        }
-        else
-            return (<TextFormatIcon />);
+        return object[type];
     }
     return (
         <ListItem key={props.key}>
             <ListItemAvatar>
                 <Avatar>
-                    {renderType(props.type)}
+                    {renderType(props.values.Category)}
                 </Avatar>
             </ListItemAvatar>
             <ListItemText
-                primary="Mission 1"
+                primary={`Mission ${props.index}`}
                 secondary={secondary ? 'Secondary text' : null}
             />
             <ListItemSecondaryAction>

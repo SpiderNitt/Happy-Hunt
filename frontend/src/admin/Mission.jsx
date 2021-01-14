@@ -15,7 +15,7 @@ const Mission = () => {
     return (
         <div className="mission-container">
             {data.map((mission, index) => (
-                <Link to={`/admin/missiondetail/${mission._id}`}><MissionCard type="1" key={mission._id} values={mission} index={index + 1} /></Link>
+                <Link to={`/admin/missiondetail/${mission._id}`}><MissionCard key={mission._id} values={mission} index={index + 1} /></Link>
             ))}
         </div>
     );
