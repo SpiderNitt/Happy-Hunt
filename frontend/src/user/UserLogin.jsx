@@ -60,7 +60,7 @@ export default function UserLogin(props) {
       console.log(response.data);
       return;
     }
-    logIn(response.data.token);
+    await logIn(response.data.token);
     resetForm();
     response.data.user.Role === "Player" ? props.history.push(Routes.HOME) : props.history.push(Routes.ADMIN_MISSIONS);
   }
