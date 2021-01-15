@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
-import PaymentPage from "./user/PaymentPage";
+// import PaymentPage from "./user/PaymentPage";
 // import ProfilePage from "./user/ProfilePage";
 // import UserLogin from "./UserLogin";
 // import GameIntro from "./user/GameIntro";
@@ -14,4 +14,4 @@ import PaymentPage from "./user/PaymentPage";
 // import AdminRegistration from "./AdminRegistration";
 // import Template from "./user/Template";
 
-ReactDOM.render(<PaymentPage />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));

@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import Home from "../user/Home";
-import UserRegistration from "../user/UserRegistration";
 import TopNav from "../user/TopNav";
 import NavBar from "../user/NavBar";
 import { Container } from "@material-ui/core";
@@ -16,8 +15,6 @@ import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
 
-import VerificationEmail from "../user/VerificationEmail";
-import UserLogin from "../user/UserLogin";
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
 import ProfilePage from "../user/ProfilePage";
@@ -42,11 +39,6 @@ function UserNav() {
     <Router>
       <div className="user">
         <Switch>
-
-          <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
-          <Route path={Routes.USER_LOGIN} component={UserLogin}/>
-          <Route path={Routes.USER_VERIFY} component={VerificationEmail}/>
-          <Route path={Routes.WELCOME} exact component={GameIntro}/>
           {getToken() ? (
         <>
           <Route path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>

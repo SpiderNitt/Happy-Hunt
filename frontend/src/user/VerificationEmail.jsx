@@ -55,7 +55,7 @@ function VerificationEmail(props) {
         return;
         }
         console.log(response.data);
-        logIn(response.data.token);
+        await logIn(response.data.token);
         resetForm();
         props.history.push(Routes.HOME);
     }
