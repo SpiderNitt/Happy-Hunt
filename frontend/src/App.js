@@ -4,6 +4,7 @@ import "./App.css";
 import UserNav from "./navigation/userNavigation";
 import AdminNav from "./navigation/AdminNavigation";
 import AuthContext from "./api/authContext";
+import AuthNavigation from "./navigation/AuthNavigation";
 
 function App() {
   const [user, setUser] = useState();
@@ -12,6 +13,7 @@ function App() {
       <div className='App'>
         <UserNav />
         <AdminNav />
+        <AuthNavigation />
       </div>
     </AuthContext.Provider>
   );
