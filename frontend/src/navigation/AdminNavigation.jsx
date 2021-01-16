@@ -43,11 +43,7 @@ export default function AdminNav() {
                                 <Drawer />
                                 <AdminList />
                             </Route>
-                            <Route path={Routes.ADMIN_MISSION_DETAILS} exact>
-                                <DrawerHeader title="Mission Detail" />
-                                <Drawer />
-                                <MissionDetail />
-                            </Route>
+                            <Route path={Routes.ADMIN_MISSION_DETAILS} exact render={(props) => (<div><DrawerHeader title="Mission Details" /><Drawer /><MissionDetail {...props} /></div>)} />
                             <Route path={Routes.ADMIN_MISSION_UPDATE} exact>
                                 <DrawerHeader title="Admin Mission" />
                                 <Drawer />
