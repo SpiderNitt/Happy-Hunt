@@ -10,6 +10,7 @@ import AdminMission from '../admin/AdminMission';
 import Notification from '../admin/Notifications';
 import MissionDetail from '../admin/MissionDetail'
 import NewMission from '../admin/NewMission';
+import EditMission from '../admin/EditMission';
 import Routes from "../utils/routes";
 import { getToken } from "../api/storage";
 
@@ -47,7 +48,7 @@ export default function AdminNav() {
                                 <Drawer />
                                 <MissionDetail />
                             </Route>
-                            <Route path={Routes.ADMIN_MISSION_EDIT} exact>
+                            <Route path={Routes.ADMIN_MISSION_UPDATE} exact>
                                 <DrawerHeader title="Admin Mission" />
                                 <Drawer />
                                 <AdminMission />
@@ -62,10 +63,11 @@ export default function AdminNav() {
                                 <Drawer />
                                 <NewMission />
                             </Route>
+                            <Route path={Routes.ADMIN_EDIT_MISSION} exact render={(props) => (<div><DrawerHeader title="Edit Mission" /><Drawer /><EditMission {...props} /></div>)} />
                         </>
                     ) : <Redirect to={Routes.WELCOME} />}
                 </Switch>
             </div>
-        </Router>
+        </Router >
     );
 }
