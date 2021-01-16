@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
@@ -7,22 +7,61 @@ import Select from '@material-ui/core/Select';
 import client from '../api/client';
 import { withRouter } from 'react-router-dom';
 
+const dummyData = {
+    "id": "5ff7bac89b8b6a46c011b200",
+    "Category": "Picture",
+    "clue": "uhugyfytfytfyfyfyfug jgyfyfddtd gfgugufigi vugfyfyfy",
+    "answer_Type": "Picture",
+    "answer": ["base64string"],
+    "Location": {
+        "Lat": "12.334543656",
+        "Long": "34.56456756"
+    },
+    "Other_Info": "vdhvdsvfdvfhdsvfjdvfvdvdsjvadv bjdvdsvdsv vcvdhcvjdsvcdsv",
+    "Feed": "true",
+    "ServerEvaluation": "false",
+    "maxPoints": "100",
+    "MissionName": "IESFHORIG",
+    "Hints": [
+        {
+            "Content": "hfbfrbfrfrfgrfbrjbfjrbgjrbgbr",
+            "MaxPoints": "123"
+        }, {
+            "Content": "hfbfrbfrfrfgrfbrjbfjrbgjrbgbr",
+            "MaxPoints": "123"
+        }, {
+            "Content": "hfbfrbfrfrfgrfbrjbfjrbgjrbgbr",
+            "MaxPoints": "123"
+        },
+        {
+            "Content": "hfbfrbfrfrfgrfbrjbfjrbgjrbgbr",
+            "MaxPoints": "123"
+        }
+    ]
+};
 
-const NewMission = (props) => {
+const EditMission = (props) => {
     const { history } = props;
+    const [data, setData] = useState(dummyData);
     const formik = useFormik({
         initialValues: {
-            Category: '',
-            clue: '',
-            answer: '',
-            Other_Info: '',
+            Category: data['Category'],
+            clue: data['clue'],
+            answer: data['answer'].join(','),
+            Other_Info: data['Other_Info'],
             answer_Type: '',
+            maxPoints: data['maxPoints'],
+            Lat: data.Location.Lat,
+            Long: data.Location.Long,
+            MissionName: data['Category']
         },
+        enableReinitialize: true,
         onSubmit: async (values) => {
             const { Category, clue, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName } = values;
             const answerArray = [];
             answerArray.push(answer);
             const object = {
+                id: props.match.params.id,
                 Category,
                 clue,
                 answer: answerArray,
@@ -49,11 +88,17 @@ const NewMission = (props) => {
                     }
                 ]
             };
-            const response = await client.post('api/admin/mission/add', object);
+            const response = await client.patch('api/admin/mission/update', object);
             console.log(response);
         },
     });
-
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await client.get(`api/mission/${props.match.params.id}`);
+            setData(result.data);
+        }
+        fetchData()
+    }, []);
     return (
         <div>
             <div style={{
@@ -72,7 +117,7 @@ const NewMission = (props) => {
                 marginTop: '10px',
                 width: '600px'
             }}>
-                <h3 style={{ textAlign: 'center' }}>Add a Mission</h3>
+                <h3 style={{ textAlign: 'center' }}>Edit</h3>
                 <form onSubmit={formik.handleSubmit}>
                     <TextField
                         fullWidth
@@ -179,5 +224,5 @@ const NewMission = (props) => {
 };
 
 
-export default withRouter(NewMission);
+export default withRouter(EditMission);
 

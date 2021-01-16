@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import AdminMissionListItem from './AdminMissionListItem';
@@ -7,6 +7,7 @@ import Fab from '@material-ui/core/Fab';
 import colors from '../utils/colors';
 import Routes from '../utils/routes'
 import { withRouter } from 'react-router-dom'
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +30,15 @@ const useStyles = makeStyles((theme) => ({
 function AdminMission(props) {
     const { history } = props;
     const classes = useStyles();
-    const [dense, setDense] = React.useState(false);
+    const [dense, setDense] = useState(false);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await client.get('api/admin/mission')
+            setData(result.data.Missions);
+        }
+        fetchData();
+    }, []);
     return (
         <div>
             <div style={{
@@ -38,19 +47,15 @@ function AdminMission(props) {
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
                 marginTop: '10px',
-                width: '600px'
+                width: '600px',
+                height: '500px',
+                overflow: 'auto',
             }}>
                 <div className={classes.demo}>
                     <List dense={dense}>
-                        <AdminMissionListItem type="1" key="1" />
-                        <AdminMissionListItem type="2" key="2" />
-                        <AdminMissionListItem type="1" key="3" />
-                        <AdminMissionListItem type="3" key="4" />
-                        <AdminMissionListItem type="2" key="5" />
-                        <AdminMissionListItem type="1" key="6" />
-                        <AdminMissionListItem type="3" key="7" />
-                        <AdminMissionListItem type="1" key="8" />
-                        <AdminMissionListItem type="2" key="9" />
+                        {data.map((mission, index) => (
+                            <AdminMissionListItem key={mission._id} values={mission} index={index + 1} />
+                        ))}
                     </List>
                 </div>
             </div>

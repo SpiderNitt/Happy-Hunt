@@ -80,7 +80,7 @@ const Drawer = props => {
             text: "Missions",
             icon: <EditIcon />,
             onClick: () => {
-                history.push(Routes.ADMIN_MISSION_EDIT);
+                history.push(Routes.ADMIN_MISSION_UPDATE);
             }
         }
     ]
