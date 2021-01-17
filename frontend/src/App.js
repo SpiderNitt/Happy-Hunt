@@ -12,8 +12,6 @@ function App() {
     <AuthContext.Provider value={{ user, setUser }}>
       <div className='App'>
         <UserNav />
-        <AdminNav />
-        <AuthNavigation />
       </div>
     </AuthContext.Provider>
   );
