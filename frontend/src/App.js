@@ -9,11 +9,7 @@ function App() {
   return (
     <AuthProvider>
       <div className='App'>
-        <BrowserRouter>
-          <Switch>
-            <AppNavigation />
-          </Switch>
-        </BrowserRouter>
+        <UserNav />
       </div>
     </AuthProvider>
   );
