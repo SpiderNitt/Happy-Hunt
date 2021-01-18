@@ -1,12 +1,23 @@
-import React , { useState } from 'react';
+import React , { useState , useEffect} from 'react';
 import clueData from './ClueData';
 import Button from '@material-ui/core/Button';
+import client from '../api/client';
 
 function Hints(props) {
     const [showSecondHint, setshowSecondHint] = useState(false);
     const [showThirdHint, setshowThirdHint] = useState(false);
     const [disable1, setDisable1] = useState(false);
     const [disable2, setDisable2] = useState(false);
+
+    const [data, setData] = useState([]);
+    useEffect(() => {
+      const fetch = async () => {
+          const result = await client.get('api/player/hint')
+          setData(result.data.missions);
+      }
+      fetch();
+      console.log(data)
+  }, []);
 
     const onButtonClickHandler1 = () => {
         setshowSecondHint(true)
