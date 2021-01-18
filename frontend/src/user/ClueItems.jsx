@@ -8,29 +8,28 @@ import Typography from '@material-ui/core/Typography';
 import { Chip, Container, Grid } from '@material-ui/core';
 import './Clues';
 
-const RenderClues=(props)=> {
+const RenderClues=({mission, index})=> {
    const classes= useStyles();
-   console.log(props.key)
-   console.log(props.data)
+   console.log(mission)
     return (
-      // <Card key={props.key}  style={{ marginBottom: 10, padding: 10 }}>
-      //   <CardContent>
-      //     <div className={classes.container}>
-      //       <Typography className={classes.title} color="textSecondary" variant="ul" >
-      //         Clue : {props.data.cluename}
-      //       </Typography>
+      <Card style={{ marginBottom: 10, padding: 10 }}>
+        <CardContent>
+          <div className={classes.container}>
+            <Typography className={classes.title} color="textSecondary" variant="ul" >
+              {`Mission ${index}`}
+            </Typography>
             
-      //       <Chip size="small" label={props.data.isSolved? "solved" : "unsolved" } />
-      //     </div>
-      //   </CardContent>
-      //   <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
-      //     <Button variant="contained" size="small" href="/photo-clue">View</Button>
-      //     <Typography color="textSecondary">
-      //       {props.data.points}
-      //     </Typography>
-      //   </CardActions>
-      // </Card>
-      <p>kk</p>
+            {/* <Chip size="small" label={props.data.isSolved? "solved" : "unsolved" } /> */}
+          </div>
+        </CardContent>
+        <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <Button variant="contained" size="small" href="/photo-clue">View</Button>
+          <Typography color="textSecondary">
+            {mission.maxPoints}
+          </Typography>
+        </CardActions>
+      </Card>
+      
     );
 }
 

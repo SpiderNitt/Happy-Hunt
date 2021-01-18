@@ -1,10 +1,11 @@
 import { Avatar, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
 import { Add, Edit, ExitToApp, GroupAdd } from '@material-ui/icons';
-import React, { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Routes from '../utils/routes';
 import AuthContext from '../api/authContext.js';
 import useAuth from '../hooks/useAuth';
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +34,18 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePage(props) {
     const { logOut } = useAuth();
     const classes = useStyles();
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+      const fetch = async () => {
+          const result = await client.get('api/player/profile')
+          setData(result.data);
+
+          
+      }
+      fetch();
+      console.log (data)
+  }, [])
     return (
         <Container maxWidth="md" >
             <div className={classes.root}>
@@ -40,7 +53,7 @@ function ProfilePage(props) {
             </div>
             <List className={classes.listContainer}>
                 <ListItem className={classes.items}>
-                    <ListItemText primary="name" />
+                    <ListItemText primary={`Name: ${data.name}`} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit />
@@ -49,7 +62,7 @@ function ProfilePage(props) {
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
-                    <ListItemText primary="emailID" />
+                    <ListItemText primary={`Email Id: ${data.emailId}`} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit />
@@ -58,16 +71,7 @@ function ProfilePage(props) {
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
-                    <ListItemText primary="Mobile Number" />
-                    <ListItemSecondaryAction>
-                    <IconButton edge="end">
-                        <Edit />
-                    </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-                <Divider />
-                <ListItem className={classes.items}>
-                    <ListItemText primary="Gender" />
+                    <ListItemText primary={`Mobile no: ${data.phoneNo}`} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit />
