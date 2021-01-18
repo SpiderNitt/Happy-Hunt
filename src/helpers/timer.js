@@ -95,6 +95,6 @@ setInterval(async () => {
     }
   }
   console.log("complete");
-}, 1800000);
+}, 38000000);
 
 module.exports = { app, io };
