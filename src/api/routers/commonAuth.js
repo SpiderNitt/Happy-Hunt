@@ -20,7 +20,9 @@ commonAuth.post("/login", loginValidator, async (req, res) => {
     if (!bcrypt.compare(password, user.password))
       return res.status(400).json({ message: "Incorrect password" });
     const token = createJWTtoken(user);
-    return res.status(200).json({ user, token });
+    const date = new Date();
+    date.setTime(date.getTime() + 86400000);
+    return res.status(200).json({ user, token, expiration: date });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
