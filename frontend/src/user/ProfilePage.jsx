@@ -3,8 +3,7 @@ import { Add, Edit, ExitToApp, GroupAdd } from '@material-ui/icons';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Routes from '../utils/routes';
-import AuthContext from '../api/authContext.js';
-import useAuth from '../hooks/useAuth';
+import {AuthContext} from '../api/authContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function ProfilePage(props) {
-    const { logOut } = useAuth();
+    const authContext = useContext(AuthContext)
     const classes = useStyles();
     return (
         <Container maxWidth="md" >
@@ -91,7 +90,7 @@ function ProfilePage(props) {
                 <ListItemIcon>
                     <ExitToApp />
                 </ListItemIcon>
-                    <ListItemText primary="Logout" onClick={logOut} />
+                    <ListItemText primary="Logout" onClick={authContext.logout} />
                 </ListItem>
             </List>
         </Container>

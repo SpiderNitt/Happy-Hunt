@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import Routes from '../utils/routes';
+import {AuthContext} from '../api/authContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function GameIntro() {
+  const auth = useContext(AuthContext);
   const classes = useStyles();
 
   return (
@@ -25,7 +27,7 @@ export default function GameIntro() {
             Register
         </Button>
         <br/>
-        <Button variant="outlined" color="secondary" href={Routes.USER_LOGIN}>
+        <Button variant="outlined" color="secondary" href={auth.isAuthenticated ? Routes.HOME : Routes.USER_LOGIN}>
             Login
         </Button>
     </div>

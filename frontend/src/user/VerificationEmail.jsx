@@ -1,12 +1,13 @@
 import { Button, Container, Grid, Link, makeStyles, TextField, Typography } from '@material-ui/core';
 import { MessageOutlined } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
-import React from 'react';
+import React, { useContext } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
 import * as Yup from "yup";
 import { userMobileNoVerify } from '../api/auth';
 import Routes from '../utils/routes';
-import useAuth from '../hooks/useAuth';
+import jwtDecode from 'jwt-decode';
+import { AuthContext } from '../api/authContext';
 const queryString = require('query-string');
 
 const validationSchema = Yup.object().shape({
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 function VerificationEmail(props) {
     const styles = useStyles();
-    const { logIn } = useAuth();
+    const auth = useContext(AuthContext);
     const parsed = queryString.parse(props.location.search);
     const handleSubmit = async({otp}, { resetForm }) => {
         const body = {
@@ -50,14 +51,21 @@ function VerificationEmail(props) {
         }
         const response = await userMobileNoVerify(body);
         if(!response.ok){
-        console.log(response.problem);
-        console.log(response.data);
-        return;
+            console.log(response.problem);
+            console.log(response.data);
+            return;
         }
-        console.log(response.data);
-        await logIn(response.data.token);
+        const {exp} = await jwtDecode(response.data.token)
+        const data = {
+          token: response.data.token,
+          expiresAt: exp,
+          userInfo: response.data.result
+        }
+        await auth.setAuthState(data);
         resetForm();
-        props.history.push(Routes.HOME);
+        setTimeout(() => {
+            props.history.push(Routes.HOME);
+        }, 500);
     }
     return (
         <Container className={styles.root}>
