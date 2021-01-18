@@ -25,6 +25,7 @@ team.post("/create", async (req, res) => {
       members: [],
     });
     newTeam.members.push(user);
+    if (user.Paid) newTeam.Paid = user.Paid;
     await newTeam.save();
     user.team = newTeam._id;
     await user.save();
@@ -52,12 +53,15 @@ team.get("/join", async (req, res) => {
     if (teamid == null || teamid === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-
     const user = await User.findById(req.jwt_payload.id);
     user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
+    if (existingTeam.Paid < 1) {
+      return res.status(200).json({ message: "Team is full" });
+    }
     user.team = existingTeam._id;
     existingTeam.members.push(user);
+    existingTeam.Paid -= 1;
     existingTeam.save();
     user.save();
     const token = createJWTtoken(user);
