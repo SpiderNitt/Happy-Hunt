@@ -8,27 +8,28 @@ import Typography from '@material-ui/core/Typography';
 import client from '../api/client';
 import { Chip, Container, Grid } from '@material-ui/core';
 import RenderClues from './ClueItems.jsx';
+ 
 
-function Clues() {
+function Clues(){
   const [data, setData] = useState([]);
   useEffect(() => {
-    const getData = async () => {
+    const fetch = async () => {
         const result = await client.get('api/player/mission')
-        setData(result.missions);
+        setData(result.data.missions);
     }
-    getData();
+    fetch();
 }, []);
- 
-    return (
-      <Container maxWidth="md">
-        <Grid item xs={12} >
-          {data.map((mission, index) => {
-              <RenderClues key={index} data={mission} />
-          })}
-        </Grid>
-      </Container>
-    );
-}
+
+  return ( 
+    <Container maxWidth="md">
+      <Grid item xs={12} >
+      {data.map((mission, index) => (
+          <RenderClues key={mission._id} mission={mission} index={index + 1} />
+      ))}
+      </Grid>
+    </Container>
+  );
+};
 
 export default Clues;
 

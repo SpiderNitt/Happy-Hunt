@@ -211,8 +211,9 @@ player.get("/mission", async (req, res) => {
     const team = await Team.findById(teamId);
 
     const arr = [];
-    const allMissions = team.assignedMissions;
-
+    
+    const allMissions = team.assignedMissions? team.assignedMissions: ["mission 1", "mission 2", "mission 3"] 
+    
     for (let i = 0; i < allMissions.length; i++) {
       const activity = await Activity.findOne({
         team: req.jwt_payload.team,
