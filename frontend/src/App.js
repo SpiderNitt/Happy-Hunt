@@ -10,6 +10,8 @@ function App() {
     <AuthProvider>
       <div className='App'>
         <UserNav />
+        <AdminNav />
+        <AuthNavigation />
       </div>
     </AuthProvider>
   );
