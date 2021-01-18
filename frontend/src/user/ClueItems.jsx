@@ -23,9 +23,9 @@ const RenderClues=({mission, index})=> {
         </CardContent>
         <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
           <Button variant="contained" size="small" href="/photo-clue">View</Button>
-          <Typography color="textSecondary">
+          {/* <Typography color="textSecondary">
             {mission.maxPoints}
-          </Typography>
+          </Typography> */}
         </CardActions>
       </Card>
       
