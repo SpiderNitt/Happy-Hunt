@@ -29,10 +29,13 @@ team.post("/create", async (req, res) => {
     user.team = newTeam._id;
     await user.save();
     const token = createJWTtoken(user);
+    const date = new Date();
+    date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
       TeamId: newTeam.teamId,
       JWTtoken: token,
+      expiration: date,
     });
   } catch (error) {
     console.log(error);
@@ -58,10 +61,12 @@ team.get("/join", async (req, res) => {
     existingTeam.save();
     user.save();
     const token = createJWTtoken(user);
-
+    const date = new Date();
+    date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "joined to the Team Successfully. Happy Hunting!!",
       JWTtoken: token,
+      expiration: date,
     });
   } catch (error) {
     console.log(error);

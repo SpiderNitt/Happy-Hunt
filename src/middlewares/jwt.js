@@ -9,8 +9,7 @@ const createJWTtoken = (user) => {
       Role: user.Role,
     },
     process.env.TOKEN_SECRET,
-
-    { expiresIn: "168h" }
+    { expiresIn: "24h" }
   );
 };
 
