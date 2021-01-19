@@ -38,7 +38,7 @@ function MissionDetail(props) {
             setData(result.data);
         }
         fetchData();
-    }, []);
+    }, [props.match.params.id]);
     return (
         <div>
             <div style={{
