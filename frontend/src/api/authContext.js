@@ -49,6 +49,10 @@ const AuthProvider = ({ children }) => {
     return authState.userInfo.Role === "SuperAdmin";
   };
 
+  const isSuperAdmin = () => {
+    return authState.userInfo.Role === "SuperAdmin";
+  };
+
   return (
     <Provider
       value={{
