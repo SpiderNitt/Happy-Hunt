@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
 export default function GameIntro() {
   const auth = useContext(AuthContext);
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
         <Typography variant="button" display="block" style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>
@@ -27,7 +26,7 @@ export default function GameIntro() {
             Register
         </Button>
         <br/>
-        <Button variant="outlined" color="secondary" href={auth.isAuthenticated ? Routes.HOME : Routes.USER_LOGIN}>
+        <Button variant="outlined" color="secondary" href={auth.isAuthenticated() ? Routes.HOME : Routes.USER_LOGIN}>
             Login
         </Button>
     </div>

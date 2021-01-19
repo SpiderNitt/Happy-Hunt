@@ -27,13 +27,24 @@ import useScript from "../hooks/useScript";
 import AdminNav from "./AdminNavigation";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
+  useScript(
+    "https://embed.tawk.to/5ffc4538c31c9117cb6d70dc/1eromsq55",
+    "user",
+    {
+      key: "crossorigin",
+      value: "*",
+    }
+  );
   const authContext = useContext(AuthContext);
   return (
     <Route
       {...rest}
       render={() =>
         authContext.isAuthenticated() ? (
-          <>{children}</>
+          <>
+          {children}
+          <div className='user'></div>
+          </>
         ) : (
           <Redirect to={Routes.WELCOME} />
         )
@@ -44,17 +55,9 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
 
 
 function UserNav() {
-  useScript(
-    "https://embed.tawk.to/5ffc4538c31c9117cb6d70dc/1eromsq55",
-    "user",
-    {
-      key: "crossorigin",
-      value: "*",
-    }
-  );
+
   return (
     <>
-    <div className='user'></div>
     <Switch>
       <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
       <Route path={Routes.USER_LOGIN} component={UserLogin}/>

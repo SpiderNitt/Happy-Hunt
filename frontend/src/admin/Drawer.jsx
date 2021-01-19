@@ -67,7 +67,10 @@ const Drawer = props => {
         {
             text: "Logout",
             icon: <ExitToAppIcon />,
-            onClick: authContext.logout
+            onClick: () => {
+                authContext.logout();
+                history.push(Routes.USER_LOGIN);
+            }
         }
     ];
     const adminList = [
@@ -108,6 +111,8 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            {authContext.isSuperAdmin() && (
+            <>
             <h2 style={{
                 display: 'flex',
                 justifyContent: 'flex-start',
@@ -127,6 +132,8 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            </>
+            )}
         </MUIDrawer>
     );
 };

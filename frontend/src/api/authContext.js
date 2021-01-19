@@ -1,13 +1,9 @@
 import React, { createContext, useState } from "react";
-import { useHistory } from "react-router-dom";
-import Routes from "../utils/routes";
 
 const AuthContext = createContext();
 const { Provider } = AuthContext;
 
 const AuthProvider = ({ children }) => {
-  const history = useHistory();
-
   const token = localStorage.getItem("token");
   const userInfo = localStorage.getItem("userInfo");
   const expiresAt = localStorage.getItem("expiresAt");
@@ -35,7 +31,6 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("expiresAt");
     setAuthState({});
-    history.push(Routes.USER_LOGIN);
   };
 
   const isAuthenticated = () => {
@@ -55,6 +50,10 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const isSuperAdmin = () => {
+    return authState.userInfo.Role === "SuperAdmin";
+  };
+
   return (
     <Provider
       value={{
@@ -63,6 +62,7 @@ const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated,
         isAdmin,
+        isSuperAdmin,
       }}>
       {children}
     </Provider>
