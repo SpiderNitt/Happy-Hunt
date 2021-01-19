@@ -70,8 +70,9 @@ export default function UserLogin(props) {
     }
     await authContext.setAuthState(data);
     resetForm();
+    const adminRoles = ["Admin", "SuperAdmin"];
     setTimeout(() => {
-      authContext.isAdmin() ? History.push(Routes.ADMIN_MISSIONS) : History.push(Routes.HOME);
+      adminRoles.includes(data.userInfo.Role) ? History.push(Routes.ADMIN_MISSIONS) : History.push(Routes.HOME);
     }, 500);
   }
   return (

@@ -41,13 +41,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const isAdmin = () => {
-    try {
-      const adminRoles = ["Admin", "SuperAdmin"];
-      return adminRoles.includes(authState.userInfo.Role);
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    const adminRoles = ["Admin", "SuperAdmin"];
+    return adminRoles.includes(authState.userInfo.Role);
   };
 
   const isSuperAdmin = () => {

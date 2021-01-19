@@ -33,6 +33,7 @@ const AdminRoute = ({ children, ...rest }) => {
 };
 
 export default function AdminNav() {
+    const auth = useContext(AuthContext);
     return (
         <>
         <Switch>
@@ -60,15 +61,16 @@ export default function AdminNav() {
                 <Drawer />
                 <AdminList />
             </AdminRoute>
-            <AdminRoute 
+            <Route 
             path={Routes.ADMIN_MISSION_DETAILS} 
             exact 
             render={(props) => (
+            auth.isAuthenticated() && auth.isAdmin() ? (
             <div>
                 <DrawerHeader title="Mission Details" />
                 <Drawer />
                 <MissionDetail {...props} />
-            </div>
+            </div>) : (<Redirect to={Routes.WELCOME} />)
             )} />
             <AdminRoute path={Routes.ADMIN_MISSION_UPDATE} exact>
                 <DrawerHeader title="Admin Mission" />
@@ -85,8 +87,19 @@ export default function AdminNav() {
                 <Drawer />
                 <NewMission />
             </AdminRoute>
-            <AdminRoute path={Routes.ADMIN_EDIT_MISSION} exact render={(props) => (<div><DrawerHeader title="Edit Mission" /><Drawer /><EditMission {...props} /></div>)} />
-        </Switch>
+            <Route
+            path={Routes.ADMIN_EDIT_MISSION} 
+            exact 
+            render={(props) => (
+            auth.isAuthenticated() && auth.isAdmin() ? (
+            <div>
+                <DrawerHeader title="Edit Mission" />
+                <Drawer />
+                <EditMission {...props} />
+            </div>
+            ) : (<Redirect to={Routes.WELCOME} />)
+            )} />
+            </Switch>
         </>
     );
 }
