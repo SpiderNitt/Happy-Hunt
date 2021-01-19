@@ -14,9 +14,10 @@ import {
     Backdrop,
 } from '@material-ui/core';
 import { AccountCircle, Add, Close, Delete } from '@material-ui/icons';
-import React from 'react';
+import React,{ useEffect, useState} from 'react';
 import AdminRegistration from '../AdminRegistration';
 import colors from '../utils/colors';
+import client from '../api/client';
 
 const admins = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 
