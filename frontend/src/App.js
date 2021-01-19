@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
 
-import UserNav from "./navigation/userNavigation";
-import AdminNav from "./navigation/AdminNavigation";
-import AuthContext from "./api/authContext";
-import AuthNavigation from "./navigation/AuthNavigation";
+import AppNavigation from "./navigation/userNavigation";
+import { AuthProvider } from "./api/authContext";
+import { BrowserRouter, Switch } from "react-router-dom";
 
 function App() {
-  const [user, setUser] = useState();
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthProvider>
       <div className='App'>
-        <UserNav />
-        <AdminNav />
-        <AuthNavigation />
+        <BrowserRouter>
+          <Switch>
+            <AppNavigation />
+          </Switch>
+        </BrowserRouter>
       </div>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
 

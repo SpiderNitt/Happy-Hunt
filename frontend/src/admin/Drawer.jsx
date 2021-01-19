@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     Drawer as MUIDrawer,
     ListItem,
@@ -19,6 +19,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
 import colors from '../utils/colors';
 import Routes from '../utils/routes';
+import { AuthContext } from "../api/authContext";
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Drawer = props => {
     const { history } = props;
+    const authContext = useContext(AuthContext);
     const classes = useStyles();
     const itemsList = [
         {
@@ -65,7 +67,10 @@ const Drawer = props => {
         {
             text: "Logout",
             icon: <ExitToAppIcon />,
-            onClick: () => history.push("/logout")
+            onClick: () => {
+                authContext.logout();
+                history.push(Routes.USER_LOGIN);
+            }
         }
     ];
     const adminList = [
@@ -106,6 +111,8 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            {authContext.isSuperAdmin() && (
+            <>
             <h2 style={{
                 display: 'flex',
                 justifyContent: 'flex-start',
@@ -125,6 +132,8 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            </>
+            )}
         </MUIDrawer>
     );
 };

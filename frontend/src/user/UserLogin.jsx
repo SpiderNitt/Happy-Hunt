@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ArrowForward } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
@@ -8,8 +8,9 @@ import ErrorMessage from '../components/ErrorMessage';
 import { userLogin } from '../api/auth';
 import AlertMessage from '../components/AlertMessage';
 import Routes from '../utils/routes';
-import { withRouter } from 'react-router';
-import useAuth from '../hooks/useAuth';
+import { useHistory } from 'react-router';
+import { AuthContext } from '../api/authContext';
+import jwtDecode from 'jwt-decode';
 
 
 const validationSchema = Yup.object().shape({
@@ -47,8 +48,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserLogin(props) {
   const [info, setInfo] = useState('');
-  const { logIn } = useAuth();
+  const authContext = useContext(AuthContext);
   const classes = useStyles();
+  const History = useHistory();
   const handleSubmit = async({ email, password },{ resetForm }) => {
     const body = {
       emailId:email,
@@ -60,9 +62,17 @@ export default function UserLogin(props) {
       console.log(response.data);
       return;
     }
-    await logIn(response.data.token);
+    const {exp} = await jwtDecode(response.data.token)
+    const data = {
+      token: response.data.token,
+      expiresAt: exp,
+      userInfo: response.data.user
+    }
+    await authContext.setAuthState(data);
     resetForm();
-    response.data.user.Role === "Player" ? props.history.push(Routes.HOME) : props.history.push(Routes.ADMIN_MISSIONS);
+    setTimeout(() => {
+      authContext.isAdmin() ? History.push(Routes.ADMIN_MISSIONS) : History.push(Routes.HOME);
+    }, 500);
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -118,5 +128,3 @@ export default function UserLogin(props) {
     </Container>
   );
 }
-
-const UserLoginRoute = withRouter(UserLogin);
