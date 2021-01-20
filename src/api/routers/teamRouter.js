@@ -3,7 +3,8 @@ const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
-const { playerVerify } = require("../../middlewares/role");
+const { playerVerify, leaderVerify } = require("../../middlewares/role");
+const { io } = require("../../helpers/timer");
 
 team.post("/create", playerVerify, async (req, res) => {
   try {
@@ -48,30 +49,73 @@ team.post("/create", playerVerify, async (req, res) => {
   // return 0;
 });
 
-team.get("/join", playerVerify, async (req, res) => {
+team.get("/request/:teamId", playerVerify, async (req, res) => {
   try {
-    const { teamid } = req.query;
-    if (teamid == null || teamid === "") {
+    const { teamId } = req.params;
+    if (teamId === undefined || teamId === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid teamId or Provide teamId" });
+    }
+    const existingTeam = await Team.findOne({ teamId });
+    if (existingTeam.Paid < 1) {
+      return res.status(200).json({ message: "Team is full" });
+    }
+    existingTeam.requests.push(req.jwt_payload.id);
+    existingTeam.save();
+    io.emit(`Requests ${teamId}`, 1);
+    return res.status(200).json({ message: "Request sent" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ Message: "Internal Server Error, Try again later!!" });
+  }
+});
+
+team.get("/reject", leaderVerify, async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (userId === undefined || userId === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid userId or Provide userId" });
+    }
+    const existingTeam = await Team.findById(req.jwt_payload.team);
+    existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
+    existingTeam.save();
+    return res.status(200).json({ message: "Request Rejected" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ Message: "Internal Server Error, Try again later!!" });
+  }
+});
+
+team.get("/accept", leaderVerify, async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (userId == null || userId === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-    const user = await User.findById(req.jwt_payload.id);
+    const user = await User.findById(userId);
     user.Role = "TeamMember";
-    const existingTeam = await Team.findOne({ teamId: teamid });
+    const existingTeam = await Team.findById(req.jwt_payload.team);
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Team is full" });
     }
     user.team = existingTeam._id;
     existingTeam.members.push(user);
     existingTeam.Paid -= 1;
+    existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     existingTeam.save();
     user.save();
     const token = createJWTtoken(user);
     const date = new Date();
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
-      Message: "joined to the Team Successfully. Happy Hunting!!",
-      JWTtoken: token,
-      expiration: date,
+      Message: "Request Accepted",
     });
   } catch (error) {
     console.log(error);

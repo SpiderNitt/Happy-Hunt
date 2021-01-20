@@ -36,6 +36,12 @@ const TeamSchema = new mongoose.Schema({
       ref: "Mission",
     },
   ],
+  requests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
