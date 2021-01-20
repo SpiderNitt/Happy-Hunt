@@ -32,6 +32,6 @@ const send = async (MOBILE) => {
   return 0;
 };
 
-send("919789364515");
+send("917358275270");
 
 module.exports = send;
