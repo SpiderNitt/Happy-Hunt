@@ -15,6 +15,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { Container, TableHead } from '@material-ui/core';
 import { scoreboard } from '../api/scoreBoard';
+import LoadingPage from '../components/LoadingPage';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -102,12 +103,14 @@ export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [ scores, setScores ] = useState([])
+  const [loading, setLoading] = useState(true);
   const fetchScore = async() => {
     const response = await scoreboard();
     if(!response.ok){
       console.log(response.status, response.originalError, response.problem);
       return;
     }
+    setLoading(false);
     setScores(response.data);
   }
   useEffect(() => {
@@ -128,7 +131,8 @@ export default function CustomPaginationActionsTable() {
   return (
       <Container fixed className={classes.root}>
         <Paper className={classes.paper}>
-            <Table className={classes.table}>
+          {loading && <LoadingPage />}
+            {!loading && <Table className={classes.table}>
                 <TableHead>
                 <TableRow>
                     <TableCell style={{ fontWeight: 'bolder' }} component="th">
@@ -178,7 +182,7 @@ export default function CustomPaginationActionsTable() {
                     />
                 </TableRow>
                 </TableFooter>
-            </Table>
+            </Table>}
         </Paper>
     </Container>
   );
