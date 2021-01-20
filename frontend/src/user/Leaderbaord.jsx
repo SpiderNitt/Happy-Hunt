@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,6 +14,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { Container, TableHead } from '@material-ui/core';
+import { scoreboard } from '../api/scoreBoard';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -79,26 +80,6 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, points) {
-  return { name, points };
-}
-
-const rows = [
-  createData('Cupcake', 300),
-  createData('Donut', 400),
-  createData('Eclair', 200),
-  createData('Frozen yoghurt', 150),
-  createData('Gingerbread', 350),
-  createData('Honeycomb', 400),
-  createData('Ice cream sandwich', 230),
-  createData('Jelly Bean', 370),
-  createData('KitKat', 510),
-  createData('Lollipop', 390),
-  createData('Marshmallow', 310),
-  createData('Nougat', 360),
-  createData('Oreo', 430),
-].sort((a, b) => (a.points > b.points ? -1 : 1));
-
 const useStyles2 = makeStyles(theme => ({
     root: {
         width: "100%",
@@ -120,8 +101,20 @@ export default function CustomPaginationActionsTable() {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [ scores, setScores ] = useState([])
+  const fetchScore = async() => {
+    const response = await scoreboard();
+    if(!response.ok){
+      console.log(response.status, response.originalError, response.problem);
+      return;
+    }
+    setScores(response.data);
+  }
+  useEffect(() => {
+    fetchScore();
+  },[])
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, scores.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -141,21 +134,21 @@ export default function CustomPaginationActionsTable() {
                     <TableCell style={{ fontWeight: 'bolder' }} component="th">
                         Team Name
                     </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder' }} align="right">
+                    <TableCell style={{ fontWeight: 'bolder' }} align="center">
                         points
                     </TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
                 {(rowsPerPage > 0
-                    ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    : rows
+                    ? scores.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    : scores
                 ).map((row) => (
                     <TableRow key={row.name}>
                     <TableCell style={{ minWidth: 100 }} component="th" scope="row">
-                        {row.name}
+                        {row.teamName}
                     </TableCell>
-                    <TableCell style={{ minWidth: 100 }} align="right">
+                    <TableCell style={{ minWidth: 100 }} align="center">
                         {row.points}
                     </TableCell>
                     </TableRow>
@@ -163,7 +156,7 @@ export default function CustomPaginationActionsTable() {
 
                 {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
+                    <TableCell colSpan={3} />
                     </TableRow>
                 )}
                 </TableBody>
@@ -172,7 +165,7 @@ export default function CustomPaginationActionsTable() {
                     <TablePagination
                     rowsPerPageOptions={[5, 10, { label: 'All', value: -1 }]}
                     colSpan={3}
-                    count={rows.length}
+                    count={scores.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{

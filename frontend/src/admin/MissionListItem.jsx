@@ -15,7 +15,7 @@ function MissionListItem(props) {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <p><span className={classes.bold}>{props.title}</span>&emsp;Lorem ipsum dolor sit amet, consectetur adipis</p>
+            <p><span className={classes.bold}>{props.title}</span> {props.value}</p>
         </div>
     )
 }

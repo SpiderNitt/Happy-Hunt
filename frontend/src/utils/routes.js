@@ -14,13 +14,14 @@ const Routes = {
   ADMIN_LOGIN: "/admin/login",
   ADMIN_ADD: "/admin/add-admin",
   ADMIN_MISSIONS: "/admin",
-  ADMIN_MISSION_DETAILS: "/admin/missiondetail",
+  ADMIN_MISSION_DETAILS: "/admin/missiondetail/:id",
   ADMIN_LEADERBOARD: "/admin/scoreboard",
   ADMIN_LIST: "/admin/list",
-  ADMIN_MISSION_EDIT: "/admin/mission/edit",
+  ADMIN_MISSION_UPDATE: "/admin/mission/update",
   ADMIN_NOTIFICATION: "/admin/notification",
   ADMIN_NEW_MISSION: "/admin/mission/new",
   ADMIN_ACTIVITY_FEED: "/admin/activity",
+  ADMIN_EDIT_MISSION: "/admin/mission/edit/:id",
 };
 
 export default Routes;

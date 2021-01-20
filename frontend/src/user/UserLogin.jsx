@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ArrowForward } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
@@ -8,9 +8,11 @@ import ErrorMessage from '../components/ErrorMessage';
 import { userLogin } from '../api/auth';
 import AlertMessage from '../components/AlertMessage';
 import Routes from '../utils/routes';
-import { withRouter } from 'react-router';
-import useAuth from '../hooks/useAuth';
-
+import { useHistory } from 'react-router';
+import { AuthContext } from '../api/authContext';
+import jwtDecode from 'jwt-decode';
+import LoadingPage from '../components/LoadingPage';
+import SuccessAnimation from '../components/SuccessAnimation';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -47,9 +49,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserLogin(props) {
   const [info, setInfo] = useState('');
-  const { logIn } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [successLogin, setSuccessLogin] = useState(false);
+  const authContext = useContext(AuthContext);
   const classes = useStyles();
+  const History = useHistory();
   const handleSubmit = async({ email, password },{ resetForm }) => {
+    setLoading(true);
     const body = {
       emailId:email,
       password:password
@@ -60,15 +66,28 @@ export default function UserLogin(props) {
       console.log(response.data);
       return;
     }
-    logIn(response.data.token);
+    setLoading(false);
+    setSuccessLogin(true);
+    const {exp} = await jwtDecode(response.data.token)
+    const data = {
+      token: response.data.token,
+      expiresAt: exp,
+      userInfo: response.data.user
+    }
+    await authContext.setAuthState(data);
     resetForm();
-    response.data.user.Role === "Player" ? props.history.push(Routes.HOME) : props.history.push(Routes.ADMIN_MISSIONS);
+    const adminRoles = ["Admin", "SuperAdmin"];
+    setTimeout(() => {
+      adminRoles.includes(data.userInfo.Role) ? History.push(Routes.ADMIN_MISSIONS) : History.push(Routes.HOME);
+    }, 2000);
   }
   return (
     <Container component="main" maxWidth="xs">
     <CssBaseline />
+    {loading && <LoadingPage /> }
+    {successLogin && <SuccessAnimation />}
     {info && <AlertMessage message={info} setInfo={setInfo} />}
-    <div className={classes.paper}>
+    {(!loading && !successLogin) && <div className={classes.paper}>
         <Avatar className={classes.avatar} sizes='large' >
           <ArrowForward style={{ fontSize: 40 }} />
         </Avatar>
@@ -114,9 +133,7 @@ export default function UserLogin(props) {
           </Form>
         )}
         </Formik>
-    </div>
+    </div>}
     </Container>
   );
 }
-
-const UserLoginRoute = withRouter(UserLogin);

@@ -9,4 +9,4 @@ export const userMobileNoVerify = (body) =>
 export const userLogin = (body) => client.post("/auth/login", body);
 
 export const AdminRegister = (email) =>
-  client.post("/auth/create_admin", { emailId: email });
+  client.post("/api/admin/createAdmin", { emailId: email });
