@@ -6,8 +6,7 @@ const {
 } = require("../../middlewares/expressValidator");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
-const sendSMS = require("../../helpers/SendSMS");
-const verifySMS = require("../../helpers/VerifySMS");
+const { send, verify } = require("../../helpers/SMS/index");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
@@ -36,8 +35,7 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
     });
 
     try {
-      if (sendSMS(phoneNo))
-        return res.status(200).json({ message: "OTP sent" });
+      if (send(phoneNo)) return res.status(200).json({ message: "OTP sent" });
       return res.status(400).json({ message: "OTP not sent" });
     } catch (err) {
       console.log(err.message);
@@ -54,7 +52,7 @@ player.post("/resendOtp", async (req, res) => {
     if (!mobileNo) return res.status(400).json({ message: "Fill all fields" });
     const user = await User.findOne({ phoneNo: mobileNo, active: false });
     if (!user) return res.status(400).json({ message: "User not registered" });
-    if (sendSMS(mobileNo)) return res.status(200).json({ message: "OTP sent" });
+    if (send(mobileNo)) return res.status(200).json({ message: "OTP sent" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
@@ -68,7 +66,8 @@ player.post("/verify", async (req, res) => {
     const user = await User.findOne({ phoneNo: mobileNo });
     if (!user) return res.status(400).json({ message: "User not registered" });
     // console.log(await verifySMS(user.otpId, otp));
-    if (!(await verifySMS(user.otpId, otp))) {
+    if (!(await verify(otp, user.otpId))) {
+      await User.findOneAndRemove({ phoneNo: mobileNo });
       return res.status(400).json({ message: "OTP incorrect" });
     }
     const result = await User.findOneAndUpdate(

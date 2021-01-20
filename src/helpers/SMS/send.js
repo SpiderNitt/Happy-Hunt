@@ -1,10 +1,12 @@
 /* eslint-disable node/no-unsupported-features/es-syntax */
 const axios = require("axios");
 const FormData = require("form-data");
+require("dotenv").config({ path: "./src/env/.env" });
+const User = require("../../database/models/User");
 
-const send = async (MOBILE) => {
+const send = async (mobile) => {
   const data = new FormData();
-  data.append("mobile", MOBILE);
+  data.append("mobile", `91${mobile}`);
   data.append("sender_id", "SMSINFO");
   data.append(
     "message",
@@ -25,13 +27,16 @@ const send = async (MOBILE) => {
   try {
     const response = await axios(config);
     console.log(response.data);
-    return response.data;
+    const result = await User.updateOne(
+      { phoneNo: mobile },
+      { otpId: response.data.otp_id }
+    );
+    if (result.nModified === 1) return true;
+    return false;
   } catch (message) {
-    console.log(message.response.data);
+    console.log(message);
+    return false;
   }
-  return 0;
 };
-
-send("917358275270");
-
+send("7358275270");
 module.exports = send;

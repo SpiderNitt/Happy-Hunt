@@ -19,12 +19,11 @@ const verify = async (otpCode, otpId) => {
 
   try {
     const res = await axios(config);
-    console.log(res.data);
-    return res.data;
+    if (res.data.status === "success") return true;
+    return false;
   } catch (message) {
     console.log(message.response.data);
+    return false;
   }
-  return 0;
 };
-verify("229613", "153fdcbf-9fd0-41fd-abe0-f702645ca771");
 module.exports = verify;
