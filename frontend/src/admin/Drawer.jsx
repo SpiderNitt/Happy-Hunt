@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     Drawer as MUIDrawer,
     ListItem,
@@ -19,6 +19,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
 import colors from '../utils/colors';
 import Routes from '../utils/routes';
+import { AuthContext } from "../api/authContext";
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -39,13 +40,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Drawer = props => {
     const { history } = props;
+    const authContext = useContext(AuthContext);
     const classes = useStyles();
     const itemsList = [
         {
             text: "Mission",
             icon: <DashboardIcon />,
             onClick: () => {
-                props.onTitleChange('Missions')
                 history.push(Routes.ADMIN_MISSIONS);
             }
         },
@@ -53,7 +54,6 @@ const Drawer = props => {
             text: "Activity",
             icon: <DynamicFeedIcon />,
             onClick: () => {
-                props.onTitleChange('Activity feed')
                 history.push(Routes.ADMIN_ACTIVITY_FEED);
             }
         },
@@ -61,14 +61,16 @@ const Drawer = props => {
             text: "Score Board",
             icon: <ScoreIcon />,
             onClick: () => {
-                props.onTitleChange('Score Board')
                 history.push(Routes.ADMIN_LEADERBOARD)
             }
         },
         {
             text: "Logout",
             icon: <ExitToAppIcon />,
-            onClick: () => history.push("/logout")
+            onClick: () => {
+                authContext.logout();
+                history.push(Routes.USER_LOGIN);
+            }
         }
     ];
     const adminList = [
@@ -76,7 +78,6 @@ const Drawer = props => {
             text: "Admin List",
             icon: <ListIcon />,
             onClick: () => {
-                props.onTitleChange('Admin List');
                 history.push(Routes.ADMIN_LIST);
             }
         },
@@ -84,8 +85,7 @@ const Drawer = props => {
             text: "Missions",
             icon: <EditIcon />,
             onClick: () => {
-                props.onTitleChange('Missions');
-                history.push(Routes.ADMIN_MISSION_EDIT);
+                history.push(Routes.ADMIN_MISSION_UPDATE);
             }
         }
     ]
@@ -111,6 +111,8 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            {authContext.isSuperAdmin() && (
+            <>
             <h2 style={{
                 display: 'flex',
                 justifyContent: 'flex-start',
@@ -130,6 +132,8 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            </>
+            )}
         </MUIDrawer>
     );
 };

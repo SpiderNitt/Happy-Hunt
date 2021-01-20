@@ -6,6 +6,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import * as Yup from "yup";
 import { userMobileNoVerify } from '../api/auth';
 import Routes from '../utils/routes';
+import { joinTeam } from '../api/team';
 
 const validationSchema = Yup.object().shape({
     teamId: Yup.string().required().label("Team ID"),
@@ -40,18 +41,15 @@ const useStyles = makeStyles((theme) => ({
 function JoinTeam(props) {
     const styles = useStyles();
     const handleSubmit = async({teamId}, { resetForm }) => {
-        const body = {   
-            teamId:teamId
-        }
-        const response = await userMobileNoVerify(body);
+        const response = await joinTeam(teamId);
         if(!response.ok){
-        console.log(response.problem);
-        console.log(response.data);
-        return;
+            console.log(response.problem);
+            console.log(response);
+            return;
         }
         console.log(response.data);
         resetForm();
-        props.history.push(Routes.USER_PROFILE);
+        // props.history.push(Routes.USER_PROFILE);
     }
     return (
         <Container className={styles.root}>
