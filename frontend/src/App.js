@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-import AppNavigation from "./navigation/userNavigation";
+import AppNavigation from "./navigation/UserNavigation";
 import { AuthProvider } from "./api/authContext";
 import { BrowserRouter, Switch } from "react-router-dom";
 
