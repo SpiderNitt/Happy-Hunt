@@ -23,18 +23,10 @@ import UserRegistration from "../user/UserRegistration";
 import UserLogin from "../user/UserLogin";
 import VerificationEmail from "../user/VerificationEmail";
 import { AuthContext } from "../api/authContext";
-import useScript from "../hooks/useScript";
 import AdminNav from "./AdminNavigation";
+import MessageBot from "../components/MessageBot";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
-  useScript(
-    "https://embed.tawk.to/5ffc4538c31c9117cb6d70dc/1eromsq55",
-    "user",
-    {
-      key: "crossorigin",
-      value: "*",
-    }
-  );
   const authContext = useContext(AuthContext);
   return (
     <Route
@@ -43,7 +35,7 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
         authContext.isAuthenticated() ? (
           <>
           {children}
-          <div className='user'></div>
+          <MessageBot />
           </>
         ) : (
           <Redirect to={Routes.WELCOME} />
@@ -59,12 +51,26 @@ function UserNav() {
   return (
     <>
     <Switch>
-      <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
-      <Route path={Routes.USER_LOGIN} component={UserLogin}/>
-      <Route path={Routes.USER_VERIFY} component={VerificationEmail}/>
-      <Route path={Routes.WELCOME} exact component={GameIntro}/>
-      <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>
-      <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} component={JoinTeam}/>
+      <Route path={Routes.USER_REGISTER} exact>
+        <UserRegistration />
+        <MessageBot />
+      </Route>
+      <Route path={Routes.USER_LOGIN} exact>
+        <UserLogin />
+        <MessageBot />
+      </Route>
+      <Route path={Routes.USER_VERIFY} exact render={(props) => (
+        <>
+        <VerificationEmail {...props} />
+        <MessageBot />
+        </>
+      )} />
+      <Route path={Routes.WELCOME} exact>
+        <GameIntro />
+        <MessageBot />
+      </Route>
+      <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact component={CreateTeam}/>
+      <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact component={JoinTeam}/>
       <Route path="/photo-clue" component={PictureClues}/>
       <Route path="/photo" exact component={Capture}/>
       <Route path="/location-clue" component={LocationClues}/>

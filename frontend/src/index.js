@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
+// import LoadingPage from "./components/LoadingPage";
+// import SuccessAnimation from "./components/SuccessAnimation";
 // import PaymentPage from "./user/PaymentPage";
 // import ProfilePage from "./user/ProfilePage";
 // import UserLogin from "./UserLogin";
