@@ -19,7 +19,13 @@ import AdminRegistration from '../AdminRegistration';
 import colors from '../utils/colors';
 import client from '../api/client';
 
-const admins = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+const admins = [{
+  emailId: 'sampleadmin@gmail.com',
+  password: 'secret'
+},{
+  emailId: 'sampleadmin2@gmail.com',
+  password: 'secret2'
+}]
 
 const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -54,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     },
     box: {
         marginTop: 70,
-        height: 640,
+        width: 600,
         overflowY: 'scroll',
         backgroundColor: colors.light,
         borderRadius: 20,    
@@ -66,7 +72,12 @@ function AdminMembers(props) {
     const [data,setData] = useState(admins);
     const styles = useStyles();
     useEffect(()=>{
-      console.log(data);
+      const fetchData = async ()=>{
+        const result=await client.get('api/adminList');
+        console.log(result.data);
+        setData(result.data);
+      }
+      fetchData();
     },[]);
     const handleOpen = () => {
       setOpen(true);
@@ -78,7 +89,7 @@ function AdminMembers(props) {
         <Container className={styles.root}>
             <div className={styles.box}>
             <List>
-              {data.map((index) => (
+              {data.map((element,index) => (
                 <>
                 <ListItem>
                   <ListItemAvatar>
@@ -87,7 +98,8 @@ function AdminMembers(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={`admin${index+1}@example.com`}
+                    primary={element.emailId}
+                    secondary={`Password: secret`}
                     style={{ marginLeft: 10 }}
                   />
                   <ListItemSecondaryAction>
