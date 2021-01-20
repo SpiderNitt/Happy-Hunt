@@ -47,7 +47,7 @@ Router.post(
 
         await User.create({
           emailId,
-          Role: "admin",
+          Role: "Admin",
           password,
           active: true,
         });
