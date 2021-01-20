@@ -3,8 +3,9 @@ const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
+const { playerVerify } = require("../../middlewares/role");
 
-team.post("/create", async (req, res) => {
+team.post("/create", playerVerify, async (req, res) => {
   try {
     const { teamName } = req.body;
     if (teamName == null || teamName === "") {
@@ -47,7 +48,7 @@ team.post("/create", async (req, res) => {
   // return 0;
 });
 
-team.get("/join", async (req, res) => {
+team.get("/join", playerVerify, async (req, res) => {
   try {
     const { teamid } = req.query;
     if (teamid == null || teamid === "") {
@@ -81,7 +82,7 @@ team.get("/join", async (req, res) => {
   return 0;
 });
 
-team.post("/location", async (req, res) => {
+team.post("/location", playerVerify, async (req, res) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user.Role === "TeamLeader") {
