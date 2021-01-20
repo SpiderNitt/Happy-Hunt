@@ -1,11 +1,8 @@
 const openApi = require("express").Router();
 const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
-<<<<<<< HEAD
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
-=======
->>>>>>> fbfa1286919c822aecb8a21dea640a608f9442de
 
 openApi.get("/scoreboard", async (req, res) => {
   try {
@@ -26,7 +23,6 @@ openApi.get("/mission/:id", async (req, res) => {
     if (!mission) {
       return res.status(404).json({ message: "Mission not found" });
     }
-<<<<<<< HEAD
     const hint = [];
     let i;
     for (i = 0; i < mission.Hints.length; i += 1) {
@@ -36,15 +32,11 @@ openApi.get("/mission/:id", async (req, res) => {
     }
     const result = { mission, hint };
     return res.status(200).json(result);
-=======
-    return res.status(200).json(mission);
->>>>>>> fbfa1286919c822aecb8a21dea640a608f9442de
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ Message: "Server Error, Try again later" });
   }
 });
-<<<<<<< HEAD
 openApi.post("/payment", async (req, res) => {
   try {
     const emailId = req.body.payload.payment.email;
@@ -87,6 +79,4 @@ openApi.get("/adminList", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-=======
->>>>>>> fbfa1286919c822aecb8a21dea640a608f9442de
 module.exports = openApi;
