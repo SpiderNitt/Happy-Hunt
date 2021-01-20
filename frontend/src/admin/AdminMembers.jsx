@@ -62,12 +62,15 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function AdminMembers(props) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [data,setData] = useState(admins);
     const styles = useStyles();
+    useEffect(()=>{
+      console.log(data);
+    },[]);
     const handleOpen = () => {
       setOpen(true);
     };
-  
     const handleClose = () => {
       setOpen(false);
     };
@@ -75,7 +78,7 @@ function AdminMembers(props) {
         <Container className={styles.root}>
             <div className={styles.box}>
             <List>
-              {admins.map((index) => (
+              {data.map((index) => (
                 <>
                 <ListItem>
                   <ListItemAvatar>

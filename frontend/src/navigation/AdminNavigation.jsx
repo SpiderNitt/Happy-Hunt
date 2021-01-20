@@ -4,7 +4,7 @@ import Drawer from "../admin/Drawer";
 import DrawerHeader from '../admin/DrawerHeader';
 import Mission from '../admin/Mission'
 import Activity from '../admin/Activity.jsx'
-import ScoreBoard from '../admin/ScoreBoard'
+import ScoreBoard from '../user/Leaderbaord'
 import AdminList from '../admin/AdminMembers'
 import AdminMission from '../admin/AdminMission';
 import Notification from '../admin/Notifications';

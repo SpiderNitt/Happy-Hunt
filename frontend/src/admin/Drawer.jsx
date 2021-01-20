@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     toolbarIcon: {
         display: 'flex',
         alignItems: 'center',
+        width:'80%',
         justifyContent: 'space-around',
         padding: '0 8px',
         ...theme.mixins.toolbar,
@@ -91,9 +92,9 @@ const Drawer = props => {
     return (
         <MUIDrawer variant="permanent" className={classes.drawer} open="true">
             <div className={classes.toolbarIcon}>
-                <Avatar className={classes.orange}>S</Avatar>
+                <Avatar className={classes.orange}>{props.title}</Avatar>
                 <div>
-                    <div>Sanju Samson</div>
+                    <div>{props.username}</div>
                 </div>
             </div>
             <List>
@@ -137,4 +138,8 @@ const Drawer = props => {
     );
 };
 
+Drawer.defaultProps = {
+    username: 'ADMIN',
+    title:'A'
+}
 export default withRouter(Drawer);
