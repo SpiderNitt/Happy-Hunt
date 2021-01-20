@@ -1,13 +1,15 @@
-import { Button, Container, Grid, Link, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Button, Container, CssBaseline, Grid, Link, makeStyles, TextField, Typography } from '@material-ui/core';
 import { MessageOutlined } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
 import * as Yup from "yup";
 import { userMobileNoVerify } from '../api/auth';
 import Routes from '../utils/routes';
 import jwtDecode from 'jwt-decode';
 import { AuthContext } from '../api/authContext';
+import LoadingPage from '../components/LoadingPage';
+import SuccessAnimation from '../components/SuccessAnimation';
 const queryString = require('query-string');
 
 const validationSchema = Yup.object().shape({
@@ -42,9 +44,12 @@ const useStyles = makeStyles((theme) => ({
 
 function VerificationEmail(props) {
     const styles = useStyles();
+    const [loading, setLoading] = useState(false);
+    const [successVerify, setSuccessVerify] = useState(false);
     const auth = useContext(AuthContext);
     const parsed = queryString.parse(props.location.search);
     const handleSubmit = async({otp}, { resetForm }) => {
+        setLoading(true);
         const body = {
             mobileNo:parsed.mobileNo,   
             otp:otp
@@ -53,8 +58,11 @@ function VerificationEmail(props) {
         if(!response.ok){
             console.log(response.problem);
             console.log(response.data);
+            setLoading(false);
             return;
         }
+        setLoading(false);
+        setSuccessVerify(true);
         const {exp} = await jwtDecode(response.data.token)
         const data = {
           token: response.data.token,
@@ -65,10 +73,14 @@ function VerificationEmail(props) {
         resetForm();
         setTimeout(() => {
             props.history.push(Routes.HOME);
-        }, 500);
+        }, 2000);
     }
     return (
-        <Container className={styles.root}>
+        <Container maxWidth="md">
+            <CssBaseline />
+            {loading && <LoadingPage /> }
+            {successVerify && <SuccessAnimation />}
+            {(!loading && !successVerify) && <div className={styles.root}>
             <div style={{ fontSize: 50 }}>
                 <MessageOutlined fontSize="inherit" />
             </div>
@@ -111,6 +123,7 @@ function VerificationEmail(props) {
             >
                 resend OTP
             </Link>
+            </div>}
         </Container>
     );
 }

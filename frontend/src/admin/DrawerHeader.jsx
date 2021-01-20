@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
-import { ChatBubble } from '@material-ui/icons';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -115,11 +114,6 @@ const DrawerHeader = (props) => {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {props.title}
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <ChatBubble />
-                        </Badge>
-                    </IconButton>
                     <IconButton color="inherit" href="/admin/notification">
                         <Badge badgeContent={3} color="secondary">
                             <NotificationsActiveIcon />

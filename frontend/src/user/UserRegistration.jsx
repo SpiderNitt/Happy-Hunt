@@ -7,8 +7,9 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 import ErrorMessage from '../components/ErrorMessage';
 import { userRegister } from '../api/auth';
 import AlertMessage from '../components/AlertMessage';
-import { withRouter } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import Routes from '../utils/routes';
+import LoadingPage from '../components/LoadingPage';
 
 
 const validationSchema = Yup.object().shape({
@@ -52,9 +53,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserRegistration(props) {
   const [info, setInfo] = useState('');
+  const [loading, setLoading] = useState(false);
   const classes = useStyles();
+  const history = useHistory();
 
   const handleSubmit = async ({ username, email, phoneNo, password },{ resetForm }) => {
+    setLoading(true);
     const body = {
       name:username,
       emailId:email, 
@@ -65,17 +69,22 @@ export default function UserRegistration(props) {
     if(!response.ok){
       console.log(response.problem);
       setInfo(response.data.message);
+      setLoading(false);
       return;
     }
     resetForm();
-    props.history.push(`${Routes.USER_VERIFY}?mobileNo=${phoneNo}`);
+    setTimeout(() => {
+      setLoading(false);
+      history.push(`${Routes.USER_VERIFY}?mobileNo=${phoneNo}`);
+    }, 500);
   }
 
   return (
     <Container component="main" maxWidth="xs">
     <CssBaseline />
+    {loading && <LoadingPage /> }
     {info && <AlertMessage message={info} setInfo={setInfo} />}
-    <div className={classes.paper}>
+    {!loading && <div className={classes.paper}>
         <div className={classes.avatar}>
           <LockOutlined style={{ fontSize: 40 }} />
         </div>
@@ -145,7 +154,7 @@ export default function UserRegistration(props) {
           </Form>
         )}
         </Formik>
-    </div>
+    </div>}
     </Container>
   );
 }
