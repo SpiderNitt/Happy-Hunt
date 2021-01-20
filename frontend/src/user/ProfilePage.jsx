@@ -3,7 +3,7 @@ import { Add, Edit, ExitToApp, GroupAdd } from '@material-ui/icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Routes from '../utils/routes';
-import AuthContext from '../api/authContext.js';
+import {AuthContext} from '../api/authContext.js';
 import useAuth from '../hooks/useAuth';
 import client from '../api/client';
 
