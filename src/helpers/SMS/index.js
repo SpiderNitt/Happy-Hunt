@@ -1,5 +1,5 @@
-const send = require("./SMS_SEND");
-const verify = require("./SMS_VERIFY");
-const resend = require("./SMS_RESEND");
+const send = require("./send");
+const verify = require("./verify");
+const resend = require("./resend");
 
 module.exports = { send, verify, resend };
