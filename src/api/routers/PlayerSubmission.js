@@ -7,10 +7,12 @@ const Activity = require("../../database/models/Activity");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
+const { playerVerify } = require("../../middlewares/role");
 
 player.post(
   "/submission",
   multer({ storage: multer.memoryStorage() }).single("answer"),
+  playerVerify,
   async (req, res) => {
     try {
       const { team } = req.jwt_payload;
@@ -156,7 +158,7 @@ player.post(
     }
   }
 );
-player.get("/profile", async (req, res) => {
+player.get("/profile", playerVerify, async (req, res) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user === undefined || user === null) {
@@ -171,6 +173,7 @@ player.get("/profile", async (req, res) => {
 player.patch(
   "/update",
   multer({ storage: multer.memoryStorage() }).single("photo"),
+  playerVerify,
   async (req, res) => {
     try {
       const { id } = req.jwt_payload;
@@ -204,7 +207,7 @@ player.patch(
     }
   }
 );
-player.get("/mission", async (req, res) => {
+player.get("/mission", playerVerify, async (req, res) => {
   try {
     const teamId = req.jwt_payload.team;
 
@@ -245,7 +248,7 @@ player.get("/mission", async (req, res) => {
     });
   }
 });
-player.get("/hint", async (req, res) => {
+player.get("/hint", playerVerify, async (req, res) => {
   try {
     const { MissionId } = req.body;
     const mission = await Mission.findById(MissionId);

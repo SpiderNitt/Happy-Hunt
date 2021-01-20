@@ -3,8 +3,9 @@ const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
+const { playerVerify } = require("../../middlewares/role");
 
-team.post("/create", async (req, res) => {
+team.post("/create", playerVerify, async (req, res) => {
   try {
     const { teamName } = req.body;
     if (teamName == null || teamName === "") {
@@ -25,14 +26,18 @@ team.post("/create", async (req, res) => {
       members: [],
     });
     newTeam.members.push(user);
+    if (user.Paid) newTeam.Paid = user.Paid;
     await newTeam.save();
     user.team = newTeam._id;
     await user.save();
     const token = createJWTtoken(user);
+    const date = new Date();
+    date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
       TeamId: newTeam.teamId,
       JWTtoken: token,
+      expiration: date,
     });
   } catch (error) {
     console.log(error);
@@ -43,25 +48,30 @@ team.post("/create", async (req, res) => {
   // return 0;
 });
 
-team.get("/join", async (req, res) => {
+team.get("/join", playerVerify, async (req, res) => {
   try {
     const { teamid } = req.query;
     if (teamid == null || teamid === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-
     const user = await User.findById(req.jwt_payload.id);
     user.Role = "TeamMember";
     const existingTeam = await Team.findOne({ teamId: teamid });
+    if (existingTeam.Paid < 1) {
+      return res.status(200).json({ message: "Team is full" });
+    }
     user.team = existingTeam._id;
     existingTeam.members.push(user);
+    existingTeam.Paid -= 1;
     existingTeam.save();
     user.save();
     const token = createJWTtoken(user);
-
+    const date = new Date();
+    date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "joined to the Team Successfully. Happy Hunting!!",
       JWTtoken: token,
+      expiration: date,
     });
   } catch (error) {
     console.log(error);
@@ -72,7 +82,7 @@ team.get("/join", async (req, res) => {
   return 0;
 });
 
-team.post("/location", async (req, res) => {
+team.post("/location", playerVerify, async (req, res) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user.Role === "TeamLeader") {

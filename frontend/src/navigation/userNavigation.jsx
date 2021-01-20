@@ -23,18 +23,10 @@ import UserRegistration from "../user/UserRegistration";
 import UserLogin from "../user/UserLogin";
 import VerificationEmail from "../user/VerificationEmail";
 import { AuthContext } from "../api/authContext";
-import useScript from "../hooks/useScript";
 import AdminNav from "./AdminNavigation";
+import MessageBot from "../components/MessageBot";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
-  useScript(
-    "https://embed.tawk.to/5ffc4538c31c9117cb6d70dc/1eromsq55",
-    "user",
-    {
-      key: "crossorigin",
-      value: "*",
-    }
-  );
   const authContext = useContext(AuthContext);
   return (
     <Route
@@ -42,12 +34,12 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
       render={() =>
         authContext.isAuthenticated() ? (
           <>
-          {children}
-          <div className='user'></div>
+            {children}
+            <MessageBot />
           </>
         ) : (
-          <Redirect to={Routes.WELCOME} />
-        )
+            <Redirect to={Routes.WELCOME} />
+          )
       }
     ></Route>
   );
@@ -58,59 +50,73 @@ function UserNav() {
 
   return (
     <>
-    <Switch>
-      <Route path={Routes.USER_REGISTER} component={UserRegistration}/>
-      <Route path={Routes.USER_LOGIN} component={UserLogin}/>
-      <Route path={Routes.USER_VERIFY} component={VerificationEmail}/>
-      <Route path={Routes.WELCOME} exact component={GameIntro}/>
-      <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} component={CreateTeam}/>
-      <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} component={JoinTeam}/>
-      <Route path="/photo-clue" component={PictureClues}/>
-      <Route path="/photo" exact component={Capture}/>
-      <Route path="/location-clue" component={LocationClues}/>
-      <Route path="/text-clue" component={TextClues}/>
-      <UserAuthenticatedRoute path={Routes.HOME} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+      <Switch>
+        <Route path={Routes.USER_REGISTER} exact>
+          <UserRegistration />
+          <MessageBot />
+        </Route>
+        <Route path={Routes.USER_LOGIN} exact>
+          <UserLogin />
+          <MessageBot />
+        </Route>
+        <Route path={Routes.USER_VERIFY} exact render={(props) => (
+          <>
+            <VerificationEmail {...props} />
+            <MessageBot />
+          </>
+        )} />
+        <Route path={Routes.WELCOME} exact>
+          <GameIntro />
+          <MessageBot />
+        </Route>
+        <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact component={CreateTeam} />
+        <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact component={JoinTeam} />
+        <Route path="/photo-clue" component={PictureClues} />
+        <Route path="/photo" exact component={Capture} />
+        <Route path="/location-clue" component={LocationClues} />
+        <Route path="/text-clue" component={TextClues} />
+        <UserAuthenticatedRoute path={Routes.HOME} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <Home />
-        </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <ProfilePage />
-        </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_ACTIVITY} exact>
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_ACTIVITY} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="activity" /></div>
           <Container>
-              <ActivityFeed />
+            <ActivityFeed />
           </Container>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_CLUES} exact>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_CLUES} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
           <ClueTabs />
           <div style={{ marginTop: 20 }}>
-              <Clues />
+            <Clues />
           </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>
           <Container>
-              <Leaderboard />
+            <Leaderboard />
           </Container>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_NOTIFICATION} exact>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_NOTIFICATION} exact>
           <TopNav />
           <Container style={{ marginTop: 70 }}>
-              <Notifications />
+            <Notifications />
           </Container>
-      </UserAuthenticatedRoute>
-      <AdminNav />
-    </Switch>
+        </UserAuthenticatedRoute>
+        <AdminNav />
+      </Switch>
     </>
   )
 }

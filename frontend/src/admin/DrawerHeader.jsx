@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
-import { ChatBubble } from '@material-ui/icons';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { makeStyles } from "@material-ui/core/styles";
 
