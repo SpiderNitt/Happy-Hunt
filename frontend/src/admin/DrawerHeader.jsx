@@ -114,11 +114,6 @@ const DrawerHeader = (props) => {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {props.title}
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <ChatBubble />
-                        </Badge>
-                    </IconButton>
                     <IconButton color="inherit" href="/admin/notification">
                         <Badge badgeContent={3} color="secondary">
                             <NotificationsActiveIcon />
