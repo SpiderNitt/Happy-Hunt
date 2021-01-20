@@ -27,14 +27,6 @@ import AdminNav from "./AdminNavigation";
 import MessageBot from "../components/MessageBot";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
-  useScript(
-    "https://embed.tawk.to/5ffc4538c31c9117cb6d70dc/1eromsq55",
-    "user",
-    {
-      key: "crossorigin",
-      value: "*",
-    }
-  );
   const authContext = useContext(AuthContext);
   return (
     <Route
