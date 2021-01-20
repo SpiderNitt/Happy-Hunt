@@ -14,6 +14,7 @@ import PictureClues from '../user/PictureClues';
 import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
+import ClueItems from '../user/ClueItems'
 
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
