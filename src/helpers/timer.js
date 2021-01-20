@@ -95,6 +95,7 @@ setInterval(async () => {
     }
   }
   console.log("complete");
+  // bonus distribution
 }, 1800000);
 
 module.exports = { app, io };

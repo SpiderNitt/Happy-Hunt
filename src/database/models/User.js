@@ -5,6 +5,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   Role: { type: String, required: true }, // TeamLeader , TeamMember , Admin , SuperAdmin,
+  Paid: {
+    type: Number,
+    default: 0,
+  },
   emailId: {
     type: String,
     required: true,
