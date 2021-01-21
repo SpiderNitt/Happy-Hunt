@@ -137,7 +137,7 @@ player.post(
             {
               Answer: answer,
               category: Category,
-              status: "Pending",
+              status: false,
               ShouldBeShown: visibility,
               isSubmitted: true,
             }
