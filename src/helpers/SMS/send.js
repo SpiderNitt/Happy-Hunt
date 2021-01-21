@@ -38,5 +38,4 @@ const send = async (mobile) => {
     return false;
   }
 };
-send("7358275270");
 module.exports = send;
