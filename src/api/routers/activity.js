@@ -4,11 +4,15 @@ const Mission = require("../../database/models/Mission");
 
 Router.get("/feed", async (req, res) => {
   try {
+<<<<<<< HEAD
     const feeds = await Feed.find({ status: true })
       .populate("team")
       .populate("mission")
       .exec();
 
+=======
+    const feeds = await Feed.find({ status: true });
+>>>>>>> 966e4a8... Changed status and added payment route
     const feedToBeShown = [];
     const details = {};
     for (let index = 0; index < feeds.length; index++) {
