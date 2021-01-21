@@ -4,15 +4,26 @@ const Mission = require("../../database/models/Mission");
 
 Router.get("/feed", async (req, res) => {
   try {
-    const feeds = await Feed.find({ status: "accepted" });
+    const feeds = await Feed.find({ status: true })
+      .populate("team")
+      .populate("mission")
+      .exec();
+
     const feedToBeShown = [];
+    const details = {};
     for (let index = 0; index < feeds.length; index++) {
-      const { mission } = feeds[index];
-      const missionStatement = await Mission.findById(mission);
-      if (missionStatement.Feed) {
-        feedToBeShown.push(feeds[index]);
+      details.MissionName = feeds[index].mission.MissionName;
+      details.TeamName = feeds[index].team.teamName;
+      details.likes = feeds[index].likes;
+      details._id = feeds[index]._id;
+      details.team_id = feeds[index].team._id;
+      details.Date = feeds[index].Date;
+
+      if (feeds[index].mission.Feed) {
+        feedToBeShown.push(details);
       }
     }
+
     return res.status(200).json({ activityFeeds: feedToBeShown });
   } catch (err) {
     console.log(err);

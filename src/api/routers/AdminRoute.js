@@ -117,13 +117,12 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     }
     const mission = await Mission.findById(activity.mission);
     const team = await Team.findById(activity.team._id);
-    console.log();
-
-    if (isAccepted == "true") {
+    if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
         console.log(mission.maxPoints, " - ", activity.hintsTaken);
         team.points += mission.maxPoints - activity.hintsTaken * 20;
         activity.status = true;
+        activity.Date = Date.now();
         await team.save();
         await activity.save();
       } else {
@@ -134,8 +133,8 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
       }
     } else {
       activity.isSubmitted = false;
+      activity.Date = Date.now();
       await activity.save();
-      // await activity.deleteOne({ id: activityfeedId });
     }
     return res
       .status(200)
