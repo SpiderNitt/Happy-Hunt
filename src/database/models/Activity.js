@@ -38,5 +38,9 @@ const activitySchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  Date: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 module.exports = mongoose.model("Activity", activitySchema);

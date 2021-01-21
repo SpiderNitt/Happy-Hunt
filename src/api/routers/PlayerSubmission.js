@@ -99,11 +99,12 @@ player.post(
               {
                 Answer: answer,
                 category: Category,
-                status: "Accepted",
+                status: true,
                 ShouldBeShown: visibility,
                 isSubmitted: true,
               }
             );
+            // team
           } else {
             return res.status(200).json({ message: "Your answer is wrong" });
           }
@@ -124,11 +125,12 @@ player.post(
             {
               Answer: answer,
               category: Category,
-              status: "Accepted",
+              status: true,
               ShouldBeShown: visibility,
               isSubmitted: true,
             }
           );
+          //team
         } else {
           result = await Activity.updateOne(
             { team, mission, isSubmitted: false },
@@ -140,6 +142,7 @@ player.post(
               isSubmitted: true,
             }
           );
+          //admin
         }
         if (result.nModified === 1) {
           return res.status(200).json({ message: "Successfully submitted" });
