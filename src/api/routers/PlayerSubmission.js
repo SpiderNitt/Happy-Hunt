@@ -8,6 +8,7 @@ const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
 const { playerVerify } = require("../../middlewares/role");
+const { io } = require("../../helpers/timer");
 
 player.post(
   "/submission",
@@ -16,6 +17,7 @@ player.post(
   async (req, res) => {
     try {
       const { team } = req.jwt_payload;
+      const user = Team.findById(team);
       const { mission } = req.body;
       if (!mission) return res.status(400).json({ message: "Fill all fields" });
       const submit = await Mission.findById(mission);
@@ -25,6 +27,7 @@ player.post(
         return res.status(404).json({ message: "Mission not found" });
       }
       let answer;
+      let notification;
       try {
         switch (answerType) {
           case "Picture": {
@@ -105,9 +108,20 @@ player.post(
               }
             );
             // team
+            notification = `You got right answer for ${submit.MissionName}`;
           } else {
+            notification = `You got wrong answer for ${submit.MissionName}`;
             return res.status(200).json({ message: "Your answer is wrong" });
           }
+          team.Notifications.push(notification);
+          await user.save();
+          io.on("connection", async (socket) => {
+            socket.on(`Team ${team}`, () => {
+              socket.emit(`Notifications ${team}`, notification);
+            });
+
+            console.log("Socket connected successfully");
+          });
         } else if (ServerEvaluation) {
           const { hintsTaken } = await Activity.findOne({
             mission,
@@ -130,7 +144,17 @@ player.post(
               isSubmitted: true,
             }
           );
-          //team
+          // team
+          notification = `You got right answer for ${submit.MissionName}`;
+          team.Notifications.push(notification);
+          await user.save();
+          io.on("connection", async (socket) => {
+            socket.on(`Team ${team}`, () => {
+              socket.emit(`Notifications ${team}`, notification);
+            });
+
+            console.log("Socket connected successfully");
+          });
         } else {
           result = await Activity.updateOne(
             { team, mission, isSubmitted: false },
@@ -142,7 +166,16 @@ player.post(
               isSubmitted: true,
             }
           );
-          //admin
+          // admin
+          notification = `New submission for ${submit.MissionName} by team ${user.teamName}`;
+
+          io.on("connection", async (socket) => {
+            socket.on(`Admin `, () => {
+              socket.emit(`Notifications `, notification);
+            });
+
+            console.log("Socket connected successfully");
+          });
         }
         if (result.nModified === 1) {
           return res.status(200).json({ message: "Successfully submitted" });

@@ -11,6 +11,7 @@ const Team = require("../../database/models/Team");
 const Activity = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
+const { io } = require("../../helpers/timer");
 
 Router.post(
   "/createAdmin",
@@ -117,6 +118,7 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     }
     const mission = await Mission.findById(activity.mission);
     const team = await Team.findById(activity.team._id);
+    let notification;
     if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
         console.log(mission.maxPoints, " - ", activity.hintsTaken);
@@ -125,6 +127,7 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
         activity.Date = Date.now();
         await team.save();
         await activity.save();
+        notification = `your submission for ${mission.MissionName} is accepted`;
       } else {
         return res.status(403).json({
           message:
@@ -135,7 +138,17 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
       activity.isSubmitted = false;
       activity.Date = Date.now();
       await activity.save();
+      notification = `your submission for ${mission.MissionName} is rejected`;
     }
+    team.Notifications.push(notification);
+    await team.save();
+    io.on("connection", async (socket) => {
+      socket.on(`Team ${activity.team._id}`, () => {
+        socket.emit(`Notifications ${activity.team._id}`, notification);
+      });
+
+      console.log("Socket connected successfully");
+    });
     return res
       .status(200)
       .json({ message: "Answered successfully accepted or rejected" });
