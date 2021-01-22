@@ -8,9 +8,11 @@ Router.get("/feed", async (req, res) => {
       .populate("team")
       .populate("mission")
       .exec();
-
     const feedToBeShown = [];
+<<<<<<< HEAD
 
+=======
+>>>>>>> a340161... Made a time consuming working algorithm
     for (let index = 0; index < feeds.length; index += 1) {
       const details = {};
       details.MissionName = feeds[index].mission.MissionName;
