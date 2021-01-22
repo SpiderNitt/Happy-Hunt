@@ -2,6 +2,7 @@
 const multer = require("multer");
 const player = require("express").Router();
 const geolib = require("geolib");
+const { getDistance } = require("geolib");
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
 const Team = require("../../database/models/Team");
@@ -9,11 +10,13 @@ const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
 const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
+const { TeamenRollVerify } = require("../../middlewares/team");
 
 player.post(
   "/submission",
   multer({ storage: multer.memoryStorage() }).single("answer"),
   playerVerify,
+  TeamenRollVerify,
   async (req, res) => {
     try {
       const { team } = req.jwt_payload;
@@ -90,7 +93,7 @@ player.post(
               isSubmitted: false,
             });
             let { points } = await Team.findById(team);
-            const marks = maxPoints - hintsTaken * 20;
+            const marks = maxPoints / 2 - hintsTaken * 20;
             points += marks;
             const teamResult = await Team.updateOne({ _id: team }, { points });
             if (teamResult.nModified !== 1)
@@ -115,13 +118,7 @@ player.post(
           }
           team.Notifications.push(notification);
           await user.save();
-          io.on("connection", async (socket) => {
-            socket.on(`Team ${team}`, () => {
-              socket.emit(`Notifications ${team}`, notification);
-            });
-
-            console.log("Socket connected successfully");
-          });
+          io.emit(`Notifications ${team}`, notification);
         } else if (ServerEvaluation) {
           const { hintsTaken } = await Activity.findOne({
             mission,
@@ -129,7 +126,7 @@ player.post(
             isSubmitted: false,
           });
           let { points } = await Team.findById(team);
-          const marks = maxPoints - hintsTaken * 20;
+          const marks = maxPoints / 2 - hintsTaken * 20;
           points += marks;
           const teamResult = await Team.updateOne({ _id: team }, { points });
           if (teamResult.nModified !== 1)
@@ -148,34 +145,24 @@ player.post(
           notification = `You got right answer for ${submit.MissionName}`;
           team.Notifications.push(notification);
           await user.save();
-          io.on("connection", async (socket) => {
-            socket.on(`Team ${team}`, () => {
-              socket.emit(`Notifications ${team}`, notification);
-            });
-
-            console.log("Socket connected successfully");
-          });
+          io.emit(`Notifications ${team}`, notification);
         } else {
           result = await Activity.updateOne(
             { team, mission, isSubmitted: false },
             {
               Answer: answer,
               category: Category,
-              status: "Pending",
+              status: false,
               ShouldBeShown: visibility,
               isSubmitted: true,
             }
           );
           // admin
+          const head = await User.findOne({ Role: "SuperAdmin" });
           notification = `New submission for ${submit.MissionName} by team ${user.teamName}`;
-
-          io.on("connection", async (socket) => {
-            socket.on(`Admin `, () => {
-              socket.emit(`Notifications `, notification);
-            });
-
-            console.log("Socket connected successfully");
-          });
+          head.Notifications.push(notification);
+          await head.save();
+          io.emit(`Notifications`, notification);
         }
         if (result.nModified === 1) {
           return res.status(200).json({ message: "Successfully submitted" });
@@ -188,6 +175,53 @@ player.post(
         console.log(error);
         return res.status(416).json({ message: "Cannot submit answer" });
       }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Server Error, Try again later" });
+    }
+  }
+);
+player.post(
+  "/locationSubmission",
+  playerVerify,
+  TeamenRollVerify,
+  async (req, res) => {
+    try {
+      const team = await Team.findById(req.jwt_payload.team);
+
+      const { Location, MissionId } = req.body;
+      const mission = await Mission.findById(MissionId);
+      const teamActivity = await Activity.findOne({
+        team: req.jwt_payload.team,
+        mission: MissionId,
+      });
+      const distance = getDistance(
+        {
+          latitude: mission.Location.Lat,
+          longitude: mission.Location.Long,
+        },
+        {
+          latitude: Location.coords.latitude,
+          longitude: Location.coords.longitude,
+        }
+      );
+      if (!teamActivity.ispart) {
+        if (distance < 1000) {
+          team.points += mission.maxPoints / 2;
+          teamActivity.ispart = true;
+          await teamActivity.save();
+          await team.save();
+          return res.status(200).json({
+            message: "answer succesfully submitted and points awarded",
+          });
+        }
+        return res
+          .status(401)
+          .json({ message: "you haven't reached close to the location yet" });
+      }
+      return res
+        .status(403)
+        .json({ message: "You have already submited the mission" });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "Server Error, Try again later" });
@@ -243,7 +277,7 @@ player.patch(
     }
   }
 );
-player.get("/mission", playerVerify, async (req, res) => {
+player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
   try {
     const teamId = req.jwt_payload.team;
 
@@ -284,7 +318,7 @@ player.get("/mission", playerVerify, async (req, res) => {
     });
   }
 });
-player.get("/hint", playerVerify, async (req, res) => {
+player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
   try {
     const { MissionId } = req.body;
     const mission = await Mission.findById(MissionId);
