@@ -10,8 +10,9 @@ Router.get("/feed", async (req, res) => {
       .exec();
 
     const feedToBeShown = [];
-    const details = {};
-    for (let index = 0; index < feeds.length; index++) {
+
+    for (let index = 0; index < feeds.length; index += 1) {
+      const details = {};
       details.MissionName = feeds[index].mission.MissionName;
       details.TeamName = feeds[index].team.teamName;
       details.likes = feeds[index].likes;
