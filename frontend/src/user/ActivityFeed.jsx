@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 function ActivityFeed() {
   const classes = useStyles();
   const [data, setData] = useState([]);
-  const [like, setLike]= useState("");
+  const [likedColor, setLikedColor]= useState("");
 
   useEffect(() => {
     const fetch = async () => {
@@ -50,11 +50,11 @@ function ActivityFeed() {
 }, []);
 console.log(data)
 
-const getLike= async(id)=>{
-  const liked= await client.get(`api/activity/feed/likes/${id}`)
-  setLike(liked)
+const getLike= ()=>{
+  setLikedColor("red")
+  console.log(likedColor);
 }
-console.log(like)
+
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
@@ -69,7 +69,7 @@ console.log(like)
                     </Avatar>
                     }
                     title={"Team : " + activity.TeamName}
-                    subheader= {moment(activity.Date).startOf('hour').fromNow()}
+                    subheader= {moment(activity.Date).startOf('day').fromNow()}
                 />
                 <CardMedia
                     className={classes.cardMedia}
@@ -86,7 +86,7 @@ console.log(like)
                 </CardContent>
                 <CardActions style={{display: 'flex', justifyContent: 'space-between' }}>
                   <IconButton>
-                      <Favorite onClick={getLike(activity._id)}/> <span style={{marginTop:3,marginLeft:5, fontSize: 18 }}>{activity.likes}</span>
+                      <Favorite onClick={getLike} style={{ color:`${likedColor}`}}/> <span style={{marginTop:3,marginLeft:5, fontSize: 18 }}>39</span>
                   </IconButton>
                   <IconButton>
                       <Share />
@@ -97,8 +97,7 @@ console.log(like)
         
     ))}
       </Grid>
-    
-     
+         
   </Container>
   );
 }
