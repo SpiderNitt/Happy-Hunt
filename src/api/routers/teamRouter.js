@@ -57,13 +57,22 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
         .status(400)
         .json({ message: "Invalid teamId or Provide teamId" });
     }
-    const existingTeam = await Team.findOne({ teamId });
+    const existingTeam = await Team.findOne({ teamId })
+      .populate("members")
+      .exec();
+    let CaptainID;
+    for (let i = 0; i < existingTeam.members.length; i++) {
+      const member = existingTeam.members[i];
+      if (member.Role === "TeamLeader") {
+        CaptainID = member._id;
+      }
+    }
+    io.emit(`Request ${CaptainID}`);
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Team is full" });
     }
     existingTeam.requests.push(req.jwt_payload.id);
     existingTeam.save();
-    io.emit(`Requests ${teamId}`, 1);
     return res.status(200).json({ message: "Request sent" });
   } catch (error) {
     console.log(error);
@@ -82,8 +91,10 @@ team.get("/reject", leaderVerify, async (req, res) => {
         .json({ message: "Invalid userId or Provide userId" });
     }
     const existingTeam = await Team.findById(req.jwt_payload.team);
+    io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     existingTeam.save();
+    io.emit(`Request ${userId}`, "Reject");
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
     console.log(error);
@@ -112,6 +123,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
     existingTeam.save();
     user.save();
     const token = createJWTtoken(user);
+    io.emit(`Request ${userId}`, "Accept");
     const date = new Date();
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
