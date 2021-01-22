@@ -55,20 +55,21 @@ const RedirectUrl=(category)=>{
 function Clues(){
   const classes= useStyles();
   const [data, setData] = useState([]);
-  useEffect(() => {
-    const fetch = async () => {
-        const result = await client.get('api/player/mission')
-        setData(result.data.missions);
-        
+  const fetch = async () => {
+    const result = await client.get('api/player/mission')
+    if(!result.ok){
+      console.log(result.originalError, result.problem, result.status);
+      return;
     }
+    setData(result.data.missions);
+  }
+  useEffect(() => {
     fetch();
-   
-}, []);
-console.log(data)
+  }, []);
 
   return (   
     <Container maxWidth="md">
-      {data.map((mission, index) => (
+      {data !== [] && data.map((mission, index) => (
           <Card key={mission._id} index={index + 1} style={{ marginBottom: 10, padding: 10 }}>
        <CardContent>
          <div className={classes.container}>
