@@ -18,6 +18,12 @@ import React,{ useEffect, useState} from 'react';
 import AdminRegistration from '../AdminRegistration';
 import colors from '../utils/colors';
 import client from '../api/client';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
 const admins = [{
   emailId: 'sampleadmin@gmail.com',
@@ -69,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AdminMembers(props) {
     const [open, setOpen] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
     const [data,setData] = useState(admins);
     const styles = useStyles();
     useEffect(()=>{
@@ -85,6 +92,24 @@ function AdminMembers(props) {
     const handleClose = () => {
       setOpen(false);
     };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDeleteConfirm = (email) => {
+    const body={
+      "emailId": email
+    }
+    setOpenDialog(false);
+    const confirmDelete = async () => {
+      const response = await client.delete(`api/admin/deleteAdmin`, {data: body});
+      console.log(response);
+    }
+    confirmDelete();
+  }
     return (
         <Container className={styles.root}>
             <div className={styles.box}>
@@ -103,10 +128,31 @@ function AdminMembers(props) {
                     style={{ marginLeft: 10 }}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" style={{ marginRight: 20 }}>
+                      <IconButton edge="end" style={{ marginRight: 20 }} onClick={handleClickOpen}>
                       <Delete style={{ color: colors.danger }} />
                     </IconButton>
                   </ListItemSecondaryAction>
+                    <Dialog
+                      open={openDialog}
+                      onClose={handleCloseDialog}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogTitle id="alert-dialog-title">{"DELETE ADMIN"}</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          Are you sure you want to delete this Admin ?
+                </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseDialog} color="primary" autoFocus>
+                          NO
+                    </Button>
+                        <Button onClick={()=>handleDeleteConfirm(element.emailId)} color="secondary" variant="contained" autoFocus>
+                          YES
+                    </Button>
+                      </DialogActions>
+                    </Dialog>
                 </ListItem>
                 <Divider />
                 </>
