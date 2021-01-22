@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import { Avatar, CardHeader, IconButton } from '@material-ui/core';
 import { Favorite, PeopleAltOutlined, Share } from '@material-ui/icons';
 import client from '../api/client';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -33,18 +34,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Album() {
+function ActivityFeed() {
   const classes = useStyles();
   const [data, setData] = useState([]);
+  const [like, setLike]= useState("");
+
   useEffect(() => {
     const fetch = async () => {
       const result = await client.get('api/activity/feed')
+      console.log(result)
       setData(result.data.activityFeeds);
   }
     fetch();
    
 }, []);
 console.log(data)
+
+const getLike= async(id)=>{
+  const liked= await client.get(`api/activity/feed/likes/${id}`)
+  setLike(liked)
+}
+console.log(like)
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
@@ -59,7 +69,7 @@ console.log(data)
                     </Avatar>
                     }
                     title={"Team : " + activity.TeamName}
-                    subheader= {(new Date(activity.Date)).getHours() +" : "+ (new Date(activity.Date)).getMinutes()}
+                    subheader= {moment(activity.Date).startOf('hour').fromNow()}
                 />
                 <CardMedia
                     className={classes.cardMedia}
@@ -71,12 +81,12 @@ console.log(data)
                     #tag #tag2 #yipee 
                 </Typography>
                 <Typography variant="body1" color="textPrimary" component="p" style={{fontSize: 14, color:"gray", fontWeight:700 }}>
-                  {"activity : " + activity.activityName}
+                  {"Mission : " + activity.MissionName}
                 </Typography>
                 </CardContent>
                 <CardActions style={{display: 'flex', justifyContent: 'space-between' }}>
                   <IconButton>
-                      <Favorite /> <span style={{marginTop:3,marginLeft:5, fontSize: 18 }}>{activity.likes}</span>
+                      <Favorite onClick={getLike(activity._id)}/> <span style={{marginTop:3,marginLeft:5, fontSize: 18 }}>{activity.likes}</span>
                   </IconButton>
                   <IconButton>
                       <Share />
@@ -93,5 +103,4 @@ console.log(data)
   );
 }
 
-
-
+export default ActivityFeed;
