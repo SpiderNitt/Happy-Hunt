@@ -3,10 +3,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-   
+import Routes from "../utils/routes";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import Hints from './Hints';
 
 function LocationClues(props) {
     const classes = useStyles();
+    const [open, setOpen] = useState(false);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -21,6 +26,13 @@ function LocationClues(props) {
             }
         })
     };
+    const handleOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
 
     useEffect(()=>{
         navigator.geolocation.getCurrentPosition(onSucces);
@@ -32,13 +44,13 @@ function LocationClues(props) {
         
         <React.Fragment >
 
-            <Container maxWidth="sm" style={{ backgroundColor: '#484848', height: '100vh', marginTop:"20vh" }}>
-                <h4 style={{color:'#57EFC0',
+            <Container maxWidth="sm" style={{height: '100vh', marginTop:"20vh" }}>
+                <h4 style={{color:'#50EFE6',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
-                        Clue: Let's pass by!
+                        Mission : Let's pass by!
                 </h4>
-                <p style={{color:'#F5F5F5',
+                <p style={{color:"black",
                     fontSize:16,
                     fontFamily:'calibri',
                     display:'flex', alignItems:'center', justifyContent:'center'}}>What to do: <span style={{marginLeft:5}}> Follow the instructions as given below</span>
@@ -65,12 +77,30 @@ function LocationClues(props) {
                 </p> */}
                 <br/>
                 <br/>
-                <Button className={classes.Button} href="/clue">Back to clues</Button>
+                <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
-                <Button className={classes.Button}>Hint</Button>
+                <Button className={classes.Button}  onClick={handleOpen}>Hint</Button>
                 
-            </Container>
-        </React.Fragment>
+                <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+            >
+                <Fade in={open}>
+                <div className={classes.paper}>
+                    <Hints/>
+                </div>
+                </Fade>
+                </Modal>
+                </Container>
+            </React.Fragment>
       );
 }
 
@@ -88,7 +118,7 @@ const useStyles = makeStyles((theme)=>({
         display:'flex',
         alignSelf:'center',
         justifyContent:'center',
-        color:'whitesmoke',
+        color:'gray',
         fontSize:18,
         fontFamily:'tahoma'
       },
@@ -98,6 +128,18 @@ const useStyles = makeStyles((theme)=>({
         fontSize: 16, 
         color:'gray',
         fontFamily:'tahoma'
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+      },
+    modal: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        
     },
     button: {
         display:'flex',

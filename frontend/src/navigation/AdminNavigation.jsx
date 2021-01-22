@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import React, { useContext,useState,useEffect } from "react";
+import { BrowserRouter as Redirect, Route, Switch } from "react-router-dom";
 import Drawer from "../admin/Drawer";
 import DrawerHeader from '../admin/DrawerHeader';
 import Mission from '../admin/Mission'
 import Activity from '../admin/Activity.jsx'
-import ScoreBoard from '../admin/ScoreBoard'
+import ScoreBoard from '../user/Leaderbaord'
 import AdminList from '../admin/AdminMembers'
 import AdminMission from '../admin/AdminMission';
 import Notification from '../admin/Notifications';
@@ -34,6 +34,12 @@ const AdminRoute = ({ children, ...rest }) => {
 
 export default function AdminNav() {
     const auth = useContext(AuthContext);
+    const [username,setUsername]=useState('admin');
+    useEffect(() => {
+        const email=auth.authState.userInfo.emailId;
+        const trimmedUserName = email.substring(0, email.lastIndexOf("@"))
+        setUsername(trimmedUserName);
+    },[]);
     return (
         <>
         <Switch>
@@ -41,24 +47,24 @@ export default function AdminNav() {
             <Route path={Routes.WELCOME} exact component={GameIntro}/>
             <AdminRoute path={Routes.ADMIN_MISSIONS} exact>
                 <DrawerHeader title="Missions" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <div style={{ marginLeft: '10%' }}>
                     <Mission />
                 </div>
             </AdminRoute>
             <AdminRoute path={Routes.ADMIN_ACTIVITY_FEED} exact>
                 <DrawerHeader title="Activity Feed" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <Activity />
             </AdminRoute>
             <AdminRoute path={Routes.ADMIN_LEADERBOARD} exact>
                 <DrawerHeader title="Score Board" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <ScoreBoard />
             </AdminRoute>
             <AdminRoute path={Routes.ADMIN_LIST} exact>
                 <DrawerHeader title="Admin List" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <AdminList />
             </AdminRoute>
             <Route 
@@ -68,23 +74,23 @@ export default function AdminNav() {
             auth.isAuthenticated() && auth.isAdmin() ? (
             <div>
                 <DrawerHeader title="Mission Details" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <MissionDetail {...props} />
             </div>) : (<Redirect to={Routes.WELCOME} />)
             )} />
             <AdminRoute path={Routes.ADMIN_MISSION_UPDATE} exact>
                 <DrawerHeader title="Admin Mission" />
-                <Drawer />
+                <Drawer username={username} title={username[0]} />
                 <AdminMission />
             </AdminRoute>
             <AdminRoute path={Routes.ADMIN_NOTIFICATION} exact>
                 <DrawerHeader title="Notifications" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <Notification />
             </AdminRoute>
             <AdminRoute path={Routes.ADMIN_NEW_MISSION} exact>
                 <DrawerHeader title="ADD MISSION" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <NewMission />
             </AdminRoute>
             <Route
@@ -94,7 +100,7 @@ export default function AdminNav() {
             auth.isAuthenticated() && auth.isAdmin() ? (
             <div>
                 <DrawerHeader title="Edit Mission" />
-                <Drawer />
+                <Drawer username={username} title={username[0]}/>
                 <EditMission {...props} />
             </div>
             ) : (<Redirect to={Routes.WELCOME} />)
