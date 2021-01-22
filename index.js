@@ -2,8 +2,11 @@ require("dotenv").config({ path: "./src/env/.env" });
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const bodyParser = require("body-parser");
 const session = require("express-session");
 const { app } = require("./src/helpers/timer");
+
+app.use(bodyParser.raw());
 // session
 app.use(
   session({

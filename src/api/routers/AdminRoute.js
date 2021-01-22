@@ -66,42 +66,43 @@ Router.post(
     }
   }
 );
-Router.delete(
-  "/deleteAdmin",
-  AdminCreateValidator,
-  superAdminVerify,
-  async (req, res) => {
-    try {
-      const issuperadmin = await User.findById(req.jwt_payload.id);
-      if (issuperadmin.Role !== "SuperAdmin") {
-        return res.status(402).json({
-          message: "You don't have permission to perform the operation",
-        });
-      }
-      const { emailId } = req.body;
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-      if (emailId !== undefined) {
-        if (!(await User.findOne({ emailId }))) {
-          return res.status(404).json({ message: "no such user found" });
-        }
+Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
+  try {
+    const { emailId } = req.query;
 
-        await User.deleteOne({ emailId });
-        return res.status(200).json({ message: "user deleted sucessfully" });
-      }
-      return res
-        .status(401)
-        .json({ message: "emailId provided was undefined" });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Server Error ",
-      });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
+    if (emailId !== undefined) {
+      if (!(await User.findOne({ emailId }))) {
+        return res.status(404).json({ message: "no such user found" });
+      }
+
+      await User.deleteOne({ emailId });
+      return res.status(200).json({ message: "user deleted sucessfully" });
+    }
+    return res.status(401).json({ message: "emailId provided was undefined" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Server Error ",
+    });
   }
-);
+});
+Router.get("/submissions", adminVerify, async (req, res) => {
+  try {
+    const activityFeeds = await Activity.find({
+      isSubmitted: true,
+      status: false,
+    });
+    console.log(activityFeeds);
+    return res.status(200).json({ submissions: activityFeeds });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+});
 Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
   try {
     const { isAccepted, activityfeedId } = req.body;
@@ -117,13 +118,12 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     }
     const mission = await Mission.findById(activity.mission);
     const team = await Team.findById(activity.team._id);
-    console.log();
-
-    if (isAccepted == "true") {
+    if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
         console.log(mission.maxPoints, " - ", activity.hintsTaken);
         team.points += mission.maxPoints - activity.hintsTaken * 20;
         activity.status = true;
+        activity.Date = Date.now();
         await team.save();
         await activity.save();
       } else {
@@ -134,8 +134,8 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
       }
     } else {
       activity.isSubmitted = false;
+      activity.Date = Date.now();
       await activity.save();
-      // await activity.deleteOne({ id: activityfeedId });
     }
     return res
       .status(200)

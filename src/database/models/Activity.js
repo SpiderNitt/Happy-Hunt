@@ -12,6 +12,11 @@ const activitySchema = new mongoose.Schema({
     // Picture/Video/Picture and Location /Text
     type: String,
   },
+
+  ispart: {
+    type: Boolean,
+    default: false,
+  },
   status: {
     type: Boolean, // pending - 0/accepted - 1
   },
@@ -37,6 +42,10 @@ const activitySchema = new mongoose.Schema({
   isSubmitted: {
     type: Boolean,
     default: false,
+  },
+  Date: {
+    type: Date,
+    default: Date.now(),
   },
 });
 module.exports = mongoose.model("Activity", activitySchema);
