@@ -71,16 +71,14 @@ function UserNav() {
       </Route>
       <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact component={CreateTeam}/>
       <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact component={JoinTeam}/>
-      <Route path="/photo-clue" component={PictureClues}/>
       <Route path="/photo" exact component={Capture}/>
-      <Route path="/location-clue" component={LocationClues}/>
-      <Route path="/text-clue" component={TextClues}/>
       <UserAuthenticatedRoute path={Routes.HOME} exact>
         <TopNav />
         <div style={{ marginTop: 70 }}>
             <Home />
         </div>
       </UserAuthenticatedRoute>
+
       <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
         <TopNav />
         <div style={{ marginTop: 70 }}>
@@ -101,6 +99,24 @@ function UserNav() {
           <div style={{ marginTop: 20 }}>
               <Clues />
           </div>
+      </UserAuthenticatedRoute>
+      <UserAuthenticatedRoute path={Routes.USER_PICTURE_CLUE} exact>
+        <TopNav />
+        <div style={{ marginTop: 70 }}>
+            <PictureClues />
+        </div>
+      </UserAuthenticatedRoute>
+      <UserAuthenticatedRoute path={Routes.USER_LOCATION_CLUE} exact>
+        <TopNav />
+        <div style={{ marginTop: 70 }}>
+            <LocationClues />
+        </div>
+      </UserAuthenticatedRoute>
+      <UserAuthenticatedRoute path={Routes.USER_TEXT_CLUE} exact>
+        <TopNav />
+        <div style={{ marginTop: 70 }}>
+            <TextClues />
+        </div>
       </UserAuthenticatedRoute>
       <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
