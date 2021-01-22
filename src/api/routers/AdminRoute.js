@@ -90,6 +90,19 @@ Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
     });
   }
 });
+Router.get("/submissions", adminVerify, async (req, res) => {
+  try {
+    const activityFeeds = await Activity.find({
+      isSubmitted: true,
+      status: false,
+    });
+    console.log(activityFeeds);
+    return res.status(200).json({ submissions: activityFeeds });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+});
 Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
   try {
     const { isAccepted, activityfeedId } = req.body;

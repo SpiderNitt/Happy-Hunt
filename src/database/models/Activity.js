@@ -12,6 +12,11 @@ const activitySchema = new mongoose.Schema({
     // Picture/Video/Picture and Location /Text
     type: String,
   },
+
+  ispart: {
+    type: Boolean,
+    default: false,
+  },
   status: {
     type: Boolean, // pending - 0/accepted - 1
   },
