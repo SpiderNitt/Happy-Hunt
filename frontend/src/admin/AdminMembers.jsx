@@ -14,11 +14,24 @@ import {
     Backdrop,
 } from '@material-ui/core';
 import { AccountCircle, Add, Close, Delete } from '@material-ui/icons';
-import React from 'react';
+import React,{ useEffect, useState} from 'react';
 import AdminRegistration from '../AdminRegistration';
 import colors from '../utils/colors';
+import client from '../api/client';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
-const admins = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+const admins = [{
+  emailId: 'sampleadmin@gmail.com',
+  password: 'secret'
+},{
+  emailId: 'sampleadmin2@gmail.com',
+  password: 'secret2'
+}]
 
 const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -53,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     },
     box: {
         marginTop: 70,
-        height: 640,
+        width: 600,
         overflowY: 'scroll',
         backgroundColor: colors.light,
         borderRadius: 20,    
@@ -61,20 +74,47 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function AdminMembers(props) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [data,setData] = useState(admins);
     const styles = useStyles();
+    useEffect(()=>{
+      const fetchData = async ()=>{
+        const result=await client.get('api/adminList');
+        console.log(result.data);
+        setData(result.data);
+      }
+      fetchData();
+    },[]);
     const handleOpen = () => {
       setOpen(true);
     };
-  
     const handleClose = () => {
       setOpen(false);
     };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDeleteConfirm = (email) => {
+    const body={
+      "emailId": email
+    }
+    setOpenDialog(false);
+    const confirmDelete = async () => {
+      const response = await client.delete(`api/admin/deleteAdmin`, {data: body});
+      console.log(response);
+    }
+    confirmDelete();
+  }
     return (
         <Container className={styles.root}>
             <div className={styles.box}>
             <List>
-              {admins.map((index) => (
+              {data.map((element,index) => (
                 <>
                 <ListItem>
                   <ListItemAvatar>
@@ -83,14 +123,36 @@ function AdminMembers(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={`admin${index+1}@example.com`}
+                    primary={element.emailId}
+                    secondary={`Password: secret`}
                     style={{ marginLeft: 10 }}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" style={{ marginRight: 20 }}>
+                      <IconButton edge="end" style={{ marginRight: 20 }} onClick={handleClickOpen}>
                       <Delete style={{ color: colors.danger }} />
                     </IconButton>
                   </ListItemSecondaryAction>
+                    <Dialog
+                      open={openDialog}
+                      onClose={handleCloseDialog}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogTitle id="alert-dialog-title">{"DELETE ADMIN"}</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          Are you sure you want to delete this Admin ?
+                </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseDialog} color="primary" autoFocus>
+                          NO
+                    </Button>
+                        <Button onClick={()=>handleDeleteConfirm(element.emailId)} color="secondary" variant="contained" autoFocus>
+                          YES
+                    </Button>
+                      </DialogActions>
+                    </Dialog>
                 </ListItem>
                 <Divider />
                 </>
