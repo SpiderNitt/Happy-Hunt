@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: '10%',
     paddingRight: '10%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '600px',
   },
   fab: {
     position: 'absolute',
@@ -100,12 +105,9 @@ function AdminMembers(props) {
   };
 
   const handleDeleteConfirm = (email) => {
-    const body = {
-      "emailId": email
-    }
     setOpenDialog(false);
     const confirmDelete = async () => {
-      const response = await client.delete(`api/admin/deleteAdmin`, { data: body });
+      const response = await client.delete(`api/admin/deleteAdmin?emailId=${email}`);
       console.log(response);
     }
     confirmDelete();
