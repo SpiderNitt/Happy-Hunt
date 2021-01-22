@@ -68,6 +68,31 @@ openApi.post("/payment", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
+openApi.post("/payment", async (req, res) => {
+  try {
+    const emailId = req.body.emailID;
+    const phoneNo = req.body.phoneNumber;
+    const quantity = req.body.totalTicketQuantity;
+    let user = await User.findOne({ emailId });
+    if (!user) {
+      user = await User.findOne({ phoneNo });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+    }
+    let result;
+    if (user.team)
+      result = await Team.updateOne({ _id: user.team }, { Paid: quantity });
+    else result = await User.updateOne({ emailId }, { Paid: quantity });
+    if (result.nModified === 1) {
+      return res.status(200).json({ message: "Success" });
+    }
+    return res.status(400).json({ message: "Unable to update record" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
 openApi.get("/adminList", async (req, res) => {
   try {
     const adminList = await User.find({ Role: "Admin" });
