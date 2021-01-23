@@ -64,6 +64,7 @@ team.post("/create", playerVerify, async (req, res) => {
 });
 
 team.get("/request/:teamId", playerVerify, async (req, res) => {
+<<<<<<< HEAD
   try {
     const { teamId } = req.params;
     if (teamId === undefined || teamId === null) {
@@ -107,6 +108,33 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
 
 team.get("/reject", leaderVerify, async (req, res) => {
   try {
+=======
+  try {
+    const { teamId } = req.params;
+    if (teamId === undefined || teamId === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid teamId or Provide teamId" });
+    }
+    const existingTeam = await Team.findOne({ teamId });
+    if (existingTeam.Paid < 1) {
+      return res.status(200).json({ message: "Team is full" });
+    }
+    existingTeam.requests.push(req.jwt_payload.id);
+    existingTeam.save();
+    io.emit(`Requests ${teamId}`, 1);
+    return res.status(200).json({ message: "Request sent" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ Message: "Internal Server Error, Try again later!!" });
+  }
+});
+
+team.get("/reject", leaderVerify, async (req, res) => {
+  try {
+>>>>>>> 0adee6274a944a6bcc2cb3a3a62aa62d080ff724
     const { userId } = req.query;
     if (userId === undefined || userId === null) {
       return res
@@ -114,10 +142,15 @@ team.get("/reject", leaderVerify, async (req, res) => {
         .json({ message: "Invalid userId or Provide userId" });
     }
     const existingTeam = await Team.findById(req.jwt_payload.team);
+<<<<<<< HEAD
     io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     existingTeam.save();
     io.emit(`Request ${userId}`, "Reject");
+=======
+    existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
+    existingTeam.save();
+>>>>>>> 0adee6274a944a6bcc2cb3a3a62aa62d080ff724
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
     console.log(error);
@@ -151,7 +184,10 @@ team.get("/accept", leaderVerify, async (req, res) => {
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "Request Accepted",
+<<<<<<< HEAD
       jwttoken: token,
+=======
+>>>>>>> 0adee6274a944a6bcc2cb3a3a62aa62d080ff724
     });
   } catch (error) {
     console.log(error);
