@@ -11,10 +11,12 @@ const MissionSchema = new Schema({
   isBonus: {
     type: Boolean,
   },
-  clue: {
-    type: String,
-    required: true,
-  },
+  clue: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   answer_Type: {
     // Picture/Video/Picture and Location /Text
     type: String,

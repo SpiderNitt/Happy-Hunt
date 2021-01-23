@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema({
       type: Number,
     },
   },
+  Notifications: [{ type: String }],
   otpId: String,
   active: Boolean,
 });

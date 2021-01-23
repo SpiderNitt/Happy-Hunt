@@ -18,8 +18,7 @@ const jwtVerify = (req, res, next) => {
     const { token } = req.headers;
 
     if (!token) return res.status(401).json({ message: "No token" });
-    // console.log(process.env.TOKEN_SECRET)
-    // console.log(token)
+
     jwt.verify(token, process.env.TOKEN_SECRET, async (error, decoded) => {
       req.jwt_payload = decoded;
       if (error)

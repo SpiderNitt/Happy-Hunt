@@ -7,13 +7,10 @@ const asyncFunc = async () => {
   try {
     const teams = await Team.find({});
     const users = await User.find({ Role: "player" });
-    console.log(users.length);
-    console.log(teams.length);
+
     let usercount = 0;
     for (let i = 0; i < teams.length; i++) {
-      console.log(usercount, i);
       if (usercount < users.length) {
-        console.log(usercount);
         teams[i].members = [];
         teams[i].members.push(users[usercount]);
         teams[i].members.push(users[usercount + 1]);
@@ -36,9 +33,8 @@ const asyncFunc = async () => {
     const missions = await Mission.find({});
     const hints = await Hint.find({});
     let hintcount = 0;
-    console.log(missions.length, hints.length);
+
     for (let i = 0; i < missions.length; i++) {
-      console.log(i);
       if (hintcount < hints.length) {
         missions[i].Hints = [];
         missions[i].Hints.push(hints[hintcount]);

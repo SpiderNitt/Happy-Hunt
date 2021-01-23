@@ -9,6 +9,7 @@ const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
 const { playerVerify } = require("../../middlewares/role");
+const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
 
 player.post(
@@ -19,6 +20,7 @@ player.post(
   async (req, res) => {
     try {
       const { team } = req.jwt_payload;
+      const user = Team.findById(team);
       const { mission } = req.body;
       if (!mission) return res.status(400).json({ message: "Fill all fields" });
       const submit = await Mission.findById(mission);
@@ -28,6 +30,7 @@ player.post(
         return res.status(404).json({ message: "Mission not found" });
       }
       let answer;
+      let notification;
       try {
         switch (answerType) {
           case "Picture": {
@@ -60,7 +63,6 @@ player.post(
               { latitude: lat, longitude: lon },
               { latitude: latSub, longitude: lonSub }
             );
-            console.log(distance);
             if (distance > 5000)
               return res
                 .status(200)
@@ -108,9 +110,14 @@ player.post(
               }
             );
             // team
+            notification = `You got right answer for ${submit.MissionName}`;
           } else {
+            notification = `You got wrong answer for ${submit.MissionName}`;
             return res.status(200).json({ message: "Your answer is wrong" });
           }
+          team.Notifications.push(notification);
+          await user.save();
+          io.emit(`Notifications ${team}`, notification);
         } else if (ServerEvaluation) {
           const { hintsTaken } = await Activity.findOne({
             mission,
@@ -133,7 +140,11 @@ player.post(
               isSubmitted: true,
             }
           );
-          //team
+          // team
+          notification = `You got right answer for ${submit.MissionName}`;
+          team.Notifications.push(notification);
+          await user.save();
+          io.emit(`Notifications ${team}`, notification);
         } else {
           result = await Activity.updateOne(
             { team, mission, isSubmitted: false },
@@ -145,7 +156,12 @@ player.post(
               isSubmitted: true,
             }
           );
-          //admin
+          // admin
+          const head = await User.findOne({ Role: "SuperAdmin" });
+          notification = `New submission for ${submit.MissionName} by team ${user.teamName}`;
+          head.Notifications.push(notification);
+          await head.save();
+          io.emit(`Notifications`, notification);
         }
         if (result.nModified === 1) {
           return res.status(200).json({ message: "Successfully submitted" });
@@ -267,9 +283,33 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     const team = await Team.findById(teamId);
 
     const arr = [];
+    const arr2 = [];
     const allMissions = team.assignedMissions;
+    const allBonus = team.assignedBonus;
+    for (let index = 0; index < allBonus.length; index += 1) {
+      const activity = await Activity.findOne({
+        team: req.jwt_payload.team,
+        mission: allMissions[index],
+      });
 
-    for (let i = 0; i < allMissions.length; i++) {
+      const bonus = await Mission.findById(allMissions[index]).select({
+        clue: 1,
+        Category: 1,
+        maxPoints: 1,
+      });
+      arr2.push(bonus);
+
+      if (!activity) {
+        await Activity.create({
+          team: req.jwt_payload.team,
+          isSubmitted: false,
+          likes: 0,
+          mission: allMissions[index],
+          hintsTaken: 0,
+        });
+      }
+    }
+    for (let i = 0; i < allMissions.length; i += 1) {
       const activity = await Activity.findOne({
         team: req.jwt_payload.team,
         mission: allMissions[i],
@@ -293,7 +333,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
       }
     }
 
-    return res.status(200).json({ missions: arr });
+    return res.status(200).json({ missions: arr, bonus: arr2 });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -310,6 +350,11 @@ player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
       team: req.jwt_payload.team,
       mission: MissionId,
     });
+    if (!activity) {
+      return res
+        .status(404)
+        .json({ message: "you team is not  assigned to the mission" });
+    }
     const HintNumber = activity.hintsTaken;
     if (HintNumber < 3) {
       activity.hintsTaken += 1;
