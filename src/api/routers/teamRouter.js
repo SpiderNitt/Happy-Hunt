@@ -12,9 +12,23 @@ team.post("/create", playerVerify, async (req, res) => {
     if (teamName == null || teamName === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
+    const name = await Team.findOne({ teamName });
+
+    if (name) {
+      return res
+        .status(401)
+        .json({ message: "team of this name already exists" });
+    }
+    if (
+      req.jwt_payload.Role === "TeamLeader" ||
+      req.jwt_payload.Role === "TeamMember"
+    ) {
+      return res
+        .status(402)
+        .json({ message: "you already joined or created a team" });
+    }
 
     const user = await User.findById(req.jwt_payload.id);
-    console.log(user);
     user.Role = "TeamLeader";
     let teamId = uid();
     while (await Team.exists({ teamId })) {
@@ -50,6 +64,51 @@ team.post("/create", playerVerify, async (req, res) => {
 });
 
 team.get("/request/:teamId", playerVerify, async (req, res) => {
+<<<<<<< HEAD
+  try {
+    const { teamId } = req.params;
+    if (teamId === undefined || teamId === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid teamId or Provide teamId" });
+    }
+    if (
+      req.jwt_payload.Role === "TeamLeader" ||
+      req.jwt_payload.Role === "TeamMember"
+    ) {
+      return res
+        .status(402)
+        .json({ message: "you already joined or created a team" });
+    }
+
+    const existingTeam = await Team.findOne({ teamId })
+      .populate("members")
+      .exec();
+    let CaptainID;
+    for (let i = 0; i < existingTeam.members.length; i += 1) {
+      const member = existingTeam.members[i];
+      if (member.Role === "TeamLeader") {
+        CaptainID = member._id;
+      }
+    }
+    io.emit(`Request ${CaptainID}`);
+    if (existingTeam.Paid < 1) {
+      return res.status(200).json({ message: "Team is full" });
+    }
+    existingTeam.requests.push(req.jwt_payload.id);
+    existingTeam.save();
+    return res.status(200).json({ message: "Request sent" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ Message: "Internal Server Error, Try again later!!" });
+  }
+});
+
+team.get("/reject", leaderVerify, async (req, res) => {
+  try {
+=======
   try {
     const { teamId } = req.params;
     if (teamId === undefined || teamId === null) {
@@ -75,6 +134,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
 
 team.get("/reject", leaderVerify, async (req, res) => {
   try {
+>>>>>>> 0adee6274a944a6bcc2cb3a3a62aa62d080ff724
     const { userId } = req.query;
     if (userId === undefined || userId === null) {
       return res
@@ -82,8 +142,15 @@ team.get("/reject", leaderVerify, async (req, res) => {
         .json({ message: "Invalid userId or Provide userId" });
     }
     const existingTeam = await Team.findById(req.jwt_payload.team);
+<<<<<<< HEAD
+    io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     existingTeam.save();
+    io.emit(`Request ${userId}`, "Reject");
+=======
+    existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
+    existingTeam.save();
+>>>>>>> 0adee6274a944a6bcc2cb3a3a62aa62d080ff724
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
     console.log(error);
@@ -112,10 +179,15 @@ team.get("/accept", leaderVerify, async (req, res) => {
     existingTeam.save();
     user.save();
     const token = createJWTtoken(user);
+    io.emit(`Request ${userId}`, "Accept");
     const date = new Date();
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "Request Accepted",
+<<<<<<< HEAD
+      jwttoken: token,
+=======
+>>>>>>> 0adee6274a944a6bcc2cb3a3a62aa62d080ff724
     });
   } catch (error) {
     console.log(error);
@@ -146,7 +218,7 @@ team.post("/location", playerVerify, async (req, res) => {
       const { Location } = req.body;
       theTeam.avgLocation.Lat = Location.coords.latitude;
       theTeam.avgLocation.Long = Location.coords.longitude;
-      await team.save();
+      await theTeam.save();
       return res.status(200).json({ message: "success" });
     }
   } catch (error) {

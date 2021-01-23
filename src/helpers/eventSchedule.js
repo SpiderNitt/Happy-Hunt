@@ -3,6 +3,7 @@ const { io } = require("./timer");
 
 cron.schedule("0 10 * * *", () => {
   io.emit("start");
+  // start our algo
 });
 
 cron.schedule("0 13 * * *", () => {

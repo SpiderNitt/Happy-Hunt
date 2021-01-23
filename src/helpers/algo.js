@@ -1,17 +1,10 @@
 /* eslint-disable no-await-in-loop */
-const express = require("express");
 
-const app = express();
-const server = require("http").createServer(app);
-require("../database/setup");
-
-const options = {
-  /* ... */
-};
-const io = require("socket.io")(server, options);
-
+// to be added in event scedule
+const Geo = require("geo-nearby");
 const Mission = require("../database/models/Mission");
 const Team = require("../database/models/Team");
+const { io } = require("./timer");
 
 let counter = 0;
 let BonusMission100;
@@ -114,10 +107,8 @@ try {
     }
     counter += 1;
     io.emit("missions");
+    algo();
   }, 1800000);
-  algo();
 } catch (e) {
   console.log(e.msg);
 }
-
-module.exports = { app, io };
