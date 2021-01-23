@@ -19,12 +19,24 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const dummyData = {
-    Location: { Lat: 23, Long: 24 },
-    Category: 'Picture and Location',
-    clue: 'I am clueless yaaar',
-    answer_Type: 'Picture and Location',
-    answer: ['orange', 'apple', 'mango'],
-    Other_Info: 'I am orange'
+    mission: {
+        Location: { Lat: 23, Long: 24 },
+        Category: 'Picture and Location',
+        clue: 'I am clueless yaaar',
+        answer_Type: 'Picture and Location',
+        answer: ['orange', 'apple', 'mango'],
+        Other_Info: 'I am orange'
+    },
+    hint: [
+        {
+            Content: 'I am the hint 1',
+            MaxPoints: 123
+        },
+        {
+            Content: 'I am the hint 2',
+            MaxPoints: 456
+        }
+    ]
 }
 
 function MissionDetail(props) {
@@ -39,6 +51,15 @@ function MissionDetail(props) {
         }
         fetchData();
     }, [props.match.params.id]);
+    const combineHints = (hints) => {
+        const hintsArray = hints.map(hint => {
+            if (hint === null) {
+                return 'No hint';
+            }
+            return `${hint.Content}: ${hint.MaxPoints}`;
+        })
+        return hintsArray.join(',')
+    }
     return (
         <div>
             <div style={{
@@ -66,12 +87,15 @@ function MissionDetail(props) {
                 </div>
                 <div className={classes.root}>
                     <div className={classes.demo}>
-                        <MissionListItem title='Location: ' value={`Lat: ${data.Location.Lat}, Long: ${data.Location.Long}`} />
-                        <MissionListItem title='Category: ' value={data.Category} />
-                        <MissionListItem title='Clue/Mission: ' value={data.clue} />
-                        <MissionListItem title='Answer Type: ' value={data['answer_Type']} />
-                        <MissionListItem title='Answer: ' value={data.answer.join(',')} />
-                        <MissionListItem title='Other information: ' value={data['Other_Info']} />
+                        <MissionListItem title='Location: ' value={`Lat: ${data.mission.Location.Lat}, Long: ${data.mission.Location.Long}`} />
+                        <MissionListItem title='Category: ' value={data.mission.Category} />
+                        <MissionListItem title='Clue/Mission: ' value={data.mission.clue} />
+                        <MissionListItem title='Answer Type: ' value={data.mission['answer_Type']} />
+                        <MissionListItem title='Answer: ' value={data.mission.answer.join(',')} />
+                        <div style={{ paddingRight: '10px' }}>
+                            <MissionListItem title='Hints: ' value={combineHints(data.hint)} />
+                        </div>
+                        <MissionListItem title='Other information: ' value={data.mission['Other_Info']} />
                     </div>
                 </div>
             </div>
