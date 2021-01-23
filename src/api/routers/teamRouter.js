@@ -190,4 +190,14 @@ team.post("/location", playerVerify, async (req, res) => {
   }
 });
 
+team.get("/requests", async (req, res) => {
+  try {
+    const TeamsRequest = await Team.findById(req.jwt_payload.team, {
+      Request: 1,
+    });
+    return res.status(200).json({ message: "success", TeamsRequest });
+  } catch (e) {
+    console.log(e);
+  }
+});
 module.exports = team;
