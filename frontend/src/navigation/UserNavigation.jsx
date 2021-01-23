@@ -69,8 +69,18 @@ function UserNav() {
           <GameIntro />
           <MessageBot />
         </Route>
-        <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact component={CreateTeam} />
-        <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact component={JoinTeam} />
+        <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <CreateTeam />
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <JoinTeam />
+          </div>
+        </UserAuthenticatedRoute>
         <Route path="/photo" exact component={Capture} />
         <UserAuthenticatedRoute path={Routes.HOME} exact>
           <TopNav />
