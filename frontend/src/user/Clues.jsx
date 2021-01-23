@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Chip, Container, Grid } from '@material-ui/core';
 import Routes from '../utils/routes';
+import LoadingPage from '../components/LoadingPage';
 
 const useStyles = makeStyles({
   title: {
@@ -51,33 +52,57 @@ const RedirectUrl = (category) => {
   return url;
 }
 
-function Clues(props) {
-  const classes = useStyles();
-  const { data } = props.data;
-  return (
-    <Container maxWidth="md">
-      {data !== [] && data.map((mission, index) => (
+function Clues(){
+  const classes= useStyles();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetch = async () => {
+    const result = await client.get('api/player/mission')
+    if(!result.ok){
+      console.log(result.originalError, result.problem, result.status);
+      return;
+    }
+    setData(result.data.missions);
+    setLoading(false);
+  }
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const RenderClues=()=>{
+    return (
+      <Container maxWidth="md">
+        {data !== [] && data.map((mission, index) => (
         <Card key={mission._id} index={index + 1} style={{ marginBottom: 10, padding: 10 }}>
-          <CardContent>
-            <div className={classes.container}>
-              <Typography className={classes.title} color="textSecondary" variant="ul" >
-                {mission.clue}
-              </Typography>
-              <Chip size="small" label={data.isSolved ? "solved" : "unsolved"} />
-            </div>
-          </CardContent>
-          <div className={classes.category} color="textSecondary" variant="p" >
-            {mission.Category}
-          </div>
-          <br /><br />
-          <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button variant="contained" size="small" href={RedirectUrl(mission.Category)}>View</Button>
-            <Typography color="textSecondary">
-              {mission.maxPoints}
+        <CardContent>
+          <div className={classes.container}>
+            <Typography className={classes.title} color="textSecondary" variant="ul" >
+              {mission.clue}
             </Typography>
-          </CardActions>
+            <Chip size="small" label={data.isSolved? "solved" : "unsolved" } />
+          </div>
+        </CardContent>
+        <div className={classes.category} color="textSecondary" variant="p" >
+              {mission.Category}
+          </div>
+          <br/><br/>
+        <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <Button variant="contained" size="small" href={RedirectUrl(mission.Category)}>View</Button>
+          <Typography color="textSecondary">
+            {mission.maxPoints}
+          </Typography>
+        </CardActions>
         </Card>
       ))}
+      </Container>
+    )
+    }
+
+  return (   
+    <Container maxWidth="md">
+      {loading && <LoadingPage />}
+      {!loading && <RenderClues/>} 
 
     </Container>
   )
