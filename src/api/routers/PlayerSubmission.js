@@ -296,6 +296,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         clue: 1,
         Category: 1,
         maxPoints: 1,
+        answer_Type: 1,
       });
       arr2.push(bonus);
 
