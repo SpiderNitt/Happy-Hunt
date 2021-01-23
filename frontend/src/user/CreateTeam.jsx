@@ -1,22 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
 import { TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
 
 import ErrorMessage from '../components/ErrorMessage';
-import team from '../assets/animations/team.gif';
 import { teamRegister } from '../api/team';
 import { useHistory } from 'react-router';
 import Routes from '../utils/routes';
-import { AuthContext } from '../api/authContext';
+import Lottie from 'react-lottie';
+import animationData from '../assets/animations/teamwork.json';
 
 const validationSchema = Yup.object().shape({
-    teamName: Yup.string().required().label("Team Name"),
+  teamName: Yup.string().required().label("Team Name"),
 });
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(6),
+      marginTop: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -42,6 +42,14 @@ const useStyles = makeStyles((theme) => ({
 function CreateTeam(props) {
     const classes = useStyles();
     const History = useHistory();
+    const defaultOptions = {
+      loop: false,
+      autoplay: true,
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+      }
+    };
     const handleSubmit = async({ teamName }, { resetForm }) => {
       const response = await teamRegister({
         teamName: teamName
@@ -63,7 +71,11 @@ function CreateTeam(props) {
       <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-          <img src={team} alt="team" width={200} />
+          <Lottie options={defaultOptions}
+            height={200}
+            width={200}
+            style={{ marginTop: '20%' }}
+          />
           <Typography component="h1" variant="h5" style={{ fontFamily: 'Lucida Handwriting', fontWeight: 'bold' }}>
             Register your team
           </Typography>
