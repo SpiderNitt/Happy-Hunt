@@ -1,0 +1,45 @@
+.bottom-right{
+    position: fixed;
+    top: 79%;
+    left: 88%;
+    display: flex;
+    flex-direction: column;
+  }
+  .bottom-right > div{
+    margin-top: 10px;
+  }
+  .mission-container{
+    margin-top: 80px;
+    margin-left: 10%;
+    display: grid;
+    grid-gap: 6px;
+    grid-template-columns: repeat(4, 1fr);
+    width: 900px;
+    max-height: 500px; 
+    overflow: auto;
+    border: 1px solid black;
+    padding: 10px;
+  }
+  .mission-card{
+    width: 200px;
+    height: 80px;
+    border: 2px solid black;
+    cursor: pointer;
+    display: flex;
+  }
+  .mission-card-img{
+    width: 35%;
+    height: 100%;
+    border-right: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mission-card-name{
+    width: 75%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

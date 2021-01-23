@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -29,5 +30,33 @@
 		"eslint-plugin-react": "^7.21.5",
 		"eslint-plugin-react-hooks": "^4.2.0",
 		"prettier": "2.2.1"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"bcrypt": "^5.0.0",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"countdown": "^2.6.0",
+		"crypto-random-string": "^3.3.0",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"express-session": "^1.17.1",
+		"express-validator": "^6.9.2",
+		"form-data": "^3.0.0",
+		"geo-nearby": "^2.0.1",
+		"geolib": "^3.3.1",
+		"http": "0.0.1-security",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^5.11.10",
+		"multer": "^1.4.2",
+		"node-cron": "^2.0.3",
+		"nodemailer": "^6.4.17",
+		"react-swipeable-views": "^0.13.9",
+		"request": "^2.88.2",
+		"socket.io": "^3.0.5",
+		"uid": "^2.0.0"
+	},
+	"engines": {
+		"node": ">=8.0.0"
 	}
 }
