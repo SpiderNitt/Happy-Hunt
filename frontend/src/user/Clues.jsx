@@ -53,7 +53,7 @@ const RedirectUrl = (category) => {
 
 function Clues(props) {
   const classes = useStyles();
-  const { data } = props;
+  const { data } = props.data;
   return (
     <Container maxWidth="md">
       {data !== [] && data.map((mission, index) => (

@@ -63,10 +63,10 @@ export default function ClueTabs() {
       return;
     }
     console.log(result.data);
-    if (result.data.missions.length > 3) {
+    if (result.data.missions.length >= 6) {
       setOpen2(true);
     }
-    if (result.data.missions.length > 6) {
+    if (result.data.missions.length >= 9) {
       setOpen3(true);
     }
     setData(result.data.missions);
@@ -75,28 +75,34 @@ export default function ClueTabs() {
     fetch();
   });
   const getSet1 = () => {
+    const object = {};
     if (data.length >= 3) {
-      return data.slice(0, 3);
+      object.data = data.slice(0, 3);
     }
     else {
-      return [];
+      object.data = [];
     }
+    return object;
   }
   const getSet2 = () => {
+    const object = {};
     if (data.length >= 6) {
-      return data.slice(3, 6);
+      object.data = data.slice(3, 6);
     }
     else {
-      return [];
+      object.data = [];
     }
+    return object;
   }
   const getSet3 = () => {
+    const object = {};
     if (data.length >= 9) {
-      return data.slice(6, 9);
+      object.data = data.slice(6, 9);
     }
     else {
-      return [];
+      object.data = [];
     }
+    return object;
   }
   const handleChange = (event, newValue) => {
     setValue(newValue);
