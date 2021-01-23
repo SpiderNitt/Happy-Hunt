@@ -57,6 +57,7 @@ const missionGenerator = async (points, teams, category) => {
       distance
     );
   }
+  // console.log(distance)
   // console.log(mission);
   return mission[0];
 };
@@ -67,26 +68,34 @@ setInterval(async () => {
   const teams = await Team.find({});
   // mission distribution
   for (let index = 0; index < teams.length; index += 1) {
-    console.log(index);
+    // console.log(index);
     const category = [];
     const mission1 = await missionGenerator(100, teams[index], category);
     teams[index].assignedMissions.push(mission1.i);
     await teams[index].save();
+    await Mission.findByIdAndUpdate(mission1.i, {
+      $push: { assignedTeams: teams[index]._id },
+    });
     category.push(mission1.Category);
     const mission2 = await missionGenerator(100, teams[index], category);
     teams[index].assignedMissions.push(mission2.i);
     await teams[index].save();
+    await Mission.findByIdAndUpdate(mission2.i, {
+      $push: { assignedTeams: teams[index]._id },
+    });
     category.push(mission2.Category);
     const mission3 = await missionGenerator(200, teams[index], category); // 200 missions dont exist
     teams[index].assignedMissions.push(mission3.i);
     await teams[index].save();
+    await Mission.findByIdAndUpdate(mission3.i, {
+      $push: { assignedTeams: teams[index]._id },
+    });
     // bonus missions
     teams[index].assignedBonus.push(BonusMission100[counter]._id);
     teams[index].assignedBonus.push(BonusMission200[counter]._id);
     await teams[index].save();
   }
   counter += 1;
-  console.log("done");
 }, 1800000);
 
 module.exports = { app, io };
