@@ -4,7 +4,6 @@ import Home from "../user/Home";
 import TopNav from "../user/TopNav";
 import NavBar from "../user/NavBar";
 import { Container } from "@material-ui/core";
-import Clues from "../user/Clues";
 import ActivityFeed from "../user/ActivityFeed";
 import Leaderboard from "../user/Leaderbaord";
 import Notifications from "../user/Notifications";
@@ -96,9 +95,6 @@ function UserNav() {
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
           <ClueTabs />
-          <div style={{ marginTop: 20 }}>
-            <Clues />
-          </div>
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_PICTURE_CLUE} exact>
           <TopNav />
