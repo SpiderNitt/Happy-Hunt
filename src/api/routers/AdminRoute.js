@@ -40,7 +40,7 @@ Router.post(
           length: 10,
           type: "alphanumeric",
         });
-        console.log("password", adminpassword);
+
         const password = await bcrypt.hash(
           adminpassword,
           parseInt(10, process.env.TOKEN_SECRET)
@@ -97,7 +97,7 @@ Router.get("/submissions", adminVerify, async (req, res) => {
       isSubmitted: true,
       status: false,
     });
-    console.log(activityFeeds);
+
     return res.status(200).json({ submissions: activityFeeds });
   } catch (error) {
     console.log(error);
@@ -122,7 +122,6 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     let notification;
     if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
-        console.log(mission.maxPoints, " - ", activity.hintsTaken);
         team.points += mission.maxPoints - activity.hintsTaken * 20;
         activity.status = true;
         activity.Date = Date.now();

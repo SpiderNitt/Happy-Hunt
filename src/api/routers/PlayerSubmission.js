@@ -63,7 +63,6 @@ player.post(
               { latitude: lat, longitude: lon },
               { latitude: latSub, longitude: lonSub }
             );
-            console.log(distance);
             if (distance > 5000)
               return res
                 .status(200)
@@ -284,9 +283,33 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     const team = await Team.findById(teamId);
 
     const arr = [];
+    const arr2 = [];
     const allMissions = team.assignedMissions;
+    const allBonus = team.assignedBonus;
+    for (let index = 0; index < allBonus.length; index += 1) {
+      const activity = await Activity.findOne({
+        team: req.jwt_payload.team,
+        mission: allMissions[index],
+      });
 
-    for (let i = 0; i < allMissions.length; i++) {
+      const bonus = await Mission.findById(allMissions[index]).select({
+        clue: 1,
+        Category: 1,
+        maxPoints: 1,
+      });
+      arr2.push(bonus);
+
+      if (!activity) {
+        await Activity.create({
+          team: req.jwt_payload.team,
+          isSubmitted: false,
+          likes: 0,
+          mission: allMissions[index],
+          hintsTaken: 0,
+        });
+      }
+    }
+    for (let i = 0; i < allMissions.length; i += 1) {
       const activity = await Activity.findOne({
         team: req.jwt_payload.team,
         mission: allMissions[i],
@@ -310,7 +333,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
       }
     }
 
-    return res.status(200).json({ missions: arr });
+    return res.status(200).json({ missions: arr, bonus: arr2 });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -327,6 +350,11 @@ player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
       team: req.jwt_payload.team,
       mission: MissionId,
     });
+    if (!activity) {
+      return res
+        .status(404)
+        .json({ message: "you team is not  assigned to the mission" });
+    }
     const HintNumber = activity.hintsTaken;
     if (HintNumber < 3) {
       activity.hintsTaken += 1;

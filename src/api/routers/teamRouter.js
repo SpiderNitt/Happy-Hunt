@@ -12,9 +12,23 @@ team.post("/create", playerVerify, async (req, res) => {
     if (teamName == null || teamName === "") {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
+    const name = await Team.findOne({ teamName });
+
+    if (name) {
+      return res
+        .status(401)
+        .json({ message: "team of this name already exists" });
+    }
+    if (
+      req.jwt_payload.Role === "TeamLeader" ||
+      req.jwt_payload.Role === "TeamMember"
+    ) {
+      return res
+        .status(402)
+        .json({ message: "you already joined or created a team" });
+    }
 
     const user = await User.findById(req.jwt_payload.id);
-    console.log(user);
     user.Role = "TeamLeader";
     let teamId = uid();
     while (await Team.exists({ teamId })) {
@@ -57,11 +71,20 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
         .status(400)
         .json({ message: "Invalid teamId or Provide teamId" });
     }
+    if (
+      req.jwt_payload.Role === "TeamLeader" ||
+      req.jwt_payload.Role === "TeamMember"
+    ) {
+      return res
+        .status(402)
+        .json({ message: "you already joined or created a team" });
+    }
+
     const existingTeam = await Team.findOne({ teamId })
       .populate("members")
       .exec();
     let CaptainID;
-    for (let i = 0; i < existingTeam.members.length; i++) {
+    for (let i = 0; i < existingTeam.members.length; i += 1) {
       const member = existingTeam.members[i];
       if (member.Role === "TeamLeader") {
         CaptainID = member._id;
@@ -128,6 +151,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "Request Accepted",
+      jwttoken: token,
     });
   } catch (error) {
     console.log(error);
@@ -158,7 +182,7 @@ team.post("/location", playerVerify, async (req, res) => {
       const { Location } = req.body;
       theTeam.avgLocation.Lat = Location.coords.latitude;
       theTeam.avgLocation.Long = Location.coords.longitude;
-      await team.save();
+      await theTeam.save();
       return res.status(200).json({ message: "success" });
     }
   } catch (error) {

@@ -30,12 +30,7 @@ const TeamSchema = new mongoose.Schema({
       ref: "Mission",
     },
   ],
-  missionHistory: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Mission",
-    },
-  ],
+
   requests: [
     {
       type: mongoose.Schema.Types.ObjectId,
