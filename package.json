@@ -43,6 +43,7 @@
 		"express-session": "^1.17.1",
 		"express-validator": "^6.9.2",
 		"form-data": "^3.0.0",
+		"geo-nearby": "^2.0.1",
 		"geolib": "^3.3.1",
 		"http": "0.0.1-security",
 		"jsonwebtoken": "^8.5.1",

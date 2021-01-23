@@ -11,6 +11,7 @@ const Team = require("../../database/models/Team");
 const Activity = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
+const { io } = require("../../helpers/timer");
 
 Router.post(
   "/createAdmin",
@@ -39,7 +40,7 @@ Router.post(
           length: 10,
           type: "alphanumeric",
         });
-        console.log("password", adminpassword);
+
         const password = await bcrypt.hash(
           adminpassword,
           parseInt(10, process.env.TOKEN_SECRET)
@@ -96,7 +97,7 @@ Router.get("/submissions", adminVerify, async (req, res) => {
       isSubmitted: true,
       status: false,
     });
-    console.log(activityFeeds);
+
     return res.status(200).json({ submissions: activityFeeds });
   } catch (error) {
     console.log(error);
@@ -118,14 +119,15 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     }
     const mission = await Mission.findById(activity.mission);
     const team = await Team.findById(activity.team._id);
+    let notification;
     if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
-        console.log(mission.maxPoints, " - ", activity.hintsTaken);
         team.points += mission.maxPoints - activity.hintsTaken * 20;
         activity.status = true;
         activity.Date = Date.now();
         await team.save();
         await activity.save();
+        notification = `your submission for ${mission.MissionName} is accepted`;
       } else {
         return res.status(403).json({
           message:
@@ -136,7 +138,12 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
       activity.isSubmitted = false;
       activity.Date = Date.now();
       await activity.save();
+      notification = `your submission for ${mission.MissionName} is rejected`;
     }
+    team.Notifications.push(notification);
+    await team.save();
+    io.emit(`Notifications ${activity.team._id}`, notification);
+
     return res
       .status(200)
       .json({ message: "Answered successfully accepted or rejected" });

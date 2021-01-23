@@ -8,9 +8,7 @@ Router.get("/feed", async (req, res) => {
       .populate("team")
       .populate("mission")
       .exec();
-
     const feedToBeShown = [];
-
     for (let index = 0; index < feeds.length; index += 1) {
       const details = {};
       details.MissionName = feeds[index].mission.MissionName;
@@ -40,9 +38,9 @@ Router.get("/feed/likes/:id", async (req, res) => {
     if (!feed) {
       return res.status(404).json({ message: "no such feed found" });
     }
-    console.log("previous", feed.likes);
+
     feed.likes += 1;
-    console.log("after", feed.likes);
+
     feed.save();
     return res.status(200).json({ message: "post liked" });
   } catch (err) {

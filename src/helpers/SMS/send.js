@@ -26,15 +26,16 @@ const send = async (mobile) => {
 
   try {
     const response = await axios(config);
-    console.log(response.data);
+
     const result = await User.updateOne(
       { phoneNo: mobile },
       { otpId: response.data.otp_id }
     );
-    if (result.nModified === 1) return true;
+
+    if (result.nModified === 1 && response.data.otp_id !== null) return true;
     return false;
-  } catch (message) {
-    console.log(message);
+  } catch (e) {
+    console.log(e.message);
     return false;
   }
 };
