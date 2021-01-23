@@ -1,6 +1,7 @@
 import React , { useState } from 'react';
 import clueData from './ClueData';
 import Button from '@material-ui/core/Button';
+import Routes from '../utils/routes';
 
 function Hints(props) {
     const [showSecondHint, setshowSecondHint] = useState(false);
@@ -62,7 +63,7 @@ function Hints(props) {
             </div>
             }
         
-            <Button variant="contained" color="primary" href="/clue" style={{margin:5}}>
+            <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
                 Back
             </Button>
             <Button variant="contained" onClick={onButtonClickHandler1} disabled={disable1} color="primary" style={{margin:5}}>

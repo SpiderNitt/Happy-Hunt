@@ -8,11 +8,22 @@ import colors from '../utils/colors';
 import Routes from '../utils/routes'
 import { withRouter } from 'react-router-dom'
 import client from '../api/client';
+import LoadingPage from '../components/LoadingPage';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         maxWidth: 752,
+    },
+    position: {
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        marginTop: '10px',
+        width: '600px',
+        height: '500px',
+        overflow: 'auto',
     },
     demo: {
         backgroundColor: theme.palette.background.paper,
@@ -31,39 +42,35 @@ function AdminMission(props) {
     const { history } = props;
     const classes = useStyles();
     const [dense, setDense] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             const result = await client.get('api/admin/mission')
             setData(result.data.Missions);
+            setLoading(false);
         }
         fetchData();
     }, []);
     return (
         <div>
-            <div style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                marginTop: '10px',
-                width: '600px',
-                height: '500px',
-                overflow: 'auto',
-            }}>
-                <div className={classes.demo}>
-                    <List dense={dense}>
-                        {data.map((mission, index) => (
-                            <AdminMissionListItem key={mission._id} values={mission} index={index + 1} />
-                        ))}
-                    </List>
+            {loading && <LoadingPage />}
+            {!loading &&
+                <div className={classes.position}>
+                    <div className={classes.demo}>
+                        <List dense={dense}>
+                            {data.map((mission, index) => (
+                                <AdminMissionListItem key={mission._id} values={mission} index={index + 1} />
+                            ))}
+                        </List>
+                    </div>
                 </div>
-            </div>
+            }
             <Fab color="primary" className={classes.fab} onClick={() => { history.push(Routes.ADMIN_NEW_MISSION) }}>
                 <AddIcon fontSize="large" color={colors.white} />
             </Fab>
 
-        </div>
+        </div >
     )
 }
 
