@@ -1,5 +1,4 @@
 import { React, useEffect, useState, createRef } from 'react';
-import client from '../api/client';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -40,13 +39,13 @@ const useStyles = makeStyles({
 
 const RedirectUrl = (category) => {
   let url;
-  if (category == "Picture and Location") {
+  if (category === "Picture and Location") {
     url = Routes.USER_LOCATION_CLUE
   }
-  else if (category == "Text") {
+  else if (category === "Text") {
     url = Routes.USER_TEXT_CLUE
   }
-  else if (category == "Picture" || category == "Video") {
+  else if (category === "Picture" || category === "Video") {
     url = Routes.USER_PICTURE_CLUE
   }
   return url;

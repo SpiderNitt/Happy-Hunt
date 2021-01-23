@@ -73,7 +73,7 @@ export default function ClueTabs() {
   }
   useEffect(() => {
     fetch();
-  }, []);
+  });
   const getSet1 = () => {
     if (data.length >= 3) {
       return data.slice(0, 3);
