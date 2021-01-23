@@ -1,5 +1,4 @@
-import {React, useEffect, useState, createRef} from 'react';
-import client from '../api/client';
+import { React, useEffect, useState, createRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,44 +10,44 @@ import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
 
 const useStyles = makeStyles({
-   title: {
-     fontSize: 20,
-     color:"olive",
-     fontWeight: 300,
-     textAlign: 'left',
-     fontFamily:"tahoma"
-   },
-   pos: {
-     marginBottom: 12,
-   },
-   category: {
-    fontFamily:"tahoma",
-    fontStyle:"italic",
-    color:"gray",
-    float:"left",
-    marginLeft:10
+  title: {
+    fontSize: 20,
+    color: "olive",
+    fontWeight: 300,
+    textAlign: 'left',
+    fontFamily: "tahoma"
   },
-   points: {
-     float:"right",
-   },
-   container: {
-     display: 'flex',
-     flexDirection: 'row',
-     justifyContent: 'space-between',
-     marginBottom: 10,
-   }
- });
+  pos: {
+    marginBottom: 12,
+  },
+  category: {
+    fontFamily: "tahoma",
+    fontStyle: "italic",
+    color: "gray",
+    float: "left",
+    marginLeft: 10
+  },
+  points: {
+    float: "right",
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  }
+});
 
-const RedirectUrl=(category)=>{
+const RedirectUrl = (category) => {
   let url;
-  if(category=="Picture and Location"){
-    url=Routes.USER_LOCATION_CLUE
+  if (category === "Picture and Location") {
+    url = Routes.USER_LOCATION_CLUE
   }
-  else if(category=="Text"){
-    url=Routes.USER_TEXT_CLUE
+  else if (category === "Text") {
+    url = Routes.USER_TEXT_CLUE
   }
-  else if(category=="Picture" || category=="Video"){
-    url=Routes.USER_PICTURE_CLUE
+  else if (category === "Picture" || category === "Video") {
+    url = Routes.USER_PICTURE_CLUE
   }
   return url;
 }
@@ -104,6 +103,7 @@ function Clues(){
     <Container maxWidth="md">
       {loading && <LoadingPage />}
       {!loading && <RenderClues/>} 
+
     </Container>
   )
 };
