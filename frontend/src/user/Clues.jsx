@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { Chip, Container, Grid } from '@material-ui/core';
 import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
+import client from '../api/client';
 
 const useStyles = makeStyles({
   title: {

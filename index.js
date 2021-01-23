@@ -28,4 +28,10 @@ app.use("/api", apiRouter);
 global.appRoot = path.resolve(__dirname);
 const port = 3000;
 
+app.use(express.static("frontend/build"));
+
+app.use((req, res) => {
+  res.sendFile(`${__dirname}/frontend/build/index.html`);
+});
+
 app.listen(port, () => console.log(`server started at port ${port}`));
