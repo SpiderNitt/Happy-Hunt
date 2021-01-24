@@ -1,6 +1,7 @@
 import { Grid, makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ActivityFeedCard from "./Card";
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -12,6 +13,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Activity = () => {
   const styles = useStyles();
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await client.get('api/admin/submissions');
+      console.log(result.data);
+    }
+    fetchData();
+  })
   return (
     <Grid container className={styles.container}>
       <Grid item>

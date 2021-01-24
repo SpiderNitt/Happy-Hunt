@@ -11,6 +11,7 @@ import { Avatar, CardHeader, IconButton } from '@material-ui/core';
 import { Favorite, PeopleAltOutlined, Share } from '@material-ui/icons';
 import client from '../api/client';
 import moment from 'moment';
+import LoadingPage from '../components/LoadingPage';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -38,11 +39,13 @@ function ActivityFeed() {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [likedColor, setLikedColor]= useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
       const result = await client.get('api/activity/feed')
-      console.log(result)
+      console.log(result);
+      setLoading(false);
       setData(result.data.activityFeeds);
   }
     fetch();
@@ -58,7 +61,10 @@ const getLike= ()=>{
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
-      <Grid container spacing={4}>
+      {loading && <LoadingPage />}
+      {!loading &&      <Grid container spacing={4}>
+      
+      
       {data.map((activity, index) => (
         <Grid item key={activity._id} index={index + 1} xs={12} sm={6} md={4}>
            <Card className={classes.card} item xs={3}>
@@ -97,6 +103,8 @@ const getLike= ()=>{
         
     ))}
       </Grid>
+    }
+ 
          
   </Container>
   );

@@ -4,7 +4,6 @@ import Home from "../user/Home";
 import TopNav from "../user/TopNav";
 import NavBar from "../user/NavBar";
 import { Container } from "@material-ui/core";
-import Clues from "../user/Clues";
 import ActivityFeed from "../user/ActivityFeed";
 import Leaderboard from "../user/Leaderbaord";
 import Notifications from "../user/Notifications";
@@ -34,12 +33,12 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
       render={() =>
         authContext.isAuthenticated() ? (
           <>
-          {children}
-          <MessageBot />
+            {children}
+            <MessageBot />
           </>
         ) : (
-          <Redirect to={Routes.WELCOME} />
-        )
+            <Redirect to={Routes.WELCOME} />
+          )
       }
     ></Route>
   );
@@ -50,89 +49,96 @@ function UserNav() {
 
   return (
     <>
-    <Switch>
-      <Route path={Routes.USER_REGISTER} exact>
-        <UserRegistration />
-        <MessageBot />
-      </Route>
-      <Route path={Routes.USER_LOGIN} exact>
-        <UserLogin />
-        <MessageBot />
-      </Route>
-      <Route path={Routes.USER_VERIFY} exact render={(props) => (
-        <>
-        <VerificationEmail {...props} />
-        <MessageBot />
-        </>
-      )} />
-      <Route path={Routes.WELCOME} exact>
-        <GameIntro />
-        <MessageBot />
-      </Route>
-      <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact component={CreateTeam}/>
-      <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact component={JoinTeam}/>
-      <Route path="/photo" exact component={Capture}/>
-      <UserAuthenticatedRoute path={Routes.HOME} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+      <Switch>
+        <Route path={Routes.USER_REGISTER} exact>
+          <UserRegistration />
+          <MessageBot />
+        </Route>
+        <Route path={Routes.USER_LOGIN} exact>
+          <UserLogin />
+          <MessageBot />
+        </Route>
+        <Route path={Routes.USER_VERIFY} exact render={(props) => (
+          <>
+            <VerificationEmail {...props} />
+            <MessageBot />
+          </>
+        )} />
+        <Route path={Routes.WELCOME} exact>
+          <GameIntro />
+          <MessageBot />
+        </Route>
+        <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <CreateTeam />
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <JoinTeam />
+          </div>
+        </UserAuthenticatedRoute>
+        <Route path="/photo" exact component={Capture} />
+        <UserAuthenticatedRoute path={Routes.HOME} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <Home />
-        </div>
-      </UserAuthenticatedRoute>
+          </div>
+        </UserAuthenticatedRoute>
 
-      <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+        <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <ProfilePage />
-        </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_ACTIVITY} exact>
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_ACTIVITY} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="activity" /></div>
           <Container>
-              <ActivityFeed />
+            <ActivityFeed />
           </Container>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_CLUES} exact>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_CLUES} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
           <ClueTabs />
-          <div style={{ marginTop: 20 }}>
-              <Clues />
-          </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_PICTURE_CLUE} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_PICTURE_CLUE} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <PictureClues />
-        </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_LOCATION_CLUE} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_LOCATION_CLUE} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <LocationClues />
-        </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_TEXT_CLUE} exact>
-        <TopNav />
-        <div style={{ marginTop: 70 }}>
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_TEXT_CLUE} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
             <TextClues />
-        </div>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>
           <Container>
-              <Leaderboard />
+            <Leaderboard />
           </Container>
-      </UserAuthenticatedRoute>
-      <UserAuthenticatedRoute path={Routes.USER_NOTIFICATION} exact>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_NOTIFICATION} exact>
           <TopNav />
           <Container style={{ marginTop: 70 }}>
-              <Notifications />
+            <Notifications />
           </Container>
-      </UserAuthenticatedRoute>
-      <AdminNav />
-    </Switch>
+        </UserAuthenticatedRoute>
+        <AdminNav />
+      </Switch>
     </>
   )
 }

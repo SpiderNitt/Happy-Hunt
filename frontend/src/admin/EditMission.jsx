@@ -8,6 +8,7 @@ import client from '../api/client';
 import { withRouter } from 'react-router-dom';
 
 const dummyData = {
+    mission:{
     "id": "5ff7bac89b8b6a46c011b200",
     "Category": "Picture",
     "clue": "uhugyfytfytfyfyfyfug jgyfyfddtd gfgugufigi vugfyfyfy",
@@ -38,6 +39,7 @@ const dummyData = {
             "MaxPoints": "123"
         }
     ]
+}
 };
 
 const EditMission = (props) => {
@@ -45,15 +47,15 @@ const EditMission = (props) => {
     const [data, setData] = useState(dummyData);
     const formik = useFormik({
         initialValues: {
-            Category: data['Category'],
-            clue: data['clue'],
-            answer: data['answer'].join(','),
-            Other_Info: data['Other_Info'],
+            Category: data.mission['Category'],
+            clue: data.mission['clue'],
+            answer: data.mission['answer'].join(','),
+            Other_Info: data.mission['Other_Info'],
             answer_Type: '',
-            maxPoints: data['maxPoints'],
-            Lat: data.Location.Lat,
-            Long: data.Location.Long,
-            MissionName: data['Category']
+            maxPoints: data.mission['maxPoints'],
+            Lat: data.mission.Location.Lat,
+            Long: data.mission.Location.Long,
+            MissionName: data.mission['Category']
         },
         enableReinitialize: true,
         onSubmit: async (values) => {
