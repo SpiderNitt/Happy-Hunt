@@ -7,7 +7,7 @@ const Hint = require("../../database/models/Hint");
 openApi.get("/scoreboard", async (req, res) => {
   try {
     const teamScore = await Team.find()
-      .sort("points")
+      .sort({ points: -1 })
       .populate("members", "name -_id")
       .select("teamName points -_id members");
     return res.status(200).json(teamScore);
