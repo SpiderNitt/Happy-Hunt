@@ -1,8 +1,9 @@
 const Router = require("express").Router();
+const chalk = require("chalk");
 const Feed = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 
-Router.get("/feed", async (req, res) => {
+Router.get("/feed", async (req, res, next) => {
   try {
     const feeds = await Feed.find({ status: true })
       .populate("team")
@@ -25,13 +26,13 @@ Router.get("/feed", async (req, res) => {
 
     return res.status(200).json({ activityFeeds: feedToBeShown });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
+    res.locals.error = err;
+    res.status(500).json({
       message: "Server Error ",
     });
   }
 });
-Router.get("/feed/likes/:id", async (req, res) => {
+Router.get("/feed/likes/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const feed = await Feed.findById(id);
@@ -44,8 +45,8 @@ Router.get("/feed/likes/:id", async (req, res) => {
     feed.save();
     return res.status(200).json({ message: "post liked" });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
+    res.locals.error = err;
+    res.status(500).json({
       message: "Server Error ",
     });
   }

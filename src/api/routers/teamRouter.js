@@ -1,12 +1,13 @@
 const team = require("express").Router();
+const chalk = require("chalk");
 const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
-const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
+const { createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 
-team.post("/create", playerVerify, async (req, res) => {
+team.post("/create", playerVerify, async (req, res, next) => {
   try {
     const { teamName } = req.body;
     if (teamName == null || teamName === "") {
@@ -51,11 +52,12 @@ team.post("/create", playerVerify, async (req, res) => {
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
       TeamId: newTeam.teamId,
+      userInfo: user,
       JWTtoken: token,
       expiration: date,
     });
   } catch (error) {
-    console.log(error);
+    res.locals.error = error;
     return res
       .status(500)
       .json({ Message: "Internal Server Error, Try again later!!" });
@@ -63,7 +65,7 @@ team.post("/create", playerVerify, async (req, res) => {
   // return 0;
 });
 
-team.get("/request/:teamId", playerVerify, async (req, res) => {
+team.get("/request/:teamId", playerVerify, async (req, res, next) => {
   try {
     const { teamId } = req.params;
     if (
@@ -98,14 +100,14 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     existingTeam.save();
     return res.status(200).json({ message: "Request sent" });
   } catch (error) {
-    console.log(error);
+    res.locals.error = error;
     res
       .status(500)
       .json({ Message: "Internal Server Error, Try again later!!" });
   }
 });
 
-team.get("/reject", leaderVerify, async (req, res) => {
+team.get("/reject", leaderVerify, async (req, res, next) => {
   try {
     const { userId } = req.query;
     const user = await User.findById(userId);
@@ -121,14 +123,14 @@ team.get("/reject", leaderVerify, async (req, res) => {
     io.emit(`Request ${userId}`, "Reject");
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
-    console.log(error);
+    res.locals.error = error;
     res
       .status(500)
       .json({ Message: "Internal Server Error, Try again later!!" });
   }
 });
 
-team.get("/accept", leaderVerify, async (req, res) => {
+team.get("/accept", leaderVerify, async (req, res, next) => {
   try {
     const { userId } = req.query;
     const user = await User.findById(userId);
@@ -155,7 +157,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
       jwttoken: token,
     });
   } catch (error) {
-    console.log(error);
+    res.locals.error = error;
     res
       .status(500)
       .json({ Message: "Internal Server Error, Try again later!!" });
@@ -163,7 +165,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
   return 0;
 });
 
-team.post("/location", playerVerify, async (req, res) => {
+team.post("/location", playerVerify, async (req, res, next) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user.Role === "TeamLeader") {
@@ -190,18 +192,20 @@ team.post("/location", playerVerify, async (req, res) => {
       return res.status(200).json({ message: "success" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.locals.error = error;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
 
-team.get("/requests", async (req, res) => {
+team.get("/requests", async (req, res, next) => {
   try {
     const TeamsRequest = await Team.findById(req.jwt_payload.team, {
       Request: 1,
     });
     return res.status(200).json({ message: "success", TeamsRequest });
   } catch (e) {
-    console.log(e);
+    res.locals.error = e;
   }
 });
 module.exports = team;

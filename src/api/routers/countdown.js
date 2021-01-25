@@ -1,7 +1,7 @@
 const Router = require("express").Router();
 const countdown = require("countdown");
 
-Router.get("/", (req, res) => {
+Router.get("/", (req, res, next) => {
   const time = countdown(null, new Date(2021, 0, 30));
   delete time.units;
   delete time.value;

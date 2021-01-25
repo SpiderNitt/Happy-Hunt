@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const Router = require("express").Router();
+const chalk = require("chalk");
 const { validationResult } = require("express-validator");
 const Mission = require("../../database/models/Mission");
 
@@ -10,74 +11,79 @@ const {
 } = require("../../middlewares/expressValidator");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 
-Router.get("/", adminVerify, async (req, res) => {
+Router.get("/", adminVerify, async (req, res, next) => {
   try {
     const TotalMissions = await Mission.find({});
     return res.status(200).json({ Missions: TotalMissions });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
+    res.locals.error = err;
+    res.status(500).json({
       message: "Server Error ",
     });
   }
 });
 
-Router.post("/add", superAdminVerify, MissionValidator, async (req, res) => {
-  try {
-    const {
-      Category,
-      clue,
-      answer_Type,
-      answer,
-      Location,
-      Other_Info,
-      MissionName,
-      Feed,
-      ServerEvaluation,
-      maxPoints,
-      Hints,
-    } = req.body;
+Router.post(
+  "/add",
+  superAdminVerify,
+  MissionValidator,
+  async (req, res, next) => {
+    try {
+      const {
+        Category,
+        clue,
+        answer_Type,
+        answer,
+        Location,
+        Other_Info,
+        MissionName,
+        Feed,
+        ServerEvaluation,
+        maxPoints,
+        Hints,
+      } = req.body;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const newHints = [];
+
+      for (let i = 0; i < Hints.length; i++) {
+        const newhint = await Hint.create(Hints[i]);
+        newHints.push(newhint);
+      }
+
+      const m = await Mission.create({
+        Category,
+        clue,
+        answer_Type,
+        answer,
+        Location,
+        Other_Info,
+        maxPoints,
+        MissionName,
+        Feed,
+        ServerEvaluation,
+        assignedTeams: [],
+        Hints: newHints,
+      });
+
+      return res.status(200).json({ message: "mission added sucessfully" });
+    } catch (e) {
+      res.locals.error = e;
+      res.status(500).json({
+        message: "Server Error ",
+      });
     }
-
-    const newHints = [];
-
-    for (let i = 0; i < Hints.length; i++) {
-      const newhint = await Hint.create(Hints[i]);
-      newHints.push(newhint);
-    }
-
-    const m = await Mission.create({
-      Category,
-      clue,
-      answer_Type,
-      answer,
-      Location,
-      Other_Info,
-      maxPoints,
-      MissionName,
-      Feed,
-      ServerEvaluation,
-      assignedTeams: [],
-      Hints: newHints,
-    });
-
-    return res.status(200).json({ message: "mission added sucessfully" });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      message: "Server Error ",
-    });
   }
-});
+);
 Router.patch(
   "/update",
   superAdminVerify,
   UpdateMissionValidator,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { id } = req.body;
 
@@ -100,15 +106,15 @@ Router.patch(
       await Mission.findByIdAndUpdate(mission._id, req.body);
       return res.status(200).json({ message: "mission updated sucessfully" });
     } catch (e) {
-      console.log(e);
-      return res.status(500).json({
+      res.locals.error = e;
+      res.status(500).json({
         message: "Server Error ",
       });
     }
   }
 );
 
-Router.delete("/delete/:id", superAdminVerify, async (req, res) => {
+Router.delete("/delete/:id", superAdminVerify, async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -124,8 +130,8 @@ Router.delete("/delete/:id", superAdminVerify, async (req, res) => {
     mission.remove();
     return res.status(200).json({ message: "mission deleted sucessfully" });
   } catch (e) {
-    console.log(e);
-    return res.status(500).json({
+    res.locals.error = e;
+    res.status(500).json({
       message: "Server Error ",
     });
   }

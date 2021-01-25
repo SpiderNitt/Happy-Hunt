@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "./src/env/.env" });
+const chalk = require("chalk");
 const mongoose = require("mongoose");
 
 // checking connection to db
@@ -10,5 +11,5 @@ mongoose.connect(process.env.CLOUD_DATABASE_URL, {
   useUnifiedTopology: true,
 });
 const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("connected to database"));
+db.on("error", (error) => console.log(chalk.bold.red(error.message)));
+db.once("open", () => console.log(chalk.green.bold("connected to database")));
