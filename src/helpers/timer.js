@@ -43,19 +43,19 @@ const missionGenerator = async (points, teams, category) => {
     Category: { $nin: category },
     _id: { $nin: teams.assignedMissions },
   });
+  if (result.length === 0) {
+    console.log("No missions found");
+    return { _id: null };
+  }
   let distance = 100000000000;
   let mission;
   for (let i = 0; i < result.length; i += 1) {
-    if (
-      geolib.getDistance(
-        { latitude: teams.avgLocation.Lat, longitude: teams.avgLocation.Long },
-        { latitude: result[i].Location.Lat, longitude: result[i].Location.Long }
-      ) < distance
-    ) {
-      distance = geolib.getDistance(
-        { latitude: teams.avgLocation.Lat, longitude: teams.avgLocation.Long },
-        { latitude: result[i].Location.Lat, longitude: result[i].Location.Long }
-      );
+    const missionDistance = geolib.getDistance(
+      { latitude: teams.avgLocation.Lat, longitude: teams.avgLocation.Long },
+      { latitude: result[i].Location.Lat, longitude: result[i].Location.Long }
+    );
+    if (missionDistance < distance) {
+      distance = missionDistance;
       mission = result[i];
     }
   }
@@ -93,8 +93,16 @@ setInterval(async () => {
       $push: { assignedTeams: teams[index]._id },
     });
     // bonus missions
-    teams[index].assignedBonus.push(BonusMission100[counter]._id);
-    teams[index].assignedBonus.push(BonusMission200[counter]._id);
+    if (BonusMission100.length) {
+      console.log("No bonus missions done");
+    } else {
+      teams[index].assignedBonus.push(BonusMission100[counter]._id);
+    }
+    if (BonusMission200.length) {
+      console.log("No bonus missions done");
+    } else {
+      teams[index].assignedBonus.push(BonusMission200[counter]._id);
+    }
     await teams[index].save();
   }
   counter += 1;
