@@ -1,11 +1,12 @@
 const commonAuth = require("express").Router();
+const chalk = require("chalk");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { loginValidator } = require("../../middlewares/expressValidator");
 
-commonAuth.post("/login", loginValidator, async (req, res) => {
+commonAuth.post("/login", loginValidator, async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,8 +25,9 @@ commonAuth.post("/login", loginValidator, async (req, res) => {
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({ user, token, expiration: date });
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
 module.exports = commonAuth;

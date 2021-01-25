@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const chalk = require("chalk");
 
 // eslint-disable-next-line arrow-body-style
 const createJWTtoken = (user) => {
@@ -30,8 +31,9 @@ const jwtVerify = (req, res, next) => {
     });
     return null;
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: "Server error. Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 };
 

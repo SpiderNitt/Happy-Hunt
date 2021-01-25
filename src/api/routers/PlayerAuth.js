@@ -1,4 +1,5 @@
 const player = require("express").Router();
+const chalk = require("chalk");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const {
@@ -8,7 +9,7 @@ const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { send, verify } = require("../../helpers/SMS/index");
 
-player.post("/register", playerRegisterValidator, async (req, res) => {
+player.post("/register", playerRegisterValidator, async (req, res, next) => {
   try {
     const { name, emailId, phoneNo, password } = req.body;
 
@@ -39,15 +40,16 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
         return res.status(200).json({ message: "OTP sent" });
       return res.status(400).json({ message: "OTP not sent" });
     } catch (err) {
-      console.log(err.message);
+      res.locals.error = err;
       return res.status(400).json({ message: "OTP not sent" });
     }
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-player.post("/resendOtp", async (req, res) => {
+player.post("/resendOtp", async (req, res, next) => {
   try {
     const { mobileNo } = req.body;
     if (!mobileNo) return res.status(400).json({ message: "Fill all fields" });
@@ -58,11 +60,12 @@ player.post("/resendOtp", async (req, res) => {
       return res.status(200).json({ message: "OTP sent" });
     return res.status(404).json({ message: "token not provided" });
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-player.post("/verify", async (req, res) => {
+player.post("/verify", async (req, res, next) => {
   try {
     const { otp, mobileNo } = req.body;
     if (!otp || !mobileNo)
@@ -90,8 +93,9 @@ player.post("/verify", async (req, res) => {
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({ result, token, expiration: date });
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
 

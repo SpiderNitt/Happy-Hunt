@@ -1,10 +1,11 @@
 const openApi = require("express").Router();
+const chalk = require("chalk");
 const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
 
-openApi.get("/scoreboard", async (req, res) => {
+openApi.get("/scoreboard", async (req, res, next) => {
   try {
     const teamScore = await Team.find()
       .sort({ points: -1 })
@@ -12,11 +13,12 @@ openApi.get("/scoreboard", async (req, res) => {
       .select("teamName points -_id members");
     return res.status(200).json(teamScore);
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ Message: "Server Error, Try again later" });
+    res.locals.error = error;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-openApi.get("/mission/:id", async (req, res) => {
+openApi.get("/mission/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const mission = await Mission.findById(id);
@@ -33,11 +35,12 @@ openApi.get("/mission/:id", async (req, res) => {
     const result = { mission, hint };
     return res.status(200).json(result);
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ Message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-openApi.post("/payment", async (req, res) => {
+openApi.post("/payment", async (req, res, next) => {
   try {
     const emailId = req.body.payload.payment.email;
     const phoneNo = req.body.payload.payment.contact;
@@ -64,11 +67,12 @@ openApi.post("/payment", async (req, res) => {
     }
     return res.status(400).json({ message: "Unable to update record" });
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-openApi.post("/payment", async (req, res) => {
+openApi.post("/payment", async (req, res, next) => {
   try {
     const emailId = req.body.emailID;
     const phoneNo = req.body.phoneNumber;
@@ -89,19 +93,21 @@ openApi.post("/payment", async (req, res) => {
     }
     return res.status(400).json({ message: "Unable to update record" });
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-openApi.get("/adminList", async (req, res) => {
+openApi.get("/adminList", async (req, res, next) => {
   try {
     const adminList = await User.find({ Role: "Admin" });
     if (!adminList)
       return res.status(404).json({ message: "Admin list is empty" });
     return res.status(200).json(adminList);
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = err;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
 module.exports = openApi;

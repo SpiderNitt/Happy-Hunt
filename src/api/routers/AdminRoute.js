@@ -1,4 +1,5 @@
 const Router = require("express").Router();
+const chalk = require("chalk");
 const cryptoRandomString = require("crypto-random-string");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
@@ -17,7 +18,7 @@ Router.post(
   "/createAdmin",
   AdminCreateValidator,
   superAdminVerify,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const issuperadmin = await User.findById(req.jwt_payload.id);
       if (issuperadmin.Role !== "SuperAdmin") {
@@ -60,14 +61,14 @@ Router.post(
         .status(401)
         .json({ message: "emailId provided was undefined" });
     } catch (err) {
-      console.log(err);
-      return res.status(500).json({
+      res.locals.error = err;
+      res.status(500).json({
         message: "Server Error ",
       });
     }
   }
 );
-Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
+Router.delete("/deleteAdmin", superAdminVerify, async (req, res, next) => {
   try {
     const { emailId } = req.query;
 
@@ -85,13 +86,13 @@ Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
     }
     return res.status(401).json({ message: "emailId provided was undefined" });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
+    res.locals.error = err;
+    res.status(500).json({
       message: "Server Error ",
     });
   }
 });
-Router.get("/submissions", adminVerify, async (req, res) => {
+Router.get("/submissions", adminVerify, async (req, res, next) => {
   try {
     const activityFeeds = await Activity.find({
       isSubmitted: true,
@@ -100,11 +101,12 @@ Router.get("/submissions", adminVerify, async (req, res) => {
 
     return res.status(200).json({ submissions: activityFeeds });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message });
+    res.locals.error = error;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
-Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
+Router.post("/accept", AcceptValidator, adminVerify, async (req, res, next) => {
   try {
     const { isAccepted, activityfeedId } = req.body;
     const errors = validationResult(req);
@@ -148,8 +150,9 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
       .status(200)
       .json({ message: "Answered successfully accepted or rejected" });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message });
+    res.locals.error = error;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
 

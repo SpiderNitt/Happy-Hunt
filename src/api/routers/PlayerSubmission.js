@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const multer = require("multer");
+const chalk = require("chalk");
 const player = require("express").Router();
 const geolib = require("geolib");
 const { getDistance } = require("geolib");
@@ -17,7 +18,7 @@ player.post(
   multer({ storage: multer.memoryStorage() }).single("answer"),
   playerVerify,
   TeamenRollVerify,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { team } = req.jwt_payload;
       const user = Team.findById(team);
@@ -171,12 +172,13 @@ player.post(
         }
         return res.status(404).json({ message: "Activity not found" });
       } catch (error) {
-        console.log(error);
+        res.locals.error = error;
         return res.status(416).json({ message: "Cannot submit answer" });
       }
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "Server Error, Try again later" });
+      res.locals.error = error;
+      res.status(500).json({ Message: "Server Error, Try again later" });
+      next();
     }
   }
 );
@@ -184,7 +186,7 @@ player.post(
   "/locationSubmission",
   playerVerify,
   TeamenRollVerify,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const team = await Team.findById(req.jwt_payload.team);
 
@@ -222,12 +224,13 @@ player.post(
         .status(403)
         .json({ message: "You have already submited the mission" });
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "Server Error, Try again later" });
+      res.locals.error = error;
+      res.status(500).json({ Message: "Server Error, Try again later" });
+      next();
     }
   }
 );
-player.get("/profile", playerVerify, async (req, res) => {
+player.get("/profile", playerVerify, async (req, res, next) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user === undefined || user === null) {
@@ -235,15 +238,16 @@ player.get("/profile", playerVerify, async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    res.locals.error = error;
+    res.status(500).json({ Message: "Server Error, Try again later" });
+    next();
   }
 });
 player.patch(
   "/update",
   multer({ storage: multer.memoryStorage() }).single("photo"),
   playerVerify,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { id } = req.jwt_payload;
       const update = {};
@@ -259,7 +263,7 @@ player.patch(
           ? req.file.buffer.toString("base64")
           : userDetails.photo;
       } catch (err) {
-        console.log(err.message);
+        res.locals.error = err;
         return res.status(400).json({ message: "Image upload failed" });
       }
       const result = await User.updateOne({ _id: id }, update);
@@ -276,73 +280,78 @@ player.patch(
     }
   }
 );
-player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
-  try {
-    const teamId = req.jwt_payload.team;
+player.get(
+  "/mission",
+  playerVerify,
+  TeamenRollVerify,
+  async (req, res, next) => {
+    try {
+      const teamId = req.jwt_payload.team;
 
-    const team = await Team.findById(teamId);
+      const team = await Team.findById(teamId);
 
-    const arr = [];
-    const arr2 = [];
-    const allMissions = team.assignedMissions;
-    const allBonus = team.assignedBonus;
-    for (let index = 0; index < allBonus.length; index += 1) {
-      const activity = await Activity.findOne({
-        team: req.jwt_payload.team,
-        mission: allMissions[index],
-      });
-
-      const bonus = await Mission.findById(allMissions[index]).select({
-        clue: 1,
-        Category: 1,
-        maxPoints: 1,
-        answer_Type: 1,
-      });
-      arr2.push(bonus);
-
-      if (!activity) {
-        await Activity.create({
+      const arr = [];
+      const arr2 = [];
+      const allMissions = team.assignedMissions;
+      const allBonus = team.assignedBonus;
+      for (let index = 0; index < allBonus.length; index += 1) {
+        const activity = await Activity.findOne({
           team: req.jwt_payload.team,
-          isSubmitted: false,
-          likes: 0,
           mission: allMissions[index],
-          hintsTaken: 0,
         });
+
+        const bonus = await Mission.findById(allMissions[index]).select({
+          clue: 1,
+          Category: 1,
+          maxPoints: 1,
+          answer_Type: 1,
+        });
+        arr2.push(bonus);
+
+        if (!activity) {
+          await Activity.create({
+            team: req.jwt_payload.team,
+            isSubmitted: false,
+            likes: 0,
+            mission: allMissions[index],
+            hintsTaken: 0,
+          });
+        }
       }
-    }
-    for (let i = 0; i < allMissions.length; i += 1) {
-      const activity = await Activity.findOne({
-        team: req.jwt_payload.team,
-        mission: allMissions[i],
-      });
-
-      const mission = await Mission.findById(allMissions[i]).select({
-        clue: 1,
-        Category: 1,
-        maxPoints: 1,
-      });
-      arr.push(mission);
-
-      if (!activity) {
-        await Activity.create({
+      for (let i = 0; i < allMissions.length; i += 1) {
+        const activity = await Activity.findOne({
           team: req.jwt_payload.team,
-          isSubmitted: false,
-          likes: 0,
           mission: allMissions[i],
-          hintsTaken: 0,
         });
-      }
-    }
 
-    return res.status(200).json({ missions: arr, bonus: arr2 });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      message: "Server Error ",
-    });
+        const mission = await Mission.findById(allMissions[i]).select({
+          clue: 1,
+          Category: 1,
+          maxPoints: 1,
+        });
+        arr.push(mission);
+
+        if (!activity) {
+          await Activity.create({
+            team: req.jwt_payload.team,
+            isSubmitted: false,
+            likes: 0,
+            mission: allMissions[i],
+            hintsTaken: 0,
+          });
+        }
+      }
+
+      return res.status(200).json({ missions: arr, bonus: arr2 });
+    } catch (e) {
+      res.locals.error = e;
+      res.status(500).json({
+        message: "Server Error ",
+      });
+    }
   }
-});
-player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
+);
+player.get("/hint", playerVerify, TeamenRollVerify, async (req, res, next) => {
   try {
     const { MissionId } = req.body;
     const mission = await Mission.findById(MissionId);
@@ -365,8 +374,8 @@ player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
     }
     return res.status(403).json({ message: "No more hints available" });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
+    res.locals.error = err;
+    res.status(500).json({
       message: "Server Error ",
     });
   }
