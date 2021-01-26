@@ -42,10 +42,8 @@ function ProfilePage(props) {
 
     useEffect(() => {
       const fetch = async () => {
-          const result = await client.get('api/player/profile')
-          setData(result.data);
-
-          
+        const result = await client.get('api/player/profile')
+        setData(result.data);
       }
       fetch();
       console.log (data)
@@ -95,7 +93,7 @@ function ProfilePage(props) {
                 </ListItemIcon>
                     <ListItemText primary="Join Team" />
                 </ListItem>
-                <ListItem style={{ marginBottom: 20 }} component="button" onClick={handleLogout}>
+                <ListItem style={{ marginBottom: 20 }} component={Link} onClick={handleLogout}>
                 <ListItemIcon>
                     <ExitToApp />
                 </ListItemIcon>

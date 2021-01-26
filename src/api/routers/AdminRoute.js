@@ -122,7 +122,7 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     let notification;
     if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
-        team.points += mission.maxPoints - activity.hintsTaken * 20;
+        team.points += mission.maxPoints / 2 - activity.hintsTaken * 20;
         activity.status = true;
         activity.Date = Date.now();
         await team.save();

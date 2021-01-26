@@ -4,7 +4,6 @@ import Home from "../user/Home";
 import TopNav from "../user/TopNav";
 import NavBar from "../user/NavBar";
 import { Container } from "@material-ui/core";
-import Clues from "../user/Clues";
 import ActivityFeed from "../user/ActivityFeed";
 import Leaderboard from "../user/Leaderbaord";
 import Notifications from "../user/Notifications";
@@ -69,8 +68,18 @@ function UserNav() {
           <GameIntro />
           <MessageBot />
         </Route>
-        <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact component={CreateTeam} />
-        <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact component={JoinTeam} />
+        <UserAuthenticatedRoute path={Routes.USER_REGISTER_TEAM} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <CreateTeam />
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_JOIN_TEAM} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <JoinTeam />
+          </div>
+        </UserAuthenticatedRoute>
         <Route path="/photo" exact component={Capture} />
         <UserAuthenticatedRoute path={Routes.HOME} exact>
           <TopNav />
@@ -96,9 +105,6 @@ function UserNav() {
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
           <ClueTabs />
-          <div style={{ marginTop: 20 }}>
-            <Clues />
-          </div>
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_PICTURE_CLUE} exact>
           <TopNav />
