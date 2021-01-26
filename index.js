@@ -25,9 +25,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(express.static("./Frontend/build"));
-app.use((req, res) => {
+/*app.use((req, res) => {
   res.sendFile(`${__dirname}/frontend/build/index.html`);
-});
+});*/
 app.use("/auth", authRouter);
 app.use("/api", apiRouter);
 global.appRoot = path.resolve(__dirname);
