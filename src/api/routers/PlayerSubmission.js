@@ -72,7 +72,7 @@ player.post(
           }
           default: {
             return res
-              .status(500)
+              .status(401)
               .json({ message: "Database error,answerType improper" });
           }
         }

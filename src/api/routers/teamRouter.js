@@ -163,7 +163,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
   return 0;
 });
 
-team.post("/location", playerVerify, async (req, res) => {
+team.post("/location", leaderVerify, async (req, res) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user.Role === "TeamLeader") {
@@ -202,6 +202,7 @@ team.get("/requests", async (req, res) => {
     return res.status(200).json({ message: "success", TeamsRequest });
   } catch (e) {
     console.log(e);
+    res.status(500).json({ message: e.message });
   }
 });
 module.exports = team;
