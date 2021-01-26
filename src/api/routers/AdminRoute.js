@@ -12,6 +12,7 @@ const Activity = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
+const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
 
 Router.post(
   "/createAdmin",
@@ -19,12 +20,6 @@ Router.post(
   superAdminVerify,
   async (req, res) => {
     try {
-      const issuperadmin = await User.findById(req.jwt_payload.id);
-      if (issuperadmin.Role !== "SuperAdmin") {
-        return res.status(402).json({
-          message: "You don't have permission to perform the operation",
-        });
-      }
       const { emailId } = req.body;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -52,6 +47,12 @@ Router.post(
           password,
           active: true,
         });
+        await sendEmail(
+          emailId,
+          "ADMIN created",
+          "hii ur invited to happy hunt as admin",
+          "<h1>hello</h1>"
+        );
         return res
           .status(200)
           .json({ AdminEmailId: emailId, password: adminpassword });
