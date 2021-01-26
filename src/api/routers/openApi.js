@@ -4,6 +4,7 @@ const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
+const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
 
 openApi.get("/scoreboard", async (req, res) => {
   try {
@@ -87,6 +88,12 @@ openApi.post("/payment_1", async (req, res) => {
           Role: "Player",
           Paid: quantity,
         });
+        await sendEmail(
+          emailId,
+          "USER created",
+          `password:${password}`,
+          "<h1>hello</h1>"
+        );
         return res.status(200).json({ message: "Success" });
       }
     }
