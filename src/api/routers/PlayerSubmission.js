@@ -357,7 +357,7 @@ player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
         .json({ message: "you team is not  assigned to the mission" });
     }
     const HintNumber = activity.hintsTaken;
-    if (HintNumber < 3) {
+    if (HintNumber < 2) {
       activity.hintsTaken += 1;
       activity.save();
       const hintStatement = await Hint.findById(hint[HintNumber]);
