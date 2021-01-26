@@ -7,6 +7,7 @@ const {
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { send, verify } = require("../../helpers/SMS/index");
+const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
 
 player.post("/register", playerRegisterValidator, async (req, res) => {
   try {
@@ -33,6 +34,13 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       active: false,
       Role: "Player",
     });
+    const timeR = Date.now();
+    await sendEmail(
+      user.emailId,
+      "welcome to Happy-Hunt",
+      `welcome ,${timeR} `,
+      "<h1>hello</h1>"
+    );
 
     try {
       if (await send(phoneNo))

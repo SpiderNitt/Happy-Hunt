@@ -5,6 +5,7 @@ const User = require("../../database/models/User");
 const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
+const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
 
 team.post("/create", playerVerify, async (req, res) => {
   try {
@@ -96,6 +97,13 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     }
     existingTeam.requests.push(req.jwt_payload.id);
     existingTeam.save();
+    const captain = await User.findById(CaptainID);
+    await sendEmail(
+      captain.emailId,
+      "User Requested to join ur team",
+      "hii he/she wants to join ur team ",
+      "<h1>hello</h1>"
+    );
     return res.status(200).json({ message: "Request sent" });
   } catch (error) {
     console.log(error);
@@ -119,6 +127,12 @@ team.get("/reject", leaderVerify, async (req, res) => {
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     existingTeam.save();
     io.emit(`Request ${userId}`, "Reject");
+    await sendEmail(
+      user.emailId,
+      "leader rejected ur request",
+      "your request to join the team was rejected",
+      "<h1>hello</h1>"
+    );
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
     console.log(error);
@@ -148,6 +162,12 @@ team.get("/accept", leaderVerify, async (req, res) => {
     user.save();
     const token = createJWTtoken(user);
     io.emit(`Request ${userId}`, "Accept");
+    await sendEmail(
+      user.emailId,
+      "leader accepted ur request",
+      "your request to join the team was accepted",
+      "<h1>hello</h1>"
+    );
     const date = new Date();
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
