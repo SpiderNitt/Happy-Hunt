@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,11 +21,6 @@ const useStyles = makeStyles((theme) => ({
 
 function MissionListItem(props) {
     const classes = useStyles();
-    useEffect(() => {
-        if (props.eval) {
-            console.log(props.value);
-        }
-    })
     return (
         <div className={classes.root}>
             {props.eval && props.value.length === 3 && <div>
