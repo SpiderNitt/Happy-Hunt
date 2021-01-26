@@ -66,11 +66,6 @@ team.post("/create", playerVerify, async (req, res) => {
 team.get("/request/:teamId", playerVerify, async (req, res) => {
   try {
     const { teamId } = req.params;
-    if (teamId === undefined || teamId === null) {
-      return res
-        .status(400)
-        .json({ message: "Invalid teamId or Provide teamId" });
-    }
     if (
       req.jwt_payload.Role === "TeamLeader" ||
       req.jwt_payload.Role === "TeamMember"
@@ -83,6 +78,11 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     const existingTeam = await Team.findOne({ teamId })
       .populate("members")
       .exec();
+    if (teamId === undefined || teamId === null || existingTeam === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid teamId or Provide teamId" });
+    }
     let CaptainID;
     for (let i = 0; i < existingTeam.members.length; i += 1) {
       const member = existingTeam.members[i];
@@ -108,7 +108,8 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
 team.get("/reject", leaderVerify, async (req, res) => {
   try {
     const { userId } = req.query;
-    if (userId === undefined || userId === null) {
+    const user = await User.findById(userId);
+    if (userId === undefined || userId === null || user === null) {
       return res
         .status(400)
         .json({ message: "Invalid userId or Provide userId" });
@@ -130,10 +131,10 @@ team.get("/reject", leaderVerify, async (req, res) => {
 team.get("/accept", leaderVerify, async (req, res) => {
   try {
     const { userId } = req.query;
-    if (userId == null || userId === "") {
+    const user = await User.findById(userId);
+    if (userId == null || userId === "" || user === null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-    const user = await User.findById(userId);
     user.Role = "TeamMember";
     const existingTeam = await Team.findById(req.jwt_payload.team);
     if (existingTeam.Paid < 1) {
@@ -180,6 +181,9 @@ team.post("/location", playerVerify, async (req, res) => {
       // timestamp: 1610034540979
       // __proto__: GeolocationPosition;
       const { Location } = req.body;
+      if (Location.latitude === undefined || Location.longitude === undefined) {
+        return res.status(400).json({ message: "Invalid Location" });
+      }
       theTeam.avgLocation.Lat = Location.coords.latitude;
       theTeam.avgLocation.Long = Location.coords.longitude;
       await theTeam.save();
