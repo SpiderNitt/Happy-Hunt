@@ -1,13 +1,15 @@
 const openApi = require("express").Router();
+const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
+const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
 
 openApi.get("/scoreboard", async (req, res) => {
   try {
     const teamScore = await Team.find()
-      .sort("points")
+      .sort({ points: -1 })
       .populate("members", "name -_id")
       .select("teamName points -_id members");
     return res.status(200).json(teamScore);
@@ -68,7 +70,7 @@ openApi.post("/payment", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-openApi.post("/payment", async (req, res) => {
+openApi.post("/payment_1", async (req, res) => {
   try {
     const emailId = req.body.emailID;
     const phoneNo = req.body.phoneNumber;
@@ -77,7 +79,22 @@ openApi.post("/payment", async (req, res) => {
     if (!user) {
       user = await User.findOne({ phoneNo });
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        const password = uid();
+        const user = await User.create({
+          emailId,
+          phoneNo,
+          password,
+          active: true,
+          Role: "Player",
+          Paid: quantity,
+        });
+        await sendEmail(
+          emailId,
+          "USER created",
+          `password:${password}`,
+          "<h1>hello</h1>"
+        );
+        return res.status(200).json({ message: "Success" });
       }
     }
     let result;

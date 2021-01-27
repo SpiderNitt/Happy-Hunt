@@ -72,7 +72,7 @@ player.post(
           }
           default: {
             return res
-              .status(500)
+              .status(401)
               .json({ message: "Database error,answerType improper" });
           }
         }
@@ -289,11 +289,12 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     for (let index = 0; index < allBonus.length; index += 1) {
       const activity = await Activity.findOne({
         team: req.jwt_payload.team,
-        mission: allMissions[index],
+        mission: allBonus[index],
       });
 
-      const bonus = await Mission.findById(allMissions[index]).select({
+      const bonus = await Mission.findById(allBonus[index]).select({
         clue: 1,
+        MissionName: 1,
         Category: 1,
         maxPoints: 1,
         answer_Type: 1,
@@ -305,7 +306,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
           team: req.jwt_payload.team,
           isSubmitted: false,
           likes: 0,
-          mission: allMissions[index],
+          mission: allBonus[index],
           hintsTaken: 0,
         });
       }
@@ -318,8 +319,10 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
 
       const mission = await Mission.findById(allMissions[i]).select({
         clue: 1,
+        MissionName: 1,
         Category: 1,
         maxPoints: 1,
+        answer_Type: 1,
       });
       arr.push(mission);
 
@@ -357,7 +360,7 @@ player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
         .json({ message: "you team is not  assigned to the mission" });
     }
     const HintNumber = activity.hintsTaken;
-    if (HintNumber < 3) {
+    if (HintNumber < 2) {
       activity.hintsTaken += 1;
       activity.save();
       const hintStatement = await Hint.findById(hint[HintNumber]);

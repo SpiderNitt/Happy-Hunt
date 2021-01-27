@@ -5,6 +5,7 @@ const User = require("../../database/models/User");
 const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
+const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
 
 team.post("/create", playerVerify, async (req, res) => {
   try {
@@ -66,11 +67,6 @@ team.post("/create", playerVerify, async (req, res) => {
 team.get("/request/:teamId", playerVerify, async (req, res) => {
   try {
     const { teamId } = req.params;
-    if (teamId === undefined || teamId === null) {
-      return res
-        .status(400)
-        .json({ message: "Invalid teamId or Provide teamId" });
-    }
     if (
       req.jwt_payload.Role === "TeamLeader" ||
       req.jwt_payload.Role === "TeamMember"
@@ -83,6 +79,11 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     const existingTeam = await Team.findOne({ teamId })
       .populate("members")
       .exec();
+    if (teamId === undefined || teamId === null || existingTeam === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid teamId or Provide teamId" });
+    }
     let CaptainID;
     for (let i = 0; i < existingTeam.members.length; i += 1) {
       const member = existingTeam.members[i];
@@ -96,6 +97,13 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     }
     existingTeam.requests.push(req.jwt_payload.id);
     existingTeam.save();
+    const captain = await User.findById(CaptainID);
+    await sendEmail(
+      captain.emailId,
+      "User Requested to join ur team",
+      "hii he/she wants to join ur team ",
+      "<h1>hello</h1>"
+    );
     return res.status(200).json({ message: "Request sent" });
   } catch (error) {
     console.log(error);
@@ -108,7 +116,8 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
 team.get("/reject", leaderVerify, async (req, res) => {
   try {
     const { userId } = req.query;
-    if (userId === undefined || userId === null) {
+    const user = await User.findById(userId);
+    if (userId === undefined || userId === null || user === null) {
       return res
         .status(400)
         .json({ message: "Invalid userId or Provide userId" });
@@ -118,6 +127,12 @@ team.get("/reject", leaderVerify, async (req, res) => {
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     existingTeam.save();
     io.emit(`Request ${userId}`, "Reject");
+    await sendEmail(
+      user.emailId,
+      "leader rejected ur request",
+      "your request to join the team was rejected",
+      "<h1>hello</h1>"
+    );
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
     console.log(error);
@@ -130,10 +145,10 @@ team.get("/reject", leaderVerify, async (req, res) => {
 team.get("/accept", leaderVerify, async (req, res) => {
   try {
     const { userId } = req.query;
-    if (userId == null || userId === "") {
+    const user = await User.findById(userId);
+    if (userId == null || userId === "" || user === null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
-    const user = await User.findById(userId);
     user.Role = "TeamMember";
     const existingTeam = await Team.findById(req.jwt_payload.team);
     if (existingTeam.Paid < 1) {
@@ -147,6 +162,12 @@ team.get("/accept", leaderVerify, async (req, res) => {
     user.save();
     const token = createJWTtoken(user);
     io.emit(`Request ${userId}`, "Accept");
+    await sendEmail(
+      user.emailId,
+      "leader accepted ur request",
+      "your request to join the team was accepted",
+      "<h1>hello</h1>"
+    );
     const date = new Date();
     date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
@@ -162,7 +183,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
   return 0;
 });
 
-team.post("/location", playerVerify, async (req, res) => {
+team.post("/location", leaderVerify, async (req, res) => {
   try {
     const user = await User.findById(req.jwt_payload.id);
     if (user.Role === "TeamLeader") {
@@ -180,6 +201,9 @@ team.post("/location", playerVerify, async (req, res) => {
       // timestamp: 1610034540979
       // __proto__: GeolocationPosition;
       const { Location } = req.body;
+      if (Location.latitude === undefined || Location.longitude === undefined) {
+        return res.status(400).json({ message: "Invalid Location" });
+      }
       theTeam.avgLocation.Lat = Location.coords.latitude;
       theTeam.avgLocation.Long = Location.coords.longitude;
       await theTeam.save();
@@ -190,4 +214,15 @@ team.post("/location", playerVerify, async (req, res) => {
   }
 });
 
+team.get("/requests", async (req, res) => {
+  try {
+    const TeamsRequest = await Team.findById(req.jwt_payload.team, {
+      Request: 1,
+    });
+    return res.status(200).json({ message: "success", TeamsRequest });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: e.message });
+  }
+});
 module.exports = team;
