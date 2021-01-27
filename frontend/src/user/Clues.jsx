@@ -1,13 +1,14 @@
-import { React, useEffect, useState, createRef } from 'react';
+import { React, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Chip, Container, Grid } from '@material-ui/core';
+import { Chip, Container } from '@material-ui/core';
 import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
+import client from '../api/client';
 
 const useStyles = makeStyles({
   title: {

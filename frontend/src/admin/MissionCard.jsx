@@ -12,14 +12,15 @@ const MissionCard = (props) => {
             'Picture': <CameraAltIcon fontSize="large" color="primary" />,
             'Text': <TextFormatIcon fontSize="large" color="primary" />,
             'Picture and Location': <LocationOnIcon fontSize="large" color="secondary" />,
-            'Video': <CameraAltIcon fontSize="large" color="secondary" />
+            'Video': <CameraAltIcon fontSize="large" color="secondary" />,
+            '': <LocationOnIcon fontSize="large" color="secondary" />
         }
         return object[type];
     }
     return (
         <div className='mission-card'>
             <div className='mission-card-img'>
-                {renderType(props.values.Category)}
+                {renderType(props.values['answer_Type'])}
             </div>
             <div className='mission-card-name'>
                 <p>{`Mission ${props.index}`}</p>
