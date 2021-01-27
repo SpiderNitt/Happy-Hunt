@@ -85,11 +85,11 @@ function Clues(){
           </div>
         </CardContent>
         <div className={classes.category} color="textSecondary" variant="p" >
-              {mission.Category}
+              {mission.answer_Type}
           </div>
           <br/><br/>
         <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
-          <Button variant="contained" size="small" href={RedirectUrl(mission.Category)}>View</Button>
+          <Button variant="contained" size="small" href={RedirectUrl(mission.answer_Type)}>View</Button>
           <Typography color="textSecondary">
             {mission.maxPoints}
           </Typography>

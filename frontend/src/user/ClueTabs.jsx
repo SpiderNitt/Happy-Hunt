@@ -73,7 +73,7 @@ export default function ClueTabs() {
   }
   useEffect(() => {
     fetch();
-  });
+  }, []);
   const getSet1 = () => {
     const object = {};
     if (data.length >= 3) {
