@@ -75,27 +75,32 @@ function MissionDetail(props) {
                 left: '55%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
-                marginTop: '10px',
-                width: '600px'
+                marginTop: '40px',
+                width: '600px',
+                height: '500px',
+                overflow: 'auto',
             }}>
                 <div style={{
                     display: 'flex',
                     width: '100%',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}>
-                    <h1>Mission</h1>
                 </div>
                 <div className={classes.root}>
                     <div className={classes.demo}>
-                        <MissionListItem title='Location: ' value={`Lat: ${data.mission.Location.Lat}, Long: ${data.mission.Location.Long}`} />
+                        {data.mission.Location && <MissionListItem title='Location: ' value={`Lat: ${data.mission.Location.Lat}, Long: ${data.mission.Location.Long}`} />}
                         <MissionListItem title='Category: ' value={data.mission.Category} />
-                        <MissionListItem title='Clue/Mission: ' value={data.mission.clue} />
+                        <MissionListItem title='Mission Name: ' value={data.mission.MissionName} />
+                        <MissionListItem title='Clue/Mission: ' value={data.mission.clue} eval={true} />
                         <MissionListItem title='Answer Type: ' value={data.mission['answer_Type']} />
+                        {data.mission.ServerEvaluation ? <MissionListItem title='Server Evaluation: ' value={'True'} /> : <MissionListItem title='Server Evaluation: ' value={'False'} />}
                         <MissionListItem title='Answer: ' value={data.mission.answer.join(',')} />
                         <div style={{ paddingRight: '10px' }}>
                             <MissionListItem title='Hints: ' value={combineHints(data.hint)} />
                         </div>
                         <MissionListItem title='Other information: ' value={data.mission['Other_Info']} />
+                        <MissionListItem title='Maximum Points: ' value={data.mission.maxPoints} />
+                        {data.mission.isBonus && <MissionListItem title='Type of clue: ' value={'Bonus'} />}
                     </div>
                 </div>
             </div>

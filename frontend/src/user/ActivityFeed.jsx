@@ -58,13 +58,10 @@ const getLike= ()=>{
   console.log(likedColor);
 }
 
-
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       {loading && <LoadingPage />}
       {!loading &&      <Grid container spacing={4}>
-      
-      
       {data.map((activity, index) => (
         <Grid item key={activity._id} index={index + 1} xs={12} sm={6} md={4}>
            <Card className={classes.card} item xs={3}>
