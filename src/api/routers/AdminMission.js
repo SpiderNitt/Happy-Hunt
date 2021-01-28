@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const Router = require("express").Router();
 const { validationResult } = require("express-validator");
+const multer = require("multer");
 const Mission = require("../../database/models/Mission");
 
 const Hint = require("../../database/models/Hint");
@@ -22,65 +23,82 @@ Router.get("/", adminVerify, async (req, res) => {
   }
 });
 
-Router.post("/add", superAdminVerify, MissionValidator, async (req, res) => {
-  try {
-    const {
-      Category,
-      clue,
-      answer_Type,
-      answer,
-      Location,
-      Other_Info,
-      MissionName,
-      Feed,
-      ServerEvaluation,
-      maxPoints,
-      Hints,
-    } = req.body;
+Router.post(
+  "/add",
+  multer({ storage: multer.memoryStorage() }).array("Photos", 2),
+  MissionValidator,
+  superAdminVerify,
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+  async (req, res) => {
+    try {
+      const {
+        Category,
+        clue,
+        isBonus,
+        answer_Type,
+        answer,
+        Location,
+        Other_Info,
+        MissionName,
+        Feed,
+        ServerEvaluation,
+        maxPoints,
+        Hints,
+      } = req.body;
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      console.log(req.files);
+
+      const newHints = [];
+
+      for (let i = 0; i < Hints.length; i += 1) {
+        const newhint = await Hint.create(Hints[i]);
+        newHints.push(newhint);
+      }
+      const mediaFiles = [];
+      for (let x = 0; x < req.files.length; x += 1) {
+        const basefile = req.files[x].buffer.toString("base64");
+        mediaFiles.push(basefile);
+      }
+
+      await Mission.create({
+        Category,
+        clue,
+        answer_Type,
+        answer,
+        isBonus,
+        Location,
+        Other_Info,
+        maxPoints,
+        MissionName,
+        Feed,
+        Photos: mediaFiles,
+        ServerEvaluation,
+        assignedTeams: [],
+        Hints: newHints,
+      });
+
+      return res.status(200).json({ message: "mission added sucessfully" });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({
+        message: "Server Error ",
+      });
     }
-
-    const newHints = [];
-
-    for (let i = 0; i < Hints.length; i++) {
-      const newhint = await Hint.create(Hints[i]);
-      newHints.push(newhint);
-    }
-
-    const m = await Mission.create({
-      Category,
-      clue,
-      answer_Type,
-      answer,
-      Location,
-      Other_Info,
-      maxPoints,
-      MissionName,
-      Feed,
-      ServerEvaluation,
-      assignedTeams: [],
-      Hints: newHints,
-    });
-
-    return res.status(200).json({ message: "mission added sucessfully" });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      message: "Server Error ",
-    });
   }
-});
+);
 Router.patch(
   "/update",
   superAdminVerify,
   UpdateMissionValidator,
+  multer({ storage: multer.memoryStorage() }).array("Photos", 2),
+
   async (req, res) => {
     try {
       const { id } = req.body;
-
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -91,12 +109,22 @@ Router.patch(
       if (HintsGiven) {
         const hints = mission.Hints;
 
-        for (let index = 0; index < HintsGiven.length; index++) {
+        for (let index = 0; index < HintsGiven.length; index += 1) {
           await Hint.findByIdAndUpdate(hints[index], HintsGiven[index]);
         }
       }
+
+      if (req.files) {
+        const mediaFiles = [];
+        for (let x = 0; x < req.files.length; x += 1) {
+          const basefile = req.files[x].buffer.toString("base64");
+          mediaFiles.push(basefile);
+        }
+        req.body.Photos = mediaFiles;
+      }
       delete req.body.Hints;
       delete req.body.id;
+
       await Mission.findByIdAndUpdate(mission._id, req.body);
       return res.status(200).json({ message: "mission updated sucessfully" });
     } catch (e) {
