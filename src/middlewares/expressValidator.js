@@ -15,7 +15,7 @@ module.exports = {
   ],
   MissionValidator: [
     body("Category").isString().notEmpty(),
-    body("clue").isString().notEmpty(),
+    body("clue").isArray().notEmpty(),
     body("answer_Type").isString().notEmpty(),
     body("MissionName").isString().notEmpty(),
     body("answer").isArray().notEmpty(),
@@ -32,7 +32,7 @@ module.exports = {
   UpdateMissionValidator: [
     body("id").notEmpty(),
     body("Category").isString().optional(),
-    body("clue").isString().optional(),
+    body("clue").isArray().optional(),
     body("answer_Type").isString().optional(),
     body("answer").isArray().optional(),
     body("MissionName").isString().optional(),
