@@ -57,7 +57,6 @@ const missionGenerator = async (points, teams, category) => {
 BonusAsync();
 const algo = () => {
   const algorithm = setInterval(async () => {
-    console.log(counter);
     const teams = await Team.find({});
     // mission distribution
     for (let index = 0; index < teams.length; index += 1) {
@@ -85,13 +84,11 @@ const algo = () => {
       });
       // bonus missions
       if (BonusMission100.length <= counter) {
-        console.log(BonusMission100.length, counter);
         console.log("No bonus missions found");
       } else {
         teams[index].assignedBonus.push(BonusMission100[counter]._id);
       }
       if (BonusMission200.length <= counter) {
-        console.log(BonusMission200.length, counter);
         console.log("No bonus missions found");
       } else {
         teams[index].assignedBonus.push(BonusMission200[counter]._id);
@@ -102,8 +99,8 @@ const algo = () => {
     io.emit("missions");
     if (counter === 3) {
       clearInterval(algorithm);
-      console.log("algo is done");
+      console.log("All missions assigned to all teams");
     }
-  }, 5000);
+  }, 1800000);
 };
 module.exports = algo;
