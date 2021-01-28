@@ -66,8 +66,12 @@ function CreateTeam(props) {
     };
     setInfo("Team registered successfully!");
     setMessageType("success");
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    localStorage.setItem("userInfo", JSON.stringify({...userInfo, teamID: response.data.TeamId}));
+    console.log(response.data);
+    // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    // localStorage.setItem("userInfo", JSON.stringify({...userInfo, teamID: response.data.TeamId}));
+    await localStorage.setItem("token", response.data.JWTtoken);
+    await localStorage.setItem("userInfo", JSON.stringify(response.data.userInfo));
+    await localStorage.setItem("expiresAt", response.data.expiration);
     resetForm();
     setTimeout(() => {
       History.push(Routes.USER_PROFILE);

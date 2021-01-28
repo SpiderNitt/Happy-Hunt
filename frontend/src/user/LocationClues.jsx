@@ -13,27 +13,35 @@ import client from '../api/client'
 function LocationClues(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const [data, setData]= useState([]);
+    const [data, setData]= useState({});
+    const [clues,setClues] = useState([]);
+    const [hints,setHints] = useState([]);
     const [evaluation, showEvaluation]= useState(false);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
     });
-
+    
     const fetch = async () => {
-        const result = await client.get(`api/mission/${props.match.params.id}`);
+        const result = await client.get(`/api/mission/${props.match.params.id}`);
+        console.log(result);
+        if(!result.ok){
+            console.log(result.status, result.problem, result.originalError);
+            return;
+        }
         console.log(result.data);
-        setData(result.data.mission);
+        await setData(result.data.mission);
+        await setClues(result.data.mission.clue);
+        await setHints(result.data.hint)
+        console.log(data);
     }
 
     useEffect(() => {
         fetch();
-    }, [props.match.params.id]);
+    },[]);
 
-    console.log(data)
-
-    const onSucces = location=>{
+    const onSuccess = location=>{
         setLocation({
             loaded:true,
             coordinates:{
@@ -78,11 +86,11 @@ function LocationClues(props) {
         setOpen(false);
     };
 
+
     return (
         
         <React.Fragment >
-
-            <Container maxWidth="sm" style={{height: '100vh', marginTop:"20vh" }}>
+            {data !== {} && <Container maxWidth="sm" style={{height: '100vh', marginTop:"20vh" }}>
                 <h4 style={{color:'#50EFE6',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
@@ -94,25 +102,15 @@ function LocationClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info} 
                 </p>
-                {/* <div className={classes.task1}>
-                   <p>
-                   {data.clue[0]}
-                    </p>
-                </div>
-                {(data.clue[1]) ? (
-                     <div className={classes.task1}>
-                     <p>
-                     {data.clue[1]}
-                      </p>
-                  </div>
-                ) :''}
-                 {(data.clue[2]) ? (
-                     <div className={classes.task1}>
-                     <p>
-                     {data.clue[2]}
-                      </p>
-                  </div>
-                ) :''} */}
+                {clues && clues.length > 1 ? (
+                        <>
+                        <p>{clues[0]}</p>
+                        <img alt="clue" src={clues[1]} width='100%' />
+                        </>
+                    ) : (
+                        <p>{clues[0]}</p>
+                    )
+                }
                 <p className={classes.points}>{data.maxPoints}</p>
                 <br/>
                 <br/>
@@ -142,12 +140,12 @@ function LocationClues(props) {
                 >
                 <Fade in={open}>
                 <div className={classes.paper}>
-                    <Hints id={data._id}/>
+                    {hints && <Hints id={data._id} data={hints}/>}
                 </div>
                 </Fade>                
                 </Modal>
                 </div>) :''}
-                </Container>
+                </Container>}
             </React.Fragment>
       );
 }
