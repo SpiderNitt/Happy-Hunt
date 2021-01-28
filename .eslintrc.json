@@ -24,6 +24,7 @@
     "func-names": "off",
     "no-console": "off",
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-    "consistent-return": "warn"
+    "consistent-return": "warn",
+    "no-await-in-loop":"off"
   }
 }
