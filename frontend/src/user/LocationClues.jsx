@@ -16,6 +16,8 @@ function LocationClues(props) {
     const [data, setData]= useState({});
     const [clues,setClues] = useState([]);
     const [hints,setHints] = useState([]);
+    const [evaluation, showEvaluation]= useState(false);
+    const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -39,7 +41,6 @@ function LocationClues(props) {
         fetch();
     },[]);
 
-
     const onSuccess = location=>{
         setLocation({
             loaded:true,
@@ -49,18 +50,42 @@ function LocationClues(props) {
             }
         })
     };
+
+    const getLocation=()=>{
+        navigator.geolocation.getCurrentPosition(onSucces);
+    };
+
+    const body= {
+        "MissionId":props.match.params.id,
+        "Location":{
+            "coords":{
+                "latitude":`${location.coordinates.Lat}`,
+                "longitude":`${location.coordinates.Long}`
+            }
+        }
+    }
+      const submitAnswer = async () => {
+        const result = await client.post('api/player/locationSubmission', body)
+        if(!result.ok){
+          console.log(result, result.originalError, result.problem, result.status);
+          console.log(result.data.message)
+          setAns(result.data.message)
+          showEvaluation(true)
+          return;
+        }
+        showEvaluation(true)
+        setAns(result.data.message)
+      }
+      console.log(ans);
+  
     const handleOpen = () => {
         setOpen(true);
-      };
+    };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
-      };
+    };
 
-    // useEffect(()=>{
-    //     navigator.geolocation.getCurrentPosition(onSucces);
-    //     console.log(location)
-    // }, []);
 
     return (
         
@@ -91,12 +116,14 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <div>
-                    <LocationOnIcon className={classes.icon} />
+                    <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
+                {evaluation? <p>{ans}</p>: ''}
                 <br/>
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
+                <Button className={classes.Button} onClick={submitAnswer}>Submit</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
@@ -164,7 +191,8 @@ const useStyles = makeStyles((theme)=>({
         display:'flex',
         alignSelf:'center',
         justifyContent:'center',
-        color:'white',
+        color:'black',
+        backgroundColor:"gray",
         fontSize:20,
         fontFamily:'tahoma'
       },
@@ -176,7 +204,8 @@ const useStyles = makeStyles((theme)=>({
     },
     icon: {
         fontSize:65,
-        color:"#EF7257"
+        color:"#EF7257",
+        cursor:"pointer"
     },
     }));
 
