@@ -20,7 +20,7 @@ player.post(
   async (req, res) => {
     try {
       const { team } = req.jwt_payload;
-      const user = Team.findById(team);
+      const user = await Team.findById(team);
       const { mission } = req.body;
       if (!mission) return res.status(400).json({ message: "Fill all fields" });
       const submit = await Mission.findById(mission);
@@ -115,7 +115,7 @@ player.post(
             notification = `You got wrong answer for ${submit.MissionName}`;
             return res.status(200).json({ message: "Your answer is wrong" });
           }
-          team.Notifications.push(notification);
+          user.Notifications.push(notification);
           await user.save();
           io.emit(`Notifications ${team}`, notification);
         } else if (ServerEvaluation) {
@@ -142,7 +142,7 @@ player.post(
           );
           // team
           notification = `You got right answer for ${submit.MissionName}`;
-          team.Notifications.push(notification);
+          user.Notifications.push(notification);
           await user.save();
           io.emit(`Notifications ${team}`, notification);
         } else {
