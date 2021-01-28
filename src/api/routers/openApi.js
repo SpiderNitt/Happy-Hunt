@@ -41,6 +41,7 @@ openApi.get("/mission/:id", async (req, res) => {
 });
 openApi.post("/payment", async (req, res) => {
   try {
+    console.log(req.body);
     const emailId = req.body.payload.payment.email;
     const phoneNo = req.body.payload.payment.contact;
     const { amount } = req.body.payload.payment;
