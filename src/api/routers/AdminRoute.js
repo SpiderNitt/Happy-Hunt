@@ -13,6 +13,7 @@ const Mission = require("../../database/models/Mission");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
+const algo = require("../../helpers/algo");
 
 Router.post(
   "/createAdmin",
@@ -90,6 +91,15 @@ Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
     return res.status(500).json({
       message: "Server Error ",
     });
+  }
+});
+Router.get("/start", async (req, res) => {
+  try {
+    algo();
+    return res.status(200).json({ message: "Success" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 Router.get("/submissions", adminVerify, async (req, res) => {

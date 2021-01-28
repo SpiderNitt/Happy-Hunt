@@ -51,10 +51,6 @@ const TeamSchema = new mongoose.Schema({
       type: Number,
     },
   },
-  maxPointsAssigned: {
-    type: Number,
-    default: 0,
-  },
   Notifications: [{ type: String }],
 });
 module.exports = mongoose.model("Team", TeamSchema);
