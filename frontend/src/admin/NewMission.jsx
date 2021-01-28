@@ -233,7 +233,6 @@ const NewMission = (props) => {
                         error={formik.touched.Long && Boolean(formik.errors.Long)}
                         helperText={formik.touched.Long && formik.errors.Long}
                     />
-
                     <TextField
                         fullWidth
                         id="Other_Info"
