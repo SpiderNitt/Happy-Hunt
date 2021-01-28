@@ -31,6 +31,7 @@ player.post(
       }
       let answer;
       let notification;
+      const playerTeam = await Team.findById(team);
       try {
         switch (answerType) {
           case "Picture": {
@@ -115,8 +116,9 @@ player.post(
             notification = `You got wrong answer for ${submit.MissionName}`;
             return res.status(200).json({ message: "Your answer is wrong" });
           }
-          team.Notifications.push(notification);
-          await user.save();
+
+          playerTeam.Notifications.push(notification);
+          await playerTeam.save();
           io.emit(`Notifications ${team}`, notification);
         } else if (ServerEvaluation) {
           const { hintsTaken } = await Activity.findOne({
@@ -142,8 +144,8 @@ player.post(
           );
           // team
           notification = `You got right answer for ${submit.MissionName}`;
-          team.Notifications.push(notification);
-          await user.save();
+          playerTeam.Notifications.push(notification);
+          await playerTeam.save();
           io.emit(`Notifications ${team}`, notification);
         } else {
           result = await Activity.updateOne(
@@ -298,6 +300,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         Category: 1,
         maxPoints: 1,
         answer_Type: 1,
+        isBonus: 1,
       });
       arr2.push(bonus);
 
@@ -323,6 +326,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         Category: 1,
         maxPoints: 1,
         answer_Type: 1,
+        isBonus: 1,
       });
       arr.push(mission);
 
