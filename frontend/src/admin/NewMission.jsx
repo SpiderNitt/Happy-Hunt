@@ -17,12 +17,12 @@ const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const NewMission = (props) => {
     const { history } = props;
-    const convertBase64 = (file) => {
+    const convertBase64 = (file, key) => {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
             fileReader.readAsDataURL(file)
             fileReader.onload = () => {
-                formik.setFieldValue('file', fileReader.result);
+                formik.setFieldValue(key, fileReader.result);
                 resolve(fileReader.result);
             }
             fileReader.onerror = (error) => {
@@ -30,9 +30,9 @@ const NewMission = (props) => {
             }
         })
     }
-    const handleImageUpload = async (event) => {
+    const handleImageUpload = async (event, key) => {
         const file = event.target.files[0]
-        await convertBase64(file);
+        await convertBase64(file, key);
     }
     const formik = useFormik({
         initialValues: {
@@ -46,9 +46,15 @@ const NewMission = (props) => {
         },
         enableReinitialize: true,
         onSubmit: async (values) => {
-            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, file } = values;
-            const answerArray = [];
-            answerArray.push(answer);
+
+            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, file, answerfile, hint1, maxPointsHint1, hint2, maxPointsHint2 } = values;
+            let answerArray = [];
+            if (answer_Type === answerTypes[0] || answer_Type === answerTypes[2]) {
+                answerArray.push(answerfile);
+            }
+            else {
+                answerArray = answer.split(',');
+            }
             const cluesArray = [];
             if (clue2 === "") {
                 cluesArray.push(clue1);
@@ -59,6 +65,15 @@ const NewMission = (props) => {
                     cluesArray.push(clue2);
                     cluesArray.push(file);
                 }
+            }
+            let hintsArray = [];
+            if (Category !== 'Bonus') {
+                hintsArray.push({ 'Content': hint1, 'MaxPoints': maxPointsHint1 });
+                hintsArray.push({ 'Content': hint2, 'MaxPoints': maxPointsHint2 });
+            }
+            let ServerEvaluationBoolean = false;
+            if (ServerEvaluation === 'True') {
+                ServerEvaluationBoolean = true;
             }
             const object = {
                 Category,
@@ -72,13 +87,13 @@ const NewMission = (props) => {
                 },
                 MissionName,
                 Feed: true,
-                ServerEvaluation,
+                ServerEvaluation: ServerEvaluationBoolean,
                 maxPoints,
                 Hints: hintsArray,
             };
             console.log(object)
-            // const response = await client.post('api/admin/mission/add', object);
-            // console.log(response);
+            const response = await client.post('api/admin/mission/add', object);
+            console.log(response);
         },
     });
 
@@ -97,8 +112,8 @@ const NewMission = (props) => {
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
-                marginTop: '100px',
-                width: '600px'
+                marginTop: '150px',
+                width: '600px',
             }}>
                 <h3 style={{ textAlign: 'center' }}>Add a Mission</h3>
                 <form onSubmit={formik.handleSubmit}>
@@ -149,16 +164,16 @@ const NewMission = (props) => {
                         error={formik.touched.clue2 && Boolean(formik.errors.clue2)}
                         helperText={formik.touched.clue2 && formik.errors.clue2}
                     />
-                    <TextField
-                        fullWidth
-                        id="clue2"
-                        name="clue2"
-                        label="Clue Part-B"
-                        value={formik.values.clue2}
-                        onChange={formik.handleChange}
-                        error={formik.touched.clue2 && Boolean(formik.errors.clue2)}
-                        helperText={formik.touched.clue2 && formik.errors.clue2}
-                    />
+                    {(formik.values.clue2 !== "" && formik.values.clue1 !== "") &&
+                        <div>
+                            <br /><br />
+                            <div className="form-group">
+                                <input type="file" onChange={(event) => {
+                                    handleImageUpload(event, 'file');
+                                }} />
+                            </div>
+                        </div>
+                    }
                     <TextField
                         fullWidth
                         id="answer_Type"
@@ -176,20 +191,27 @@ const NewMission = (props) => {
                             </MenuItem>
                         ))}
                     </TextField>
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Server Evaluation</FormLabel>
-                        <RadioGroup aria-label="ServerEvaluation" name="ServerEvaluation" value={formik.values['ServerEvaluation']} onChange={formik.handleChange} row>
-                            <FormControlLabel value='True' control={<Radio />} label="YES" />
-                            <FormControlLabel value='False' control={<Radio />} label="NO" />
-                        </RadioGroup>
-                    </FormControl>
-                    <br />
-                    <div className="form-group">
-                        <FormLabel component="legend">Image Upload</FormLabel>
-                        <input type="file" onChange={(event) => {
-                            handleImageUpload(event);
-                        }} />
-                    </div>
+                    {(formik.values['answer_Type'] === answerTypes[0] || formik.values['answer_Type'] === answerTypes[2]) ?
+                        <div>
+                            <br /><br />
+                            <div className="form-group">
+                                <input type="file" onChange={(event) => {
+                                    handleImageUpload(event, 'answerfile');
+                                }} />
+                            </div>
+                        </div>
+                        :
+                        <TextField
+                            fullWidth
+                            id="answer"
+                            name="answer"
+                            label="Answer (Multiple answers are to be separated by commas)"
+                            value={formik.values.answer}
+                            onChange={formik.handleChange}
+                            error={formik.touched.answer && Boolean(formik.errors.answer)}
+                            helperText={formik.touched.answer && formik.errors.answer}
+                        />
+                    }
                     <TextField
                         fullWidth
                         id="Lat"
@@ -211,7 +233,6 @@ const NewMission = (props) => {
                         error={formik.touched.Long && Boolean(formik.errors.Long)}
                         helperText={formik.touched.Long && formik.errors.Long}
                     />
-
                     <TextField
                         fullWidth
                         id="Other_Info"
