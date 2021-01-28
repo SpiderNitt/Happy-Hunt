@@ -10,81 +10,67 @@ function Hints(props) {
     const [disable1, setDisable1] = useState(false);
     const [disable2, setDisable2] = useState(false);
     const [data, setData]= useState([]);
+    const [hints, setHints] = useState(props.data);
+    // useEffect(() => {
+    //     setHints(props.data);
+    //     console.log(hints);
+    // }, [])
 
-    console.log(props.id)
-    const body={
-        MissionId: `${props.id}`
-    }
-    console.log(body.MissionId)
-    const fetch = async () => {
-        const result = await client.get('api/player/hint', body);
-        console.log(result.data);
-        setData(result.data);
-    }
+    // const body={
+    //     MissionId: `${props.id}`
+    // }
+    
+    // const fetch = async () => {
+    //     const result = await client.post('/api/player/hint', body);
+    //     console.log(result.data);
+    //     setData(result.data);
+    // }
 
-      useEffect(() => {
-        fetch();
-      }, []);
-
-      console.log(data)
+    // useEffect(() => {
+    // fetch();
+    // }, []);
 
     const onButtonClickHandler1 = () => {
-        setshowSecondHint(true)
-        setDisable1(true)
+        hints.length > 1 && setshowSecondHint(true);
+        setDisable1(true);
     };
 
     const onButtonClickHandler2 = () => {
-        setshowThirdHint(true)
-        setDisable2(true)
+        hints.length === 3 && setshowThirdHint(true);
+        setDisable2(true);
     };
 
     return (
-        <div >
-            <h1>
-                {clueData[0].hints[0].name}
-            </h1>
+        <div>
+        {hints !== [] && <>
             <ul>
-                {clueData[0].hints[0].hint}
-
+                {hints[0].Content}
                 <span style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic"}}>
-                -{clueData[0].hints[0].pointsReduced}
+                -{hints[0].MaxPoints}
                 </span>
-
             </ul>
             {showSecondHint && 
-                <div>
-                     <h1>
-                {clueData[0].hints[1].name}
-            </h1>
             <ul>
-                {clueData[0].hints[1].hint}
-
+                {hints[1].Content}
                 <span style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic"}}>
-                -{clueData[0].hints[1].pointsReduced}
+                -{hints[1].MaxPoints}
                 </span>
-
             </ul>
-            </div>
             }
             {showThirdHint && 
-                <div>
-                     <h1>
-                {clueData[0].hints[2].name}
-            </h1>
             <ul>
-                {clueData[0].hints[2].hint}
+                {hints[2].Content}
 
                 <span style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic"}}>
-                -{clueData[0].hints[2].pointsReduced}
+                -{hints[2].MaxPoints}
                 </span>
 
             </ul>
-            </div>
             }
         
-            <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
+            {/* <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
                 Back
-            </Button>
+            </Button> */}
             <Button variant="contained" onClick={onButtonClickHandler1} disabled={disable1} color="primary" style={{margin:5}}>
                  Hint 2
             </Button>
@@ -93,7 +79,7 @@ function Hints(props) {
                     Hint 3
                 </Button>
             }
-           
+           </>}
         </div>
     );
 }
