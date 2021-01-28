@@ -1,11 +1,12 @@
 import Button from '@material-ui/core/Button';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Rules from './Rules';
 import Routes from '../utils/routes';
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -33,7 +34,66 @@ const useStyles = makeStyles((theme) => ({
 
 function Home(props) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [data, setData]= useState("");
+    const [getLocation, setLocation]= useState({
+      loaded:false,
+      coordinates: {lat:"", long:""}
+  });
+    
+  const onSucces = location=>{
+    setLocation({
+        loaded:true,
+        coordinates:{
+            lat: location.coords.latitude,
+            long: location.coords.longitude
+        }
+    })
+};
+ 
+  
+useEffect(()=>{
+  navigator.geolocation.getCurrentPosition(onSucces);
+
+}, []);
+
+console.log(getLocation);
+
+    const fetch = async () => {
+      const result = await client.get('api/countdown')
+      if(!result.ok){
+        console.log(result.originalError, result.problem, result.status);
+        return;
+      }
+      setData(result.data.timeReamaining);
+      console.log(result.data)
+      
+    }
+
+    console.log(getLocation)
+
+    const body= {
+      "Location":{
+          "coords":{
+              "latitude":getLocation.coordinates.lat,
+              "longitude":getLocation.coordinates.long
+          }
+      }
+  }
+    const getTeamLeadersLocation = async () => {
+      const result = await client.post('api/team/location', body)
+      if(!result.ok){
+        console.log(result, result.originalError, result.problem, result.status);
+        return;
+      }
+      console.log(result)
+      
+    }
+
+    useEffect(() => {
+      fetch();
+      getTeamLeadersLocation();
+    }, []);
   
     const handleOpen = () => {
       setOpen(true);
@@ -45,9 +105,13 @@ function Home(props) {
   
     return (
     <div className={classes.welcome}>
-      <h1>Welcome!</h1>
+      <h1 style={{fontFamily:"tahoma"}}>Welcome!</h1>
       <div>
-      <h3>Happy Hunt Challenge</h3>
+      <h3 style={{fontFamily:"tahoma"}}>Happy Hunt Challenge</h3>
+      <p style={{fontFamily:"tahoma"}}>Time to hunt: 
+        <span style={{ color:"red"}}> {data.days} days </span>
+        <span  style={{ color:"blue"}}> {data.hours} hour </span>
+        <span  style={{ color:"gray"}}> {data.minutes} minutes </span></p>
       <Button variant="outlined" color="secondary" onClick={handleOpen}>start</Button>
       <br/>
       <br/>
@@ -85,3 +149,4 @@ function Home(props) {
 }
 
 export default Home;
+
