@@ -309,6 +309,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         maxPoints: 1,
         answer_Type: 1,
         isBonus: 1,
+        Photos: 1,
       });
       arr2.push(bonus);
 
@@ -335,6 +336,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         maxPoints: 1,
         answer_Type: 1,
         isBonus: 1,
+        Photos: 1,
       });
       arr.push(mission);
 
