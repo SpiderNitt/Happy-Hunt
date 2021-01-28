@@ -201,7 +201,10 @@ team.post("/location", leaderVerify, async (req, res) => {
       // timestamp: 1610034540979
       // __proto__: GeolocationPosition;
       const { Location } = req.body;
-      if (Location.coords.latitude === undefined || Location.coords.longitude === undefined) {
+      if (
+        Location.coords.latitude === undefined ||
+        Location.coords.longitude === undefined
+      ) {
         return res.status(400).json({ message: "Invalid Location" });
       }
       theTeam.avgLocation.Lat = Location.coords.latitude;
