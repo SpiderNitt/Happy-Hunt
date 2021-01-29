@@ -18,6 +18,11 @@ function Capture (props) {
     <div>
       <Camera onTakePhotoAnimationDone = {handleTakePhotoAnimationDone}
         isFullscreen={true}
+        idealResolution={
+          {width:150,
+          height:150}
+          
+        }
       />
       {/* {
         (dataUri)

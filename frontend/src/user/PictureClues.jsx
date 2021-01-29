@@ -23,6 +23,7 @@ function PictureClues(props) {
     const [data, setData]= useState([]);
     const [imageSelected, setImageSelected] = useState("");
     const [evaluation, showEvaluation]= useState(false);
+    
     const [open, setOpen] = useState(false);
     const [resultoutput, showResultoutput]= useState(false);
     const [result, setResult]= useState([]);
@@ -93,21 +94,24 @@ function PictureClues(props) {
         }
         showEvaluation(true)
         setAns(result.data.message)
+
+        console.log(ans);
+        console.log(dataUri);
       }
-      console.log(ans);
+     
       
     const handleSubmit = async() => {
         const body = {
             mission: `${props.match.params.id}`,
             answer: `${dataUri}`
         }
-        console.log(body);
+        
 
         const response = await client.post('api/player/submission', body)
         if(!response.ok){
           console.log(response.problem);
           console.log(response.data);
-          setResult(response.data)
+          setResult(response.data.message)
           showResultoutput(true)
           return;
         }
@@ -152,7 +156,7 @@ function PictureClues(props) {
                     </p>
                     <p className={classes.points}>{data.maxPoints}</p>
                 </div>
-                {dataUri && <img src={dataUri} />}
+                {dataUri && <img src={dataUri} width="250" height="250"/>}
                 <div>
                     <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
@@ -165,6 +169,7 @@ function PictureClues(props) {
                 <Button type="submit" onClick={uploadImage}  style={{backgroundColor:"#4863A0", color:"whitesmoke"}}>
                     Submit
                 </Button> */}
+                {resultoutput?  <p>{result}</p> :''}
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} onClick={() => setonCam(true)}>Take Picture!</Button>

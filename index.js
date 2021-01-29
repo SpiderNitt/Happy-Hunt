@@ -6,7 +6,10 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const { app } = require("./src/helpers/timer");
 
-app.use(bodyParser.raw());
+
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json());
+
 // session
 app.use(
   session({
