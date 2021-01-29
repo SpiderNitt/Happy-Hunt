@@ -71,16 +71,14 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     ) {
       return res
         .status(402)
-        .json({ message: "you already joined or created a team" });
+        .json({ message: "you are already part of a team" });
     }
 
     const existingTeam = await Team.findOne({ teamId })
       .populate("members")
       .exec();
     if (teamId === undefined || teamId === null || existingTeam === null) {
-      return res
-        .status(400)
-        .json({ message: "Invalid teamId or Provide teamId" });
+      return res.status(400).json({ message: "Invalid teamId" });
     }
     let CaptainID;
     for (let i = 0; i < existingTeam.members.length; i += 1) {
@@ -91,7 +89,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     }
     io.emit(`Request ${CaptainID}`);
     if (existingTeam.Paid < 1) {
-      return res.status(200).json({ message: "Team is full" });
+      return res.status(200).json({ message: "Oops! Team is already full" });
     }
     existingTeam.requests.push(req.jwt_payload.id);
     existingTeam.save();
@@ -102,7 +100,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
       "hii he/she wants to join ur team ",
       "<h1>hello</h1>"
     );
-    return res.status(200).json({ message: "Request sent" });
+    return res.status(200).json({ message: "Join request sent!" });
   } catch (error) {
     console.log(error);
     res

@@ -6,13 +6,13 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 
 import ErrorMessage from '../components/ErrorMessage';
 import { userLogin } from '../api/auth';
-import AlertMessage from '../components/AlertMessage';
 import Routes from '../utils/routes';
 import { useHistory } from 'react-router';
 import { AuthContext } from '../api/authContext';
 import jwtDecode from 'jwt-decode';
 import LoadingPage from '../components/LoadingPage';
 import SuccessAnimation from '../components/SuccessAnimation';
+import Message from '../components/Message';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 export default function UserLogin(props) {
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messageType, setmessageType] = useState('');
   const [successLogin, setSuccessLogin] = useState(false);
   const authContext = useContext(AuthContext);
   const classes = useStyles();
@@ -64,8 +65,12 @@ export default function UserLogin(props) {
     if(!response.ok){
       console.log(response.problem);
       console.log(response.data);
+      setInfo(response.data.message);
+      setmessageType("error");
       return;
     }
+    setInfo("Login Successful!");
+    setmessageType("success");
     setLoading(false);
     setSuccessLogin(true);
     const {exp} = await jwtDecode(response.data.token)
@@ -86,7 +91,7 @@ export default function UserLogin(props) {
     <CssBaseline />
     {loading && <LoadingPage /> }
     {successLogin && <SuccessAnimation />}
-    {info && <AlertMessage message={info} setInfo={setInfo} />}
+    {info && <Message message={info} show={true} type={messageType} />}
     {(!loading && !successLogin) && <div className={classes.paper}>
         <Avatar className={classes.avatar} sizes='large' >
           <ArrowForward style={{ fontSize: 40 }} />

@@ -59,6 +59,18 @@ useEffect(()=>{
 
 console.log(getLocation);
 
+    const fetch = async () => {
+      const result = await client.get('api/countdown')
+      if(!result.ok){
+        console.log(result.originalError, result.problem, result.status);
+        return;
+      }
+      setData(result.data.timeReamaining);
+      console.log(result.data)
+      
+    }
+
+    console.log(getLocation)
     const body= {
       "Location":{
           "coords":{
@@ -77,16 +89,10 @@ console.log(getLocation);
       
     }
 
-    const fetch = async () => {
-      const result = await client.get('api/countdown')
-      if(!result.ok){
-        console.log(result.originalError, result.problem, result.status);
-        return;
-      }
-      setData(result.data.timeReamaining);
-      console.log(result.data)
-      
-    }
+    useEffect(() => {
+      fetch();
+      getTeamLeadersLocation();
+    }, []);
   
     const handleOpen = () => {
       setOpen(true);
