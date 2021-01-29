@@ -6,7 +6,6 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 
 import ErrorMessage from '../components/ErrorMessage';
 import { userLogin } from '../api/auth';
-import AlertMessage from '../components/AlertMessage';
 import Routes from '../utils/routes';
 import { useHistory } from 'react-router';
 import { AuthContext } from '../api/authContext';

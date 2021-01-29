@@ -37,7 +37,9 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePage(props) {
     const authContext = useContext(AuthContext)
     const classes = useStyles();
-    const [loading, setloading] = useState(true)
+    const [loading, setloading] = useState(true);
+    const [message, setmessage] = useState('')
+    const [messageType, setmessageType] = useState('')
     const [UserInfo, setUserInfo] = useState({});
     const [TeamInfo, setTeamInfo] = useState({});
     const [copy,setCopy] = useState(false);
@@ -52,6 +54,8 @@ function ProfilePage(props) {
         if(!result.ok){
             console.log(result.status, result.originalError, result.problem);
             console.log(result.data);
+            setmessage(result.data.message);
+            setmessageType("error");
             return;
         }
         setUserInfo(result.data);
@@ -68,7 +72,7 @@ function ProfilePage(props) {
 
     return (
         <Container maxWidth="md" >
-            {copy && <Message message="Team ID copied!" show={true} type={"success"} />}
+            {(message || copy) && <Message message={message} show={true} type={messageType} />}
             <div className={classes.root}>
                 <Avatar alt="Remy Sharp" className={classes.large} />
             </div>
@@ -116,7 +120,11 @@ function ProfilePage(props) {
                     <ListItemText primary={`Team Id`} secondary={TeamInfo.teamId} />
                     <ListItemSecondaryAction>
                     <CopyToClipboard text={TeamInfo.teamId}
-                        onCopy={() => setCopy(true)}>
+                        onCopy={() => {
+                            setCopy(true);
+                            setmessage("Team ID copied!");
+                            setmessageType("success");
+                        }}>
                         <IconButton edge="end">
                             <FileCopyOutlined />
                         </IconButton>

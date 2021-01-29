@@ -6,8 +6,7 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 
 import ErrorMessage from '../components/ErrorMessage';
 import { userRegister } from '../api/auth';
-import AlertMessage from '../components/AlertMessage';
-import { useHistory, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
 import Message from '../components/Message';
@@ -161,5 +160,3 @@ export default function UserRegistration(props) {
     </Container>
   );
 }
-
-const UserRegistrationRoute = withRouter(UserRegistration);
