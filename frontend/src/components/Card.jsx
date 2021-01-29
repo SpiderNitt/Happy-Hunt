@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -6,64 +6,89 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import GroupIcon from '@material-ui/icons/Group';
-import { Button } from '@material-ui/core';
-
-import image from '../assets/toa-heftiba-7YmG3udtQl0-unsplash.jpg';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { GroupOutlined } from '@material-ui/icons';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 720,
-    marginBottom: 10,
+    maxWidth: 345,
   },
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
   avatar: {
     backgroundColor: red[500],
   },
-  buttonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
+  title: {
+    fontWeight: 'bold',
+  }
 }));
 
-
-export default function ActivityFeedCard({ teamName, mission}) {
+export default function FeedCard({ data:activity }) {
+  const [data, setData] = useState(activity);
   const classes = useStyles();
+
+  useEffect(() => {
+    setData(activity);
+  }, [])
 
   return (
     <Card className={classes.root}>
+      {data && <>
       <CardHeader
         avatar={
-          <Avatar className={classes.avatar}>
-            <GroupIcon />
+          <Avatar aria-label="recipe" className={classes.avatar}>
+            <GroupOutlined />
           </Avatar>
         }
-        title={teamName}
-        subheader="december 25, 2020"
+        title={data.TeamName}
+        titleTypographyProps={{
+          align: 'left',
+          variant: 'h6',
+        }}
+        subheader={moment(data.Date).fromNow()}
+        subheaderTypographyProps={{
+          align: 'left',
+        }}
       />
       <CardMedia
         className={classes.media}
-        image={image}
-        title="image"
+        image="https://source.unsplash.com/random"
+        title={data.MissionName}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {mission}
+          {data.MissionName}
         </Typography>
       </CardContent>
-      <CardActions className={classes.buttonGroup}>
-        <Button variant="contained" color="primary" style={{ marginRight: 10 }}>
-          Accept
-        </Button>
-        <Button variant="contained" color="secondary" style={{ marginRight: 10 }}>
-          Reject
-        </Button>
+      <CardActions>
+        <IconButton>
+          <FavoriteIcon />
+          <span>{data.likes}</span>
+        </IconButton>
+        <IconButton>
+          <ShareIcon />
+        </IconButton>
       </CardActions>
+      </>
+    }
     </Card>
   );
 }
