@@ -239,6 +239,17 @@ team.get("/notifications", async (req, res) => {
       });
       return res.status(200).json({ message: "success", AdminNotification });
     }
+    if (req.jwt_payload.Role === "SuperAdmin") {
+      const SuperAdminNotification = await User.find(
+        {},
+        {
+          Notifications: 1,
+        }
+      );
+      return res
+        .status(200)
+        .json({ message: "success", SuperAdminNotification });
+    }
 
     const TeamsNotification = await Team.findById(req.jwt_payload.team, {
       Notifications: 1,
