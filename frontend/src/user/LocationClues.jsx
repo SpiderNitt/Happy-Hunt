@@ -52,7 +52,7 @@ function LocationClues(props) {
     };
 
     const getLocation=()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
+        navigator.geolocation.getCurrentPosition(onSuccess);
     };
 
     const body= {
