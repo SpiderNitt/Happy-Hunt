@@ -231,4 +231,15 @@ team.get("/requests", async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 });
+team.get("/notifications", async (req, res) => {
+  try {
+    const TeamsNotification = await Team.findById(req.jwt_payload.team, {
+      Notifications: 1,
+    });
+    return res.status(200).json({ message: "success", TeamsNotification });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: e.message });
+  }
+});
 module.exports = team;
