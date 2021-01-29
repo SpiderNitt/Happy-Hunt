@@ -34,7 +34,7 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
         authContext.isAuthenticated() ? (
           <>
             {children}
-            <MessageBot />
+            <MessageBot />  
           </>
         ) : (
             <Redirect to={Routes.WELCOME} />
@@ -46,7 +46,7 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
 
 
 function UserNav() {
-
+  const authContext = useContext(AuthContext);
   return (
     <>
       <Switch>
@@ -106,24 +106,39 @@ function UserNav() {
           <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
           <ClueTabs />
         </UserAuthenticatedRoute>
-        <UserAuthenticatedRoute path={Routes.USER_PICTURE_CLUE} exact>
-          <TopNav />
-          <div style={{ marginTop: 70 }}>
-            <PictureClues />
-          </div>
-        </UserAuthenticatedRoute>
-        <UserAuthenticatedRoute path={Routes.USER_LOCATION_CLUE} exact>
-          <TopNav />
-          <div style={{ marginTop: 70 }}>
-            <LocationClues />
-          </div>
-        </UserAuthenticatedRoute>
-        <UserAuthenticatedRoute path={Routes.USER_TEXT_CLUE} exact>
-          <TopNav />
-          <div style={{ marginTop: 70 }}>
-            <TextClues />
-          </div>
-        </UserAuthenticatedRoute>
+        <Route
+              path={Routes.USER_PICTURE_CLUE}
+              exact
+              render={(props) => (
+              authContext.isAuthenticated() ? (
+              <div style={{ marginTop: 70 }}>
+                  <TopNav />
+                  <PictureClues {...props} />
+              </div>
+             ) : (<Redirect to={Routes.WELCOME} />)
+        )} /> 
+        <Route
+              path={Routes.USER_LOCATION_CLUE}
+              exact
+              render={(props) => (
+              authContext.isAuthenticated() ? (
+              <div style={{ marginTop: 70 }}>
+                  <TopNav />
+                  <LocationClues {...props} />
+              </div>
+             ) : (<Redirect to={Routes.WELCOME} />)
+        )} /> 
+        <Route
+              path={Routes.USER_TEXT_CLUE}
+              exact
+              render={(props) => (
+              authContext.isAuthenticated() ? (
+              <div style={{ marginTop: 70 }}>
+                  <TopNav />
+                  <TextClues {...props} />
+              </div>
+             ) : (<Redirect to={Routes.WELCOME} />)
+        )} />     
         <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>

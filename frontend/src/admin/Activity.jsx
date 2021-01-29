@@ -13,21 +13,27 @@ const useStyles = makeStyles((theme) => ({
 
 const Activity = () => {
   const styles = useStyles();
+  const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const result = await client.get('api/admin/submissions');
-      console.log(result.data);
+      setData(result.data.submissions);
+      console.log(result.data.submissions);
     }
     fetchData();
-  })
+  }, []);
   return (
     <Grid container className={styles.container}>
-      <Grid item>
-        <ActivityFeedCard teamName='team1' mission='mission1' />
-      </Grid>
-      <Grid item>
-        <ActivityFeedCard teamName='team2' mission='mission2' />
-      </Grid>
+      {
+        data.length > 0 && data.map(submission => (
+          <Grid item>
+            <ActivityFeedCard data={submission} />
+          </Grid>
+        ))
+      }
+      {
+        data.length === 0 && <div>No submissions made</div>
+      }
     </Grid>
   );
 };

@@ -1,10 +1,14 @@
-import { Avatar, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
-import { Add, Edit, ExitToApp, GroupAdd } from '@material-ui/icons';
+import { Avatar, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
+import { Add, Edit, ExitToApp, FileCopyOutlined, GroupAdd } from '@material-ui/icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Routes from '../utils/routes';
 import {AuthContext} from '../api/authContext.js';
 import client from '../api/client';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import Message from '../components/Message';
+import colors from '../utils/colors';
+import LoadingPage from '../components/LoadingPage';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,29 +37,48 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePage(props) {
     const authContext = useContext(AuthContext)
     const classes = useStyles();
-    const [data, setData] = useState([]);
+    const [loading, setloading] = useState(true);
+    const [message, setmessage] = useState('')
+    const [messageType, setmessageType] = useState('')
+    const [UserInfo, setUserInfo] = useState({});
+    const [TeamInfo, setTeamInfo] = useState({});
+    const [copy,setCopy] = useState(false);
     const history = useHistory();
     const handleLogout = () => {
         authContext.logout();
         history.push(Routes.USER_LOGIN);
     }
+    const fetch = async () => {
+        const result = await client.get('api/player/profile')
+        setloading(false);
+        if(!result.ok){
+            console.log(result.status, result.originalError, result.problem);
+            console.log(result.data);
+            setmessage(result.data.message);
+            setmessageType("error");
+            return;
+        }
+        setUserInfo(result.data);
+        result.data.team && setTeamInfo(result.data.team);
+    }
 
     useEffect(() => {
-      const fetch = async () => {
-        const result = await client.get('api/player/profile')
-        setData(result.data);
-      }
       fetch();
-      console.log (data)
-  }, [])
+    }, [])
+
+    if(loading){
+        return <LoadingPage />
+    }
+
     return (
         <Container maxWidth="md" >
+            {(message || copy) && <Message message={message} show={true} type={messageType} />}
             <div className={classes.root}>
                 <Avatar alt="Remy Sharp" className={classes.large} />
             </div>
-            <List className={classes.listContainer}>
+            {UserInfo && <List className={classes.listContainer}>
                 <ListItem className={classes.items}>
-                    <ListItemText primary={`Name: ${data.name}`} />
+                    <ListItemText primary={`Name: ${UserInfo.name}`} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit />
@@ -64,7 +87,7 @@ function ProfilePage(props) {
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
-                    <ListItemText primary={`Email Id: ${data.emailId}`} />
+                    <ListItemText primary={`Email Id: ${UserInfo.emailId}`} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit />
@@ -73,7 +96,7 @@ function ProfilePage(props) {
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
-                    <ListItemText primary={`Mobile no: ${data.phoneNo}`} />
+                    <ListItemText primary={`Mobile no: ${UserInfo.phoneNo}`} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit />
@@ -81,6 +104,36 @@ function ProfilePage(props) {
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
+                {
+                TeamInfo ?
+                <>
+                <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
+                <ListItem className={classes.items}>
+                    <ListItemText primary={`Role`} secondary={UserInfo.Role==="TeamLeader" ? "Team Admin" : "Team Member"} />
+                </ListItem>
+                <Divider />
+                <ListItem className={classes.items}>
+                    <ListItemText primary={`Team Name`} secondary={TeamInfo.teamName} />
+                </ListItem>
+                <Divider />
+                <ListItem className={classes.items}>
+                    <ListItemText primary={`Team Id`} secondary={TeamInfo.teamId} />
+                    <ListItemSecondaryAction>
+                    <CopyToClipboard text={TeamInfo.teamId}
+                        onCopy={() => {
+                            setCopy(true);
+                            setmessage("Team ID copied!");
+                            setmessageType("success");
+                        }}>
+                        <IconButton edge="end">
+                            <FileCopyOutlined />
+                        </IconButton>
+                    </CopyToClipboard>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                </>
+                :
+                <>
                 <ListItem style={{ marginTop: 20 }} component={Link} to={Routes.USER_REGISTER_TEAM}>
                     <ListItemIcon>
                         <Add />
@@ -93,13 +146,15 @@ function ProfilePage(props) {
                 </ListItemIcon>
                     <ListItemText primary="Join Team" />
                 </ListItem>
+                </>
+                }
                 <ListItem style={{ marginBottom: 20 }} component={Link} onClick={handleLogout}>
                 <ListItemIcon>
                     <ExitToApp />
                 </ListItemIcon>
                     <ListItemText primary="Logout" />
                 </ListItem>
-            </List>
+            </List>}
         </Container>
     );
 }
