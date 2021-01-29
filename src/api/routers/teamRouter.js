@@ -52,13 +52,11 @@ team.post("/create", playerVerify, async (req, res) => {
     user.team = newTeam._id;
     await user.save();
     const token = createJWTtoken(user);
-    const date = new Date();
-    date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
-      TeamId: newTeam.teamId,
+      userInfo: user,
       JWTtoken: token,
-      expiration: date,
+      expiration: req.jwt_payload.exp,
     });
   } catch (error) {
     console.log(error);

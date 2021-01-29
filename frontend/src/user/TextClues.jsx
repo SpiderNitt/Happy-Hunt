@@ -30,10 +30,10 @@ function TextClues(props) {
         })
     };
 
-    useEffect(()=>{
+    const getLocation=()=>{
         navigator.geolocation.getCurrentPosition(onSucces);
 
-    }, []);
+    }
     console.log(location);
     console.log(props)
     
@@ -48,7 +48,6 @@ function TextClues(props) {
       }, [props.match.params.id]);
 
       console.log(data)
-
     const handleOpen = () => {
       setOpen(true);
     };
@@ -87,12 +86,13 @@ function TextClues(props) {
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
                 <div>
-                    <LocationOnIcon className={classes.icon} />
+                    <LocationOnIcon className={classes.icon}  onClick={getLocation} />
                 </div>
 
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"dark-gray", display:'flex', justifyContent:'center'}}>
                     note: the picture should be taken from inside the car.
                 </p>
+                {evaluation? <p>{ans}</p>: ''}
                 <form className={classes.root} noValidate autoComplete="off">
                 <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}} placeholder="Answer" required/>
                 </form>
@@ -185,7 +185,8 @@ const useStyles = makeStyles((theme)=>({
       },
     icon: {
         fontSize:65,
-        color:"#EF7257"
+        color:"#EF7257",
+        cursor:"pointer"
     }
     }));
 

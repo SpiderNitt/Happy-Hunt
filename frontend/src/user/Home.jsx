@@ -71,7 +71,6 @@ console.log(getLocation);
     }
 
     console.log(getLocation)
-
     const body= {
       "Location":{
           "coords":{
@@ -98,6 +97,11 @@ console.log(getLocation);
     const handleOpen = () => {
       setOpen(true);
     };
+
+    useEffect(() => {
+      fetch();
+      getTeamLeadersLocation();
+    }, []);
   
     const handleClose = () => {
       setOpen(false);
