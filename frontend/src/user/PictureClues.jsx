@@ -11,6 +11,7 @@ import Hints from './Hints';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
 import client from '../api/client';
+import Capture from './Photogragh';
 
 const api = create({
     baseURL: 'https://api.cloudinary.com/v1_1/dqj309mtu/image',
@@ -22,11 +23,12 @@ function PictureClues(props) {
     const [data, setData]= useState([]);
     const [imageSelected, setImageSelected] = useState("");
     const [open, setOpen] = useState(false);
+    const [onCam, setonCam] = useState(false);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
     });
-
+    console.log(onCam)
     const onSucces = location=>{
         setLocation({
             loaded:true,
@@ -75,9 +77,14 @@ function PictureClues(props) {
         setOpen(false);
     };
 
-    return (
-        
+    // if(onCam && !dataUri){
+    //     return <Capture setDataUri={setDataUri} setonCam={setonCam} />;
+    // }
+    
+    return (       
         <React.Fragment >
+            {onCam ?
+            <Capture setDataUri={setDataUri} setonCam={setonCam} /> :
             <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
@@ -100,17 +107,18 @@ function PictureClues(props) {
                 <div>
                     <LocationOnIcon className={classes.icon} />
                 </div>
-
+                {dataUri && <img src={dataUri} />}
                <input type="file" onChange={(e)=>{
                     setImageSelected(e.target.files[0]);
                     }
                 }/>
+                
                 <Button type="submit" onClick={uploadImage}  style={{backgroundColor:"#4863A0", color:"whitesmoke"}}>
                     Submit
                 </Button>
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} href="/photo">Take Picture!</Button>
+                <Button className={classes.Button} onClick={() => setonCam(true)}>Take Picture!</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
@@ -133,7 +141,7 @@ function PictureClues(props) {
                 </Modal>
                 </div>) :''}
                 
-            </Container>
+            </Container>}
         </React.Fragment>
       );
 }

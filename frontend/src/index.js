@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
-// import App from "./App";
-import WebShare from "./components/WebShare";
+import App from "./App";
+// import WebShare from "./components/WebShare";
 // import Message from "./components/Message";
 // import LoadingPage from "./components/LoadingPage";
 // import SuccessAnimation from "./components/SuccessAnimation";
@@ -18,4 +18,4 @@ import WebShare from "./components/WebShare";
 // import AdminRegistration from "./AdminRegistration";
 // import Template from "./user/Template";
 
-ReactDOM.render(<WebShare />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
