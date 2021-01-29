@@ -10,6 +10,7 @@ import AlertMessage from '../components/AlertMessage';
 import { useHistory, withRouter } from 'react-router-dom';
 import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
+import Message from '../components/Message';
 
 
 const validationSchema = Yup.object().shape({
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 export default function UserRegistration(props) {
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messageType, setmessageType] = useState('');
   const classes = useStyles();
   const history = useHistory();
 
@@ -69,6 +71,7 @@ export default function UserRegistration(props) {
     if(!response.ok){
       console.log(response.problem);
       setInfo(response.data.message);
+      setmessageType("error");
       setLoading(false);
       return;
     }
@@ -83,7 +86,7 @@ export default function UserRegistration(props) {
     <Container component="main" maxWidth="xs">
     <CssBaseline />
     {loading && <LoadingPage /> }
-    {info && <AlertMessage message={info} setInfo={setInfo} />}
+    {info && <Message message={info} show={true} type={messageType} />}
     {!loading && <div className={classes.paper}>
         <div className={classes.avatar}>
           <LockOutlined style={{ fontSize: 40 }} />
