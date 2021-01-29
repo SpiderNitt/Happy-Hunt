@@ -357,10 +357,10 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     });
   }
 });
-player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
+player.post("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
   try {
     const { MissionId } = req.body;
-    const mission = await Mission.findById(MissionId);
+    const mission = await Mission.findById(MissionId).lean();
     const hint = mission.Hints;
     const activity = await Activity.findOne({
       team: req.jwt_payload.team,

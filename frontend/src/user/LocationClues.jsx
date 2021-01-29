@@ -13,25 +13,35 @@ import client from '../api/client'
 function LocationClues(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const [data, setData]= useState([]);
+    const [data, setData]= useState({});
+    const [clues,setClues] = useState([]);
+    const [hints,setHints] = useState([]);
+    const [evaluation, showEvaluation]= useState(false);
+    const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
     });
-
+    
     const fetch = async () => {
-        const result = await client.get(`api/mission/${props.match.params.id}`);
+        const result = await client.get(`/api/mission/${props.match.params.id}`);
+        console.log(result);
+        if(!result.ok){
+            console.log(result.status, result.problem, result.originalError);
+            return;
+        }
         console.log(result.data);
-        setData(result.data.mission);
+        await setData(result.data.mission);
+        await setClues(result.data.mission.clue);
+        await setHints(result.data.hint)
+        console.log(data);
     }
 
-      useEffect(() => {
+    useEffect(() => {
         fetch();
-      }, [props.match.params.id]);
+    },[]);
 
-      console.log(data)
-
-    const onSucces = location=>{
+    const onSuccess = location=>{
         setLocation({
             loaded:true,
             coordinates:{
@@ -40,25 +50,47 @@ function LocationClues(props) {
             }
         })
     };
+
+    const getLocation=()=>{
+        navigator.geolocation.getCurrentPosition(onSucces);
+    };
+
+    const body= {
+        "MissionId":props.match.params.id,
+        "Location":{
+            "coords":{
+                "latitude":`${location.coordinates.Lat}`,
+                "longitude":`${location.coordinates.Long}`
+            }
+        }
+    }
+      const submitAnswer = async () => {
+        const result = await client.post('api/player/locationSubmission', body)
+        if(!result.ok){
+          console.log(result, result.originalError, result.problem, result.status);
+          console.log(result.data.message)
+          setAns(result.data.message)
+          showEvaluation(true)
+          return;
+        }
+        showEvaluation(true)
+        setAns(result.data.message)
+      }
+      console.log(ans);
+  
     const handleOpen = () => {
         setOpen(true);
-      };
+    };
     
-      const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
-      };
+    };
 
-    useEffect(()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
 
-    }, []);
-
-    console.log(location);
     return (
         
         <React.Fragment >
-
-            <Container maxWidth="sm" style={{height: '100vh', marginTop:"20vh" }}>
+            {data !== {} && <Container maxWidth="sm" style={{height: '100vh', marginTop:"20vh" }}>
                 <h4 style={{color:'#50EFE6',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
@@ -70,36 +102,28 @@ function LocationClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info} 
                 </p>
-                {/* <div className={classes.task1}>
-                   <p>
-                   {data.clue[0]}
-                    </p>
-                </div>
-                {(data.clue[1]) ? (
-                     <div className={classes.task1}>
-                     <p>
-                     {data.clue[1]}
-                      </p>
-                  </div>
-                ) :''}
-                 {(data.clue[2]) ? (
-                     <div className={classes.task1}>
-                     <p>
-                     {data.clue[2]}
-                      </p>
-                  </div>
-                ) :''} */}
+                {clues && clues.length > 1 ? (
+                        <>
+                        <p>{clues[0]}</p>
+                        <img alt="clue" src={clues[1]} width='100%' />
+                        </>
+                    ) : (
+                        <p>{clues[0]}</p>
+                    )
+                }
                 <p className={classes.points}>{data.maxPoints}</p>
                 <br/>
                 <br/>
                 <br/>
                 <div>
-                    <LocationOnIcon className={classes.icon} />
+                    <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
+                {evaluation? <p>{ans}</p>: ''}
                 <br/>
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
+                <Button className={classes.Button} onClick={submitAnswer}>Submit</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
@@ -116,12 +140,12 @@ function LocationClues(props) {
                 >
                 <Fade in={open}>
                 <div className={classes.paper}>
-                    <Hints id={data._id}/>
+                    {hints && <Hints id={data._id} data={hints}/>}
                 </div>
                 </Fade>                
                 </Modal>
                 </div>) :''}
-                </Container>
+                </Container>}
             </React.Fragment>
       );
 }
@@ -167,7 +191,8 @@ const useStyles = makeStyles((theme)=>({
         display:'flex',
         alignSelf:'center',
         justifyContent:'center',
-        color:'white',
+        color:'black',
+        backgroundColor:"gray",
         fontSize:20,
         fontFamily:'tahoma'
       },
@@ -179,7 +204,8 @@ const useStyles = makeStyles((theme)=>({
     },
     icon: {
         fontSize:65,
-        color:"#EF7257"
+        color:"#EF7257",
+        cursor:"pointer"
     },
     }));
 
