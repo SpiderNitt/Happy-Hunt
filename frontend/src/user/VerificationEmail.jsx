@@ -10,6 +10,7 @@ import jwtDecode from 'jwt-decode';
 import { AuthContext } from '../api/authContext';
 import LoadingPage from '../components/LoadingPage';
 import SuccessAnimation from '../components/SuccessAnimation';
+import Message from '../components/Message';
 const queryString = require('query-string');
 
 const validationSchema = Yup.object().shape({
@@ -45,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
 function VerificationEmail(props) {
     const styles = useStyles();
     const [loading, setLoading] = useState(false);
+    const [info, setInfo] = useState('');
+    const [messageType, setmessageType] = useState('');
     const [successVerify, setSuccessVerify] = useState(false);
     const auth = useContext(AuthContext);
     const parsed = queryString.parse(props.location.search);
@@ -58,9 +61,13 @@ function VerificationEmail(props) {
         if(!response.ok){
             console.log(response.problem);
             console.log(response.data);
+            setInfo(response.data.message);
+            setmessageType("error");
             setLoading(false);
             return;
         }
+        setInfo("Registration successful!");
+        setmessageType("success");
         setLoading(false);
         setSuccessVerify(true);
         const {exp} = await jwtDecode(response.data.token)
@@ -80,6 +87,7 @@ function VerificationEmail(props) {
             <CssBaseline />
             {loading && <LoadingPage /> }
             {successVerify && <SuccessAnimation />}
+            {info && <Message message={info} show={true} type={messageType} />}
             {(!loading && !successVerify) && <div className={styles.root}>
             <div style={{ fontSize: 50 }}>
                 <MessageOutlined fontSize="inherit" />

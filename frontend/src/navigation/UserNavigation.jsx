@@ -34,7 +34,7 @@ const UserAuthenticatedRoute = ({ children, ...rest }) => {
         authContext.isAuthenticated() ? (
           <>
             {children}
-            <MessageBot />
+            <MessageBot />  
           </>
         ) : (
             <Redirect to={Routes.WELCOME} />

@@ -229,11 +229,21 @@ player.post(
 );
 player.get("/profile", playerVerify, async (req, res) => {
   try {
-    const user = await User.findById(req.jwt_payload.id);
+    const user = await User.findById(req.jwt_payload.id)
+      .populate("team", "teamId teamName")
+      .lean();
     if (user === undefined || user === null) {
       return res.status(400).json({ message: "User not found" });
     }
-    return res.status(200).json(user);
+    const filter = ["password", "otpId"];
+    const response = Object.keys(user).reduce((object, key) => {
+      if (!filter.includes(key)) {
+        object[key] = user[key];
+      }
+      return object;
+    }, {});
+    // console.log(response);
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Server Error, Try again later" });
@@ -298,7 +308,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         Category: 1,
         maxPoints: 1,
         answer_Type: 1,
-        isBonus:1,
+        isBonus: 1,
       });
       arr2.push(bonus);
 
@@ -324,7 +334,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         Category: 1,
         maxPoints: 1,
         answer_Type: 1,
-        isBonus:1,
+        isBonus: 1,
       });
       arr.push(mission);
 
@@ -350,9 +360,9 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
 player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
   try {
     const { MissionId } = req.body;
-    console.log( MissionId )
+    console.log(MissionId);
     const mission = await Mission.findById(MissionId);
-    console.log(mission)
+    console.log(mission);
     const hint = mission.Hints;
     const activity = await Activity.findOne({
       team: req.jwt_payload.team,
