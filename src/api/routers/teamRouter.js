@@ -230,6 +230,13 @@ team.get("/requests", async (req, res) => {
 });
 team.get("/notifications", async (req, res) => {
   try {
+    if (req.jwt_payload.Role === "Admin") {
+      const AdminNotification = await User.findById(req.jwt_payload.id, {
+        Notifications: 1,
+      });
+      return res.status(200).json({ message: "success", AdminNotification });
+    }
+
     const TeamsNotification = await Team.findById(req.jwt_payload.team, {
       Notifications: 1,
     });
