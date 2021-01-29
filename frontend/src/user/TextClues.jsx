@@ -2,19 +2,19 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Hints from './Hints';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { TextareaAutosize } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
+import client from '../api/client';
 
 function TextClues(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const [data, setData] = useState([]);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -35,6 +35,19 @@ function TextClues(props) {
 
     }, []);
     console.log(location);
+    console.log(props)
+    
+    const fetch = async () => {
+        const result = await client.get(`api/mission/${props.match.params.id}`);
+        console.log(result.data);
+        setData(result.data.mission);
+    }
+
+      useEffect(() => {
+        fetch();
+      }, [props.match.params.id]);
+
+      console.log(data)
 
     const handleOpen = () => {
       setOpen(true);
@@ -44,35 +57,35 @@ function TextClues(props) {
       setOpen(false);
     };
     return (
+        
         <React.Fragment >
             
             <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#C866F5',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
-                        Clue: Chaos is my friend!
+                      Mission: {data.MissionName}
                 </h4>
                 <p style={{color:'gray',
                     fontSize:16,
                     fontFamily:'calibri',
-                    display:'flex', alignItems:'center', justifyContent:'center'}}>What to do: <span style={{marginLeft:5}}> Follow the instructions as given below</span>
+                    display:'flex', alignItems:'center', justifyContent:'center'}}>
+                        {data.Other_Info}
                 </p>
-                <div className={classes.task1}>
+                {/* <div className={classes.task1}>
                    <p>
-                    "Open the card with the two yellow dots crack the questions and reach the location within
-                    100 mts to score points"   
-                    <span className={classes.points}>100 points</span>
+                    {data.clue[0]}   
                     </p>
                 </div>
 
                 <div className={classes.task}>
                    <p>
-                    Task: On the cylindrical wall side of the building below the conical top,
-                    the side aligned with the cylindrical wall how many complete + like decoration 
-                    can you see.    
-                    <span  className={classes.points}>100 points</span>
+                    {data.clue[1]}    
                     </p>
-                </div>
+                    
+                </div> */}
+                <div className={classes.points}>{data.maxPoints} points</div>
+                <br/><br/>
                 <div>
                     <LocationOnIcon className={classes.icon} />
                 </div>
@@ -85,8 +98,8 @@ function TextClues(props) {
                 </form>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
-                <Button className={classes.Button} onClick={handleOpen}>Hint</Button>
-                
+                {!data.isBonus ? (<div>
+                    <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -98,14 +111,14 @@ function TextClues(props) {
                 BackdropProps={{
                 timeout: 500,
                 }}
-            >
+                >
                 <Fade in={open}>
                 <div className={classes.paper}>
-                    <Hints/>
+                    <Hints id={data._id}/>
                 </div>
-                </Fade>
-            </Modal>
-
+                </Fade>                
+                </Modal>
+                </div>) :''}
             </Container>
         </React.Fragment>
       );
@@ -146,7 +159,9 @@ const useStyles = makeStyles((theme)=>({
         float:"right", 
         fontStyle:"italic",
         fontSize: 16, 
-        marginLeft: 25
+        marginLeft: 25,
+        color:"gray",
+        fontFamily:"tahoma"
     },
     button: {
         display:'flex',

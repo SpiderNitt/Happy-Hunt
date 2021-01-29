@@ -4,21 +4,22 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Sample3 from '../assets/sample3.jpg';
 import { create } from 'apisauce';
-import  clueData  from './ClueData';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Hints from './Hints';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
+import client from '../api/client';
 
 const api = create({
     baseURL: 'https://api.cloudinary.com/v1_1/dqj309mtu/image',
 })
 
-function PictureClues(clue, index) {
+function PictureClues(props) {
     const classes = useStyles();
     const [dataUri, setDataUri] = useState('');
+    const [data, setData]= useState([]);
     const [imageSelected, setImageSelected] = useState("");
     const [open, setOpen] = useState(false);
     const [location, setLocation]= useState({
@@ -42,13 +43,17 @@ function PictureClues(clue, index) {
     }, []);
     console.log(location);
 
-    const handleOpen = () => {
-      setOpen(true);
-    };
-  
-    const handleClose = () => {
-      setOpen(false);
-    };
+    const fetch = async () => {
+        const result = await client.get(`api/mission/${props.match.params.id}`);
+        console.log(result.data);
+        setData(result.data.mission);
+    }
+
+      useEffect(() => {
+        fetch();
+      }, [props.match.params.id]);
+
+      console.log(data)
     
     const uploadImage=()=>{
         const formData= new FormData();
@@ -60,6 +65,16 @@ function PictureClues(clue, index) {
             console.log(response)
         });
     }
+
+    
+    const handleOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         
         <React.Fragment >
@@ -67,21 +82,20 @@ function PictureClues(clue, index) {
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
-                       Mission : { clueData[0].cluename}
+                       Mission : {data.MissionName}
                 </h4>
                 <p style={{color:'dark-gray',
                     fontSize:20,
                     fontFamily:'calibri',
-                    display:'flex', alignItems:'center', justifyContent:'center'}}>What to do:<span>Solve the below riddle and reach the spot within 100mts to score points.</span></p>
+                    display:'flex', alignItems:'center', justifyContent:'center'}}>{data.Other_Info}</p>
                     <div style= {{display:'flex', alignItems:'center', justifyContent:'center' }}>
                     <img src={Sample3} />
                     </div>
-                <div className={classes.task}>
+                <div className={classes.task}>  
                    <p>
-                    Task : Click a picture at this spot by creatively framing
-                    the name using just your hands    
+                   {data.isBonus ? data.clue[0] : ''} 
                     </p>
-                    <p className={classes.points}>100 points</p>
+                    <p className={classes.points}>{data.maxPoints}</p>
                 </div>
                 <div>
                     <LocationOnIcon className={classes.icon} />
@@ -97,7 +111,8 @@ function PictureClues(clue, index) {
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} href="/photo">Take Picture!</Button>
-                <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                {!data.isBonus ? (<div>
+                    <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -109,13 +124,14 @@ function PictureClues(clue, index) {
                 BackdropProps={{
                 timeout: 500,
                 }}
-            >
-<Fade in={open}>
+                >
+                <Fade in={open}>
                 <div className={classes.paper}>
-                    <Hints/>
+                    <Hints id={data._id}/>
                 </div>
                 </Fade>                
-            </Modal>
+                </Modal>
+                </div>) :''}
                 
             </Container>
         </React.Fragment>

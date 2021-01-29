@@ -39,16 +39,16 @@ const useStyles = makeStyles({
   }
 });
 
-const RedirectUrl = (category) => {
+const RedirectUrl = (category, id) => {
   let url;
-  if (category === "Picture and Location") {
-    url = Routes.USER_LOCATION_CLUE
+  if (category==="") {
+    url = `/user/happy-hunt/location-clue/${id}`
   }
   else if (category === "Text") {
-    url = Routes.USER_TEXT_CLUE
+    url = `/user/happy-hunt/text-clue/${id}`
   }
   else if (category === "Picture" || category === "Video") {
-    url = Routes.USER_PICTURE_CLUE
+    url = `/user/happy-hunt/picture-clue/${id}`
   }
   return url;
 }
@@ -79,22 +79,23 @@ function Clues(){
         <CardContent>
           <div className={classes.container}>
             <Typography className={classes.title} color="textSecondary" variant="ul" >
-              {mission.clue}
+              {mission.MissionName}
             </Typography>
             <Chip size="small" label={data.isSolved? "solved" : "unsolved" } />
           </div>
         </CardContent>
         <div className={classes.category} color="textSecondary" variant="p" >
-              {mission.Category}
-          </div>
+            {mission.answer_Type}
+        </div>
           <br/><br/>
         <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
-          <Button variant="contained" size="small" href={RedirectUrl(mission.Category)}>View</Button>
+          <Button variant="contained" size="small" href={RedirectUrl(mission.answer_Type, mission._id)}>View</Button>
           <Typography color="textSecondary">
             {mission.maxPoints}
           </Typography>
         </CardActions>
         </Card>
+        
       ))}
       </Container>
     )
