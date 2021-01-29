@@ -15,7 +15,12 @@ function TextClues(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [data, setData] = useState([]);
+    const [clues,setClues] = useState([]);
+    const [input, setInput]= useState('');
+    const [result, setResult]= useState([]);
+    const [hints, setHints]= useState([]);
     const [evaluation, showEvaluation]= useState(false);
+    const [resultoutput, showResultoutput]= useState(false);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
@@ -42,7 +47,9 @@ function TextClues(props) {
     const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
         console.log(result.data);
-        setData(result.data.mission);
+        await setData(result.data.mission);
+        await setClues(result.data.mission.clue);
+        await setHints(result.data.hint)
     }
 
       useEffect(() => {
@@ -74,6 +81,34 @@ function TextClues(props) {
       }
       console.log(ans);
 
+    const handleChange= (e)=>{
+        setInput(e.target.value)
+    }
+    console.log(input)
+
+    
+    const handleSubmit = async() => {
+        console.log(input)
+        const body = {
+            mission: `${props.match.params.id}`,
+            answer: input
+        }
+        console.log(body);
+
+        const response = await client.post('api/player/submission', body)
+        if(!response.ok){
+          console.log(response.problem);
+          console.log(response.data);
+          setResult(response.data.message)
+          showResultoutput(true)
+          return;
+        }
+        setResult(response.data.message)
+        console.log(result)
+        showResultoutput(true)
+
+      }
+
     const handleOpen = () => {
       setOpen(true);
     };
@@ -97,18 +132,15 @@ function TextClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info}
                 </p>
-                {/* <div className={classes.task1}>
-                   <p>
-                    {data.clue[0]}   
-                    </p>
-                </div>
-
-                <div className={classes.task}>
-                   <p>
-                    {data.clue[1]}    
-                    </p>
-                    
-                </div> */}
+                 {clues && clues.length > 1 ? (
+                        <>
+                        <p>{clues[0]}</p>
+                        <img alt="clue" src={clues[1]} width='100%' />
+                        </>
+                    ) : (
+                        <p>{clues[0]}</p>
+                    )
+                }
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
                 <div>
@@ -120,11 +152,20 @@ function TextClues(props) {
                 </p>
                 {evaluation? <p>{ans}</p>: ''}
                 <form className={classes.root} noValidate autoComplete="off">
-                <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}} placeholder="Answer" required/>
+                <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}}
+                placeholder="Answer" 
+                required
+                value={input}
+                onChange={handleChange}
+                />
                 </form>
+                
+                {resultoutput ? <div>{result}</div> : ''}
+                <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
-                <Button className={classes.Button} onClick={submitAnswer}>Submit</Button>
+                <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
+                <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
@@ -141,7 +182,7 @@ function TextClues(props) {
                 >
                 <Fade in={open}>
                 <div className={classes.paper}>
-                    <Hints id={data._id}/>
+                    {hints && <Hints id={data._id} data={hints}/>}
                 </div>
                 </Fade>                
                 </Modal>
@@ -186,7 +227,6 @@ const useStyles = makeStyles((theme)=>({
         float:"right", 
         fontStyle:"italic",
         fontSize: 16, 
-        marginLeft: 25,
         color:"gray",
         fontFamily:"tahoma"
     },

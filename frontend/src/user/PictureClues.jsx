@@ -11,6 +11,7 @@ import Hints from './Hints';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
 import client from '../api/client';
+import Capture from './Photogragh';
 
 const api = create({
     baseURL: 'https://api.cloudinary.com/v1_1/dqj309mtu/image',
@@ -21,27 +22,17 @@ function PictureClues(props) {
     const [dataUri, setDataUri] = useState('');
     const [data, setData]= useState([]);
     const [imageSelected, setImageSelected] = useState("");
+    const [evaluation, showEvaluation]= useState(false);
     const [open, setOpen] = useState(false);
+    const [resultoutput, showResultoutput]= useState(false);
+    const [result, setResult]= useState([]);
+    const [onCam, setonCam] = useState(false);
+    const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
     });
-
-    const onSucces = location=>{
-        setLocation({
-            loaded:true,
-            coordinates:{
-                lat: location.coords.latitude,
-                long: location.coords.longitude
-            }
-        })
-    };
-
-    useEffect(()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
-
-    }, []);
-    console.log(location);
+    console.log(onCam);
 
     const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
@@ -55,17 +46,76 @@ function PictureClues(props) {
 
       console.log(data)
     
-    const uploadImage=()=>{
-        const formData= new FormData();
-        formData.append("file", imageSelected);
-        formData.append("upload_preset", "haqdfpiu");
+    // const uploadImage=()=>{
+    //     const formData= new FormData();
+    //     formData.append("file", imageSelected);
+    //     formData.append("upload_preset", "haqdfpiu");
 
-        api.post ("/upload", formData)
-        .then((response)=>{
-            console.log(response)
-        });
+    //     api.post ("/upload", formData)
+    //     .then((response)=>{
+    //         console.log(response)
+    //     });
+    // }
+
+    const onSucces = location=>{
+        setLocation({
+            loaded:true,
+            coordinates:{
+                lat: location.coords.latitude,
+                long: location.coords.longitude
+            }
+        })
+    };
+
+    const getLocation=()=>{
+        navigator.geolocation.getCurrentPosition(onSucces);
+
     }
+    console.log(location);
 
+    const body= {
+        "MissionId":props.match.params.id,
+        "Location":{
+            "coords":{
+                "latitude":`${location.coordinates.Lat}`,
+                "longitude":`${location.coordinates.Long}`
+            }
+        }
+    }
+      const submitAnswer = async () => {
+        const result = await client.post('api/player/locationSubmission', body)
+        if(!result.ok){
+          console.log(result, result.originalError, result.problem, result.status);
+          console.log(result.data.message)
+          setAns(result.data.message)
+          showEvaluation(true)
+          return;
+        }
+        showEvaluation(true)
+        setAns(result.data.message)
+      }
+      console.log(ans);
+      
+    const handleSubmit = async() => {
+        const body = {
+            mission: `${props.match.params.id}`,
+            answer: `${dataUri}`
+        }
+        console.log(body);
+
+        const response = await client.post('api/player/submission', body)
+        if(!response.ok){
+          console.log(response.problem);
+          console.log(response.data);
+          setResult(response.data)
+          showResultoutput(true)
+          return;
+        }
+        setResult(response.data)
+        console.log(result)
+        showResultoutput(true)
+
+      }
     
     const handleOpen = () => {
         setOpen(true);
@@ -75,9 +125,14 @@ function PictureClues(props) {
         setOpen(false);
     };
 
-    return (
-        
+    // if(onCam && !dataUri){
+    //     return <Capture setDataUri={setDataUri} setonCam={setonCam} />;
+    // }
+    
+    return (       
         <React.Fragment >
+            {onCam ?
+            <Capture setDataUri={setDataUri} setonCam={setonCam} /> :
             <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
@@ -97,20 +152,24 @@ function PictureClues(props) {
                     </p>
                     <p className={classes.points}>{data.maxPoints}</p>
                 </div>
+                {dataUri && <img src={dataUri} />}
                 <div>
-                    <LocationOnIcon className={classes.icon} />
+                    <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
-
-               <input type="file" onChange={(e)=>{
+                {evaluation? <p>{ans}</p>: ''}
+               {/* <input type="file" onChange={(e)=>{
                     setImageSelected(e.target.files[0]);
                     }
                 }/>
+                
                 <Button type="submit" onClick={uploadImage}  style={{backgroundColor:"#4863A0", color:"whitesmoke"}}>
                     Submit
-                </Button>
+                </Button> */}
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} href="/photo">Take Picture!</Button>
+                <Button className={classes.Button} onClick={() => setonCam(true)}>Take Picture!</Button>
+                <Button className={classes.Button} onClick={handleSubmit}>Submit Picture</Button>
+                <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
@@ -133,7 +192,7 @@ function PictureClues(props) {
                 </Modal>
                 </div>) :''}
                 
-            </Container>
+            </Container>}
         </React.Fragment>
       );
 }
@@ -183,7 +242,8 @@ const useStyles = makeStyles((theme)=>({
       },
       icon: {
         fontSize:65,
-        color:"#EF7257"
+        color:"#EF7257",
+        cursor:"pointer"
     }
   }));
 
