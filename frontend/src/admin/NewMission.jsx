@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormik, Field } from 'formik';
+import { useFormik } from 'formik';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -17,23 +17,6 @@ const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const NewMission = (props) => {
     const { history } = props;
-    const convertBase64 = (file, key) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file)
-            fileReader.onload = () => {
-                formik.setFieldValue(key, fileReader.result);
-                resolve(fileReader.result);
-            }
-            fileReader.onerror = (error) => {
-                reject(error);
-            }
-        })
-    }
-    const handleImageUpload = async (event, key) => {
-        const file = event.target.files[0]
-        await convertBase64(file, key);
-    }
     const formik = useFormik({
         initialValues: {
             Category: '',
@@ -42,19 +25,18 @@ const NewMission = (props) => {
             answer: '',
             Other_Info: '',
             answer_Type: '',
-            ServerEvaluation: ''
+            ServerEvaluation: '',
+            hint1: '',
+            maxPointsHint1: 0,
+            hint2: '',
+            maxPointsHint2: 0,
         },
         enableReinitialize: true,
         onSubmit: async (values) => {
 
-            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, file, answerfile, hint1, maxPointsHint1, hint2, maxPointsHint2 } = values;
+            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, file, hint1, maxPointsHint1, hint2, maxPointsHint2 } = values;
             let answerArray = [];
-            if (answer_Type === answerTypes[0] || answer_Type === answerTypes[2]) {
-                answerArray.push(answerfile);
-            }
-            else {
-                answerArray = answer.split(',');
-            }
+            answerArray = answer.split(',');
             const cluesArray = [];
             if (clue2 === "") {
                 cluesArray.push(clue1);
@@ -63,7 +45,6 @@ const NewMission = (props) => {
                 cluesArray.push(clue1);
                 if (values.file !== undefined) {
                     cluesArray.push(clue2);
-                    cluesArray.push(file);
                 }
             }
             let hintsArray = [];
@@ -90,10 +71,12 @@ const NewMission = (props) => {
                 ServerEvaluation: ServerEvaluationBoolean,
                 maxPoints,
                 Hints: hintsArray,
+                file
             };
             console.log(object)
             const response = await client.post('api/admin/mission/add', object);
             console.log(response);
+
         },
     });
 
@@ -168,8 +151,8 @@ const NewMission = (props) => {
                         <div>
                             <br /><br />
                             <div className="form-group">
-                                <input type="file" onChange={(event) => {
-                                    handleImageUpload(event, 'file');
+                                <input id="file" name="file" type="file" multiple onChange={(event) => {
+                                    formik.setFieldValue("file", event.currentTarget.files);
                                 }} />
                             </div>
                         </div>
@@ -191,27 +174,16 @@ const NewMission = (props) => {
                             </MenuItem>
                         ))}
                     </TextField>
-                    {(formik.values['answer_Type'] === answerTypes[0] || formik.values['answer_Type'] === answerTypes[2]) ?
-                        <div>
-                            <br /><br />
-                            <div className="form-group">
-                                <input type="file" onChange={(event) => {
-                                    handleImageUpload(event, 'answerfile');
-                                }} />
-                            </div>
-                        </div>
-                        :
-                        <TextField
-                            fullWidth
-                            id="answer"
-                            name="answer"
-                            label="Answer (Multiple answers are to be separated by commas)"
-                            value={formik.values.answer}
-                            onChange={formik.handleChange}
-                            error={formik.touched.answer && Boolean(formik.errors.answer)}
-                            helperText={formik.touched.answer && formik.errors.answer}
-                        />
-                    }
+                    <TextField
+                        fullWidth
+                        id="answer"
+                        name="answer"
+                        label="Answer (Multiple answers are to be separated by commas)"
+                        value={formik.values.answer}
+                        onChange={formik.handleChange}
+                        error={formik.touched.answer && Boolean(formik.errors.answer)}
+                        helperText={formik.touched.answer && formik.errors.answer}
+                    />
                     <TextField
                         fullWidth
                         id="Lat"
