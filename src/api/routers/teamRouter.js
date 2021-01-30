@@ -228,4 +228,14 @@ team.get("/requests", async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 });
+team.get("/score", async (req, res) => {
+  try {
+    const score = await Team.findById(req.jwt_payload.team, { points: 1 });
+    return res.status(200).json({ score });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
 module.exports = team;
