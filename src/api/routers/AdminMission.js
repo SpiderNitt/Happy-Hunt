@@ -89,7 +89,6 @@ Router.post(
         maxPoints,
         MissionName,
         Feed,
-        Photos: mediaFiles,
         ServerEvaluation,
         assignedTeams: [],
         Hints: newHints,
