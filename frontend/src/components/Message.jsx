@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Message({ show=false, message, type }) {
+export default function Message({ show=false, message, ...otherprops }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(show);
 
@@ -25,6 +25,7 @@ export default function Message({ show=false, message, type }) {
       return;
     }
     setOpen(false);
+    if(otherprops.setMessage) otherprops.setMessage('')
   };
 
   return (
@@ -39,7 +40,7 @@ export default function Message({ show=false, message, type }) {
       anchorOrigin={{ vertical:"top", horizontal:"center" }}
       style={{ marginTop: 70 }}
       >
-        <Alert onClose={handleClose} severity={type}>
+        <Alert onClose={handleClose} severity={otherprops.type}>
           {message}
         </Alert>
       </Snackbar>

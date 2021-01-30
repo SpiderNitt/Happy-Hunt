@@ -72,7 +72,7 @@ function ProfilePage(props) {
 
     return (
         <Container maxWidth="md" >
-            {(message || copy) && <Message message={message} show={true} type={messageType} />}
+            {message && <Message message={message} show={true} type={messageType} setMessage={setmessage} />}
             <div className={classes.root}>
                 <Avatar alt="Remy Sharp" className={classes.large} />
             </div>
