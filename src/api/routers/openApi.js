@@ -56,7 +56,7 @@ openApi.get("/start", superAdminVerify, async (req, res) => {
   setTimeout(() => {
     io.emit("end");
     console.log("enddddddddddd");
-  }, 10000);
+  }, 10800000);
   return res.status(200).json({ message: "scheduled" });
 });
 
