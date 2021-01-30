@@ -12,26 +12,68 @@ const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
 
-player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
-  try {
-    const { team } = req.jwt_payload;
-    const user = await Team.findById(team);
-    const { mission, answer } = req.body;
-    if (!mission) return res.status(400).json({ message: "Fill all fields" });
-    const submit = await Mission.findById(mission);
-    const answerType = submit.answer_Type;
-    const { Category, visibility, ServerEvaluation, maxPoints } = submit;
-    if (answerType === undefined || answerType === null) {
-      return res.status(404).json({ message: "Mission not found" });
-    }
-    let notification;
-    let result;
-    if (ServerEvaluation && answerType === "Text") {
-      const originalAnswer = submit.answer;
-      let rightAnswer = false;
-      for (let i = 0; i < originalAnswer.length; i += 1) {
-        if (originalAnswer[i] === answer) {
-          rightAnswer = true;
+player.post(
+  "/submission",
+  playerVerify,
+  TeamenRollVerify,
+  async (req, res) => {
+    try {
+      const { team } = req.jwt_payload;
+      const user = await Team.findById(team);
+      const { mission } = req.body;
+      if (!mission) return res.status(400).json({ message: "Fill all fields" });
+      const submit = await Mission.findById(mission);
+      const answerType = submit.answer_Type;
+      const { Category, visibility, ServerEvaluation, maxPoints } = submit;
+      if (answerType === undefined || answerType === null) {
+        return res.status(404).json({ message: "Mission not found" });
+      }
+      let answer;
+      let notification;
+      try {
+        switch (answerType) {
+          case "Picture": {
+            if (req.body.answer === undefined || req.body.answer == null)
+              return res.status(400).json({ message: "No picture submission" });
+              answer = req.body.answer;
+            break;
+          }
+
+          case "Text": {
+            if (req.body.answer === undefined || req.body.answer == null)
+              return res.status(400).json({ message: "No text submission" });
+            answer = req.body.answer;
+            break;
+          }
+          case "Video": {
+            if (req.file === undefined || req.file == null)
+              return res.status(400).json({ message: "No video submission" });
+            answer = req.file.buffer.toString("base64");
+            break;
+          }
+          case "Picture and Location": {
+            if (req.file === undefined || req.file == null)
+              return res.status(400).json({ message: "No picture submission" });
+            const { Lat, Long } = submit.Location;
+            const lat = Lat.toString();
+            const lon = Long.toString();
+            const { latSub, lonSub } = req.body;
+            const distance = geolib.getDistance(
+              { latitude: lat, longitude: lon },
+              { latitude: latSub, longitude: lonSub }
+            );
+            if (distance > 5000)
+              return res
+                .status(200)
+                .json({ message: "You haven't reached the location" });
+            answer = req.file.buffer.toString("base64");
+            break;
+          }
+          default: {
+            return res
+              .status(401)
+              .json({ message: "Database error,answerType improper" });
+          }
         }
       }
       if (rightAnswer) {

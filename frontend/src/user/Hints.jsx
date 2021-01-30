@@ -50,7 +50,7 @@ function Hints(props) {
             </ul>
             }
             <Button variant="contained" onClick={onButtonClickHandler1} disabled={disable1} color="primary" style={{margin:5}}>
-                 Hint 2
+                 View second hint
             </Button>
             {showThirdHint && 
                 <Button variant="contained" onClick={onButtonClickHandler2} disabled={disable2} color="primary" style={{margin:5}}>

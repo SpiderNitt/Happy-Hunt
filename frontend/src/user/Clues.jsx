@@ -53,7 +53,7 @@ const RedirectUrl = (category, id) => {
   return url;
 }
 
-function Clues(){
+function Clues(props){
   const classes= useStyles();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,6 +70,8 @@ function Clues(){
   useEffect(() => {
     fetch();
   }, []);
+
+  console.log(props)
 
   const RenderClues=()=>{
     return (
