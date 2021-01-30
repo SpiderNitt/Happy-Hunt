@@ -7,6 +7,8 @@ import Fade from '@material-ui/core/Fade';
 import Rules from './Rules';
 import Routes from '../utils/routes';
 import client from '../api/client';
+import Message from '../components/Message';
+import { CssBaseline } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -33,87 +35,93 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Home(props) {
-    const classes = useStyles();
-    const [open, setOpen] = useState(false);
-    const [data, setData]= useState("");
-    const [disable, setDisable]= useState(true);
-    const [loc, setLoc]= useState({
-      loaded:false,
-      coordinates: {lat:"", long:""}
-  });
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [data, setData]= useState("");
+  const [disable, setDisable]= useState(true);
+  const [coords, setCoords]= useState({});
+  const [message, setmessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
-  const onSucces = async (location)=>{
-    console.log(location.coords.latitude)
-      setLoc({
-          loaded:true,
-          coordinates:{
-              lat: location.coords.latitude,
-              long: location.coords.longitude
-          }
-      })
-
-      console.log(loc)
-      const body= {
-        "Location":{
-            "coords":{
-                "latitude":loc.coordinates.lat,
-                "longitude":loc.coordinates.long
-            }
-        }
-    }
-    const result = await client.post('api/team/location', body)
-    if(!result.ok){
-      console.log(result, result.originalError, result.problem, result.status);
-      console.log(result.data.message)
-      return;
-    }
-    console.log(result)
-    setDisable(false);
-    console.log(location);
+  const onSuccess = (location) => {
+    setCoords({
+      lat: location.coords.latitude,
+      long: location.coords.longitude
+    })
+    setDisable(false);;
   };
 
-  const onError = error=>{
-    setLoc({
-        loaded:true,
-        error,
-    })
-};
-
-  const getTeamLeadersLocation = async () => {
-    if(!("geolocation" in navigator)){
-      onError({
-        code:0,
-        message:"Geolocation not supported."
-      })
+  const onError = error =>{
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        setmessage("User denied the request for Geolocation.");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        setmessage("Location information is unavailable.");
+        break;
+      case error.TIMEOUT:
+        setmessage("The request to get user location timed out.");
+        break;
+      case error.UNKNOWN_ERROR:
+        setmessage("An unknown error occurred.");
+        break;
+      default:
+        setmessage("Error");
     }
-    navigator.geolocation.getCurrentPosition(onSucces, onError);
-    console.log(loc);
+    setMessageType("error");
+  };
+
+  const getUserLocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(onSuccess,onError);
+    } else {
+      setmessage("Geolocation is not supported by this browser.");
+    }
   }
 
-    const fetch = async () => {
-      const result = await client.get('api/countdown')
-      if(!result.ok){
-        console.log(result.originalError, result.problem, result.status);
-        return;
-      }
-      setData(result.data.timeReamaining);
-      console.log(result.data)  
+  const fetch = async () => {
+    const result = await client.get('api/countdown')
+    if(!result.ok){
+      console.log(result.originalError, result.problem, result.status);
+      return;
     }
+    setData(result.data.timeReamaining);
+    console.log(result.data)  
+  }
 
-    useEffect(() => {
-      fetch();
-    }, []);
-  
-    const handleOpen = () => {
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const handleOpen = async() => {
+    const body = {
+      Location:{
+        coords:{
+          latitude:coords.lat,
+          longitude:coords.long
+        }
+      }
+    }
+    const result = await client.post('api/team/location', body);
+    if(!result.ok){
+      console.log(result, result.originalError, result.problem, result.status);
+      console.log(result.data.message);
+      return;
+    }
+    console.log(result);
+    setTimeout(() => {
       setOpen(true);
-    };
+    }, 500);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   
-    const handleClose = () => {
-      setOpen(false);
-    };
-  
-    return (
+  return (
     <div className={classes.welcome}>
+      <CssBaseline />
+      {message && <Message message={message} show={true} type={messageType} setMessage={setmessage} />}
       <h1 style={{fontFamily:"tahoma"}}>Welcome!</h1>
       <div>
       <h3 style={{fontFamily:"tahoma"}}>Happy Hunt Challenge</h3>
@@ -121,10 +129,9 @@ function Home(props) {
         <span style={{ color:"red"}}> {data.days} days </span>
         <span  style={{ color:"blue"}}> {data.hours} hour </span>
         <span  style={{ color:"gray"}}> {data.minutes} minutes </span></p>
-      <Button variant="outlined" color="primary" onClick={getTeamLeadersLocation}>Allow Location Sharing</Button>
+      <Button variant="outlined" color="primary" onClick={getUserLocation}>Allow Location Sharing</Button>
       <br/>
-      {loc.loaded? JSON.stringify(loc): "location not available"}
-      <br/><br/>
+      <br/>
       <Button variant="outlined" color="secondary" onClick={handleOpen} disabled={disable}>start</Button>
       <br/>
       <br/>
