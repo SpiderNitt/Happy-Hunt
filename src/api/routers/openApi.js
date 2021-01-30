@@ -1,8 +1,11 @@
 const openApi = require("express").Router();
+const schedule = require("node-schedule");
 const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
+const { io } = require("../../helpers/timer");
+const { superAdminVerify } = require("../../middlewares/role");
 
 openApi.get("/scoreboard", async (req, res) => {
   try {
@@ -48,4 +51,38 @@ openApi.get("/adminList", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
+openApi.get("/start", superAdminVerify, async (req, res) => {
+  io.emit("start");
+  setTimeout(() => {
+    io.emit("end");
+    console.log("enddddddddddd");
+  }, 10000);
+  return res.status(200).json({ message: "scheduled" });
+});
+
+openApi.get("/notifications", async (req, res) => {
+  try {
+    if (
+      req.jwt_payload.Role === "Admin" ||
+      req.jwt_payload.Role === "SuperAdmin"
+    ) {
+      const AdminNotification = await User.find(
+        { Role: "SuperAdmin" },
+        {
+          Notifications: 1,
+        }
+      );
+      return res.status(200).json({ message: "success", AdminNotification });
+    }
+
+    const TeamsNotification = await Team.findById(req.jwt_payload.team, {
+      Notifications: 1,
+    });
+    return res.status(200).json({ message: "success", TeamsNotification });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: e.message });
+  }
+});
+
 module.exports = openApi;
