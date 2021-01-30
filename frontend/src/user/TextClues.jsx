@@ -143,9 +143,11 @@ function TextClues(props) {
                 }
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
+                {!data.isBonus?
                 <div>
                     <LocationOnIcon className={classes.icon}  onClick={getLocation} />
                 </div>
+                :""}
 
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"dark-gray", display:'flex', justifyContent:'center'}}>
                     note: the picture should be taken from inside the car.
@@ -165,7 +167,9 @@ function TextClues(props) {
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
                 <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
-                <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                {!data.isBonus ? 
+                 <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                 : ''} 
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal

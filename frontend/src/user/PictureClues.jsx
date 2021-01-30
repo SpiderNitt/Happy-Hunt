@@ -57,7 +57,8 @@ function PictureClues(props) {
     //         console.log(response)
     //     });
     // }
-    const onSucces = location=>{
+ 
+    const onSuccess = location=>{
         setLocation({
             loaded:true,
             coordinates:{
@@ -68,12 +69,11 @@ function PictureClues(props) {
     };
 
     const getLocation=()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
+        navigator.geolocation.getCurrentPosition(onSuccess);
+    };
+    console.log(location)
 
-    }
-    console.log(location);
-
-    const body= {
+    const locationBody= {
         "MissionId":props.match.params.id,
         "Location":{
             "coords":{
@@ -83,7 +83,8 @@ function PictureClues(props) {
         }
     }
       const submitAnswer = async () => {
-        const result = await client.post('api/player/locationSubmission', body)
+        const result = await client.post('api/player/locationSubmission',
+        locationBody)
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
           console.log(result.data.message)
@@ -156,9 +157,13 @@ function PictureClues(props) {
                     <p className={classes.points}>{data.maxPoints}</p>
                 </div>
                 {dataUri && <img src={dataUri} width="250" height="250"/>}
+                
+                {!data.isBonus ? 
                 <div>
                     <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
+                 : ''} 
+                    
                 {evaluation? <p>{ans}</p>: ''}
                {/* <input type="file" onChange={(e)=>{
                     setImageSelected(e.target.files[0]);
@@ -173,7 +178,10 @@ function PictureClues(props) {
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} onClick={() => setonCam(true)}>Take Picture!</Button>
                 <Button className={classes.Button} onClick={handleSubmit}>Submit Picture</Button>
-                <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                {!data.isBonus ? 
+                 <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                 : ''} 
+               
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
