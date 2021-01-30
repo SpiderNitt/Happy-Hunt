@@ -54,6 +54,7 @@ function LocationClues(props) {
     const getLocation=()=>{
         navigator.geolocation.getCurrentPosition(onSuccess);
     };
+    console.log(location)
 
     const body= {
         "MissionId":props.match.params.id,

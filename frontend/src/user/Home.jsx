@@ -36,46 +36,59 @@ function Home(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [data, setData]= useState("");
-    const [getLocation, setLocation]= useState({
+    const [disable, setDisable]= useState(true);
+    const [loc, setLoc]= useState({
       loaded:false,
       coordinates: {lat:"", long:""}
   });
-    
-  const onSucces = location=>{
-    setLocation({
-        loaded:true,
-        coordinates:{
-            lat: location.coords.latitude,
-            long: location.coords.longitude
+
+  const onSucces = async (location)=>{
+    console.log(location.coords.latitude)
+      setLoc({
+          loaded:true,
+          coordinates:{
+              lat: location.coords.latitude,
+              long: location.coords.longitude
+          }
+      })
+
+      console.log(loc)
+      const body= {
+        "Location":{
+            "coords":{
+                "latitude":loc.coordinates.lat,
+                "longitude":loc.coordinates.long
+            }
         }
+    }
+    const result = await client.post('api/team/location', body)
+    if(!result.ok){
+      console.log(result, result.originalError, result.problem, result.status);
+      console.log(result.data.message)
+      return;
+    }
+    console.log(result)
+    setDisable(false);
+    console.log(location);
+  };
+
+  const onError = error=>{
+    setLoc({
+        loaded:true,
+        error,
     })
 };
- 
-  
-useEffect(()=>{
-  navigator.geolocation.getCurrentPosition(onSucces);
 
-}, []);
-
-console.log(getLocation);
-
-    const body= {
-      "Location":{
-          "coords":{
-              "latitude":getLocation.coordinates.lat,
-              "longitude":getLocation.coordinates.long
-          }
-      }
-  }
-    const getTeamLeadersLocation = async () => {
-      const result = await client.post('api/team/location', body)
-      if(!result.ok){
-        console.log(result, result.originalError, result.problem, result.status);
-        return;
-      }
-      console.log(result)
-      
+  const getTeamLeadersLocation = async () => {
+    if(!("geolocation" in navigator)){
+      onError({
+        code:0,
+        message:"Geolocation not supported."
+      })
     }
+    navigator.geolocation.getCurrentPosition(onSucces, onError);
+    console.log(loc);
+  }
 
     const fetch = async () => {
       const result = await client.get('api/countdown')
@@ -84,18 +97,16 @@ console.log(getLocation);
         return;
       }
       setData(result.data.timeReamaining);
-      console.log(result.data)
-      
+      console.log(result.data)  
     }
+
+    useEffect(() => {
+      fetch();
+    }, []);
   
     const handleOpen = () => {
       setOpen(true);
     };
-
-    useEffect(() => {
-      fetch();
-      getTeamLeadersLocation();
-    }, []);
   
     const handleClose = () => {
       setOpen(false);
@@ -110,7 +121,11 @@ console.log(getLocation);
         <span style={{ color:"red"}}> {data.days} days </span>
         <span  style={{ color:"blue"}}> {data.hours} hour </span>
         <span  style={{ color:"gray"}}> {data.minutes} minutes </span></p>
-      <Button variant="outlined" color="secondary" onClick={handleOpen}>start</Button>
+      <Button variant="outlined" color="primary" onClick={getTeamLeadersLocation}>Allow Location Sharing</Button>
+      <br/>
+      {loc.loaded? JSON.stringify(loc): "location not available"}
+      <br/><br/>
+      <Button variant="outlined" color="secondary" onClick={handleOpen} disabled={disable}>start</Button>
       <br/>
       <br/>
       <iframe 
