@@ -33,7 +33,7 @@ Router.post(
     try {
       const {
         Category,
-        clue,
+        statement,
         isBonus,
         answer_Type,
         answer,
@@ -58,9 +58,24 @@ Router.post(
         newHints.push(newhint);
       }
       const mediaFiles = [];
-      for (let x = 0; x < req.files.length; x += 1) {
-        const basefile = req.files[x].buffer.toString("base64");
-        mediaFiles.push(basefile);
+      if (req.files) {
+        for (let x = 0; x < req.files.length; x += 1) {
+          const basefile = req.files[x].buffer.toString("base64");
+          mediaFiles.push(basefile);
+        }
+      }
+      const clue = [];
+
+      for (let index = 0; index < statement.length; index += 1) {
+        const clueObj = {};
+        clueObj.text = statement[index];
+        clueObj.photos = "";
+        clue.push(clueObj);
+      }
+      if (mediaFiles.length !== 0) {
+        for (let l = 0; l < mediaFiles.length; l += 1) {
+          clue[l].photos = mediaFiles[l];
+        }
       }
 
       await Mission.create({
@@ -112,15 +127,27 @@ Router.patch(
           await Hint.findByIdAndUpdate(hints[index], HintsGiven[index]);
         }
       }
-
+      const mediaFiles = [];
       if (req.files) {
-        const mediaFiles = [];
         for (let x = 0; x < req.files.length; x += 1) {
           const basefile = req.files[x].buffer.toString("base64");
           mediaFiles.push(basefile);
         }
-        req.body.Photos = mediaFiles;
       }
+      const clueArray = [];
+      const { clue } = req.body;
+      for (let index = 0; index < clue.length; index += 1) {
+        const clueObj = {};
+        clueObj.text = clue[index];
+        clueObj.photos = "";
+        clueArray.push(clueObj);
+      }
+      if (mediaFiles.length !== 0) {
+        for (let index = 0; index < mediaFiles.length; index += 1) {
+          clueArray[index].photos = mediaFiles[index];
+        }
+      }
+      req.body.clue = clueArray;
       delete req.body.Hints;
       delete req.body.id;
 
