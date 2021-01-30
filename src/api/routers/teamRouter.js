@@ -30,6 +30,11 @@ team.post("/create", playerVerify, async (req, res) => {
     }
 
     const user = await User.findById(req.jwt_payload.id);
+    if (user.Paid === 0) {
+      return res
+        .status(401)
+        .json({ message: "make a payment to create a team" });
+    }
     user.Role = "TeamLeader";
     let teamId = uid();
     while (await Team.exists({ teamId })) {
@@ -222,6 +227,16 @@ team.get("/requests", async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: e.message });
+  }
+});
+team.get("/score", async (req, res) => {
+  try {
+    const score = await Team.findById(req.jwt_payload.team, { points: 1 });
+    return res.status(200).json({ score });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({ message: "Server Error" });
   }
 });
 module.exports = team;

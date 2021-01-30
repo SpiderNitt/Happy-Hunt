@@ -1,7 +1,4 @@
-/* eslint-disable no-await-in-loop */
-
-// to be added in event scedule
-const Geo = require("geo-nearby");
+const geolib = require("geolib");
 const Mission = require("../database/models/Mission");
 const Team = require("../database/models/Team");
 const { io } = require("./timer");
@@ -31,84 +28,79 @@ const BonusAsync = async () => {
 const missionGenerator = async (points, teams, category) => {
   const result = await Mission.find({
     maxPoints: points,
+    isBonus: false,
     "assignedTeams.9": { $exists: false },
     Category: { $nin: category },
     _id: { $nin: teams.assignedMissions },
   });
-  const dataSet = Geo.createCompactSet(result, {
-    id: "_id",
-    lat: ["Location", "Lat"],
-    lon: ["Location", "Long"],
-  });
-  const geo = new Geo(dataSet, { sorted: true });
-  let mission = [];
-  let distance = 1000;
-  while (!mission.length) {
-    distance += 1000;
-    mission = geo.nearBy(
-      teams.avgLocation.Lat,
-      teams.avgLocation.Long,
-      distance
+  if (result.length === 0) {
+    console.log("No missions found");
+    return { _id: null };
+  }
+  let distance = 100000000000;
+  let mission;
+  for (let i = 0; i < result.length; i += 1) {
+    const missionDistance = geolib.getDistance(
+      { latitude: teams.avgLocation.Lat, longitude: teams.avgLocation.Long },
+      { latitude: result[i].Location.Lat, longitude: result[i].Location.Long }
     );
+    if (missionDistance < distance) {
+      distance = missionDistance;
+      mission = result[i];
+    }
   }
   // console.log(distance);
-  // console.log(mission);
-  return mission[0];
+  // console.log(mission._id);
+  return mission;
 };
 // 0.009 latitude =1km 0.00947 longitude =1 km
-try {
-  BonusAsync();
-  const algo = setInterval(async () => {
-    if (counter > 2) {
-      clearInterval(algo);
-    }
+BonusAsync();
+const algo = () => {
+  const algorithm = setInterval(async () => {
     const teams = await Team.find({});
     // mission distribution
     for (let index = 0; index < teams.length; index += 1) {
-      console.log(index);
+      // console.log(index);
       const category = [];
       const mission1 = await missionGenerator(100, teams[index], category);
-      if (typeof mission1 !== "undefined") {
-        teams[index].assignedMissions.push(mission1.i);
-        await teams[index].save();
-        const missionUpdate = await Mission.findByIdAndUpdate(mission1.i, {
-          $push: { assignedTeams: teams[index]._id },
-        });
-        category.push(missionUpdate.Category);
-      } else {
-        console.log("No more 100 missions");
-      }
+      teams[index].assignedMissions.push(mission1._id);
+      await teams[index].save();
+      await Mission.findByIdAndUpdate(mission1._id, {
+        $push: { assignedTeams: teams[index]._id },
+      });
+      category.push(mission1.Category);
       const mission2 = await missionGenerator(100, teams[index], category);
-      // console.log(mission2);
-      if (typeof mission2 !== "undefined") {
-        teams[index].assignedMissions.push(mission2.i);
-        await teams[index].save();
-        const missionUpdate = await Mission.findByIdAndUpdate(mission2.i, {
-          $push: { assignedTeams: teams[index]._id },
-        });
-        category.push(missionUpdate.Category);
-      } else {
-        console.log("No more 100 missions");
-      }
+      teams[index].assignedMissions.push(mission2._id);
+      await teams[index].save();
+      await Mission.findByIdAndUpdate(mission2._id, {
+        $push: { assignedTeams: teams[index]._id },
+      });
+      category.push(mission2.Category);
       const mission3 = await missionGenerator(200, teams[index], category); // 200 missions dont exist
-      if (typeof mission3 !== "undefined") {
-        teams[index].assignedMissions.push(mission3.i);
-        await teams[index].save();
-        await Mission.findByIdAndUpdate(mission3.i, {
-          $push: { assignedTeams: teams[index]._id },
-        });
-      } else {
-        console.log("No more 100 missions");
-      }
+      teams[index].assignedMissions.push(mission3._id);
+      await teams[index].save();
+      await Mission.findByIdAndUpdate(mission3._id, {
+        $push: { assignedTeams: teams[index]._id },
+      });
       // bonus missions
-      teams[index].assignedBonus.push(BonusMission100[counter]._id);
-      teams[index].assignedBonus.push(BonusMission200[counter]._id);
+      if (BonusMission100.length <= counter) {
+        console.log("No bonus missions found");
+      } else {
+        teams[index].assignedBonus.push(BonusMission100[counter]._id);
+      }
+      if (BonusMission200.length <= counter) {
+        console.log("No bonus missions found");
+      } else {
+        teams[index].assignedBonus.push(BonusMission200[counter]._id);
+      }
       await teams[index].save();
     }
     counter += 1;
     io.emit("missions");
-    algo();
+    if (counter === 3) {
+      clearInterval(algorithm);
+      console.log("All missions assigned to all teams");
+    }
   }, 1800000);
-} catch (e) {
-  console.log(e.msg);
-}
+};
+module.exports = algo;

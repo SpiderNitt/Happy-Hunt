@@ -10,13 +10,19 @@ const MissionSchema = new Schema({
   },
   isBonus: {
     type: Boolean,
+    required: true,
   },
   clue: [
     {
-      type: String,
-      required: true,
+      text: {
+        type: String,
+      },
+      photos: {
+        type: String,
+      },
     },
   ],
+
   answer_Type: {
     // Picture/Video/Picture and Location /Text
     type: String,
@@ -30,9 +36,11 @@ const MissionSchema = new Schema({
   Location: {
     Lat: {
       type: Number,
+      required: true,
     },
     Long: {
       type: Number,
+      required: true,
     },
   },
   Other_Info: {
