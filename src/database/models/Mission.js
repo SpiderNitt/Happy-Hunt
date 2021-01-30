@@ -14,15 +14,15 @@ const MissionSchema = new Schema({
   },
   clue: [
     {
-      type: String,
-      required: true,
+      text: {
+        type: String,
+      },
+      photos: {
+        type: String,
+      },
     },
   ],
-  Photos: [
-    {
-      type: String,
-    },
-  ],
+
   answer_Type: {
     // Picture/Video/Picture and Location /Text
     type: String,

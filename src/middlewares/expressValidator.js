@@ -16,7 +16,7 @@ module.exports = {
   MissionValidator: [
     body("Category").isString().notEmpty(),
     body("isBonus").isBoolean().notEmpty(),
-    body("clue").isArray().notEmpty(),
+    body("statement").isArray().notEmpty(),
     body("answer_Type").isString().notEmpty(),
     body("MissionName").isString().notEmpty(),
     body("answer").isArray().notEmpty(),
