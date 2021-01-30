@@ -63,6 +63,7 @@ export default function UserLogin(props) {
     }
     const response = await userLogin(body);
     if(!response.ok){
+      setLoading(false);
       console.log(response.problem);
       console.log(response.data);
       setInfo(response.data.message);
