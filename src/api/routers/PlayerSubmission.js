@@ -17,7 +17,6 @@ player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
     const { team } = req.jwt_payload;
     const user = await Team.findById(team);
     const { mission, answer } = req.body;
-    console.log(req.body);
     if (!mission) return res.status(400).json({ message: "Fill all fields" });
     const submit = await Mission.findById(mission);
     const answerType = submit.answer_Type;
