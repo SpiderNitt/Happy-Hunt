@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
  
-import ImagePreview from './ImagePreview'; // source code : ./src/demo/AppWithImagePreview/ImagePreview
+// import ImagePreview from './ImagePreview'; 
  
 function Capture (props) {
   // const [dataUri, setDataUri] = useState('');
@@ -18,6 +18,10 @@ function Capture (props) {
     <div>
       <Camera onTakePhotoAnimationDone = {handleTakePhotoAnimationDone}
         isFullscreen={true}
+        idealResolution={{
+          width:150,
+          height:150
+        }}
       />
       {/* {
         (dataUri)
