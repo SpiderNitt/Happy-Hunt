@@ -10,7 +10,7 @@ const countDown = require("./routers/countdown");
 const { jwtVerify } = require("../middlewares/jwt");
 
 api.use("/", payment);
-// api.use("/", jwtVerify);
+api.use("/", jwtVerify);
 
 // comman route
 api.use("/", openApi);
