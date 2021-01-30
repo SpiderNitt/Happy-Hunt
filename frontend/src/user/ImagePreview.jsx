@@ -32,7 +32,7 @@ const useStyles = makeStyles({
         color:'white', 
         fontFamily:'tahoma', 
         backgroundColor:"navy",
-        margin:5
+        margin:5,
     },
 });
 

@@ -14,7 +14,6 @@ const { TeamenRollVerify } = require("../../middlewares/team");
 
 player.post(
   "/submission",
-  multer({ storage: multer.memoryStorage() }).single("answer"),
   playerVerify,
   TeamenRollVerify,
   async (req, res) => {
@@ -34,9 +33,9 @@ player.post(
       try {
         switch (answerType) {
           case "Picture": {
-            if (req.file === undefined || req.file == null)
+            if (req.body.answer === undefined || req.body.answer == null)
               return res.status(400).json({ message: "No picture submission" });
-            answer = req.file.buffer.toString("base64");
+              answer = req.body.answer;
             break;
           }
 
@@ -357,10 +356,10 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     });
   }
 });
-player.get("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
+player.post("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
   try {
     const { MissionId } = req.body;
-    const mission = await Mission.findById(MissionId);
+    const mission = await Mission.findById(MissionId).lean();
     const hint = mission.Hints;
     const activity = await Activity.findOne({
       team: req.jwt_payload.team,
