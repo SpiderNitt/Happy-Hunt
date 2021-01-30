@@ -7,9 +7,8 @@ import ErrorMessage from '../components/ErrorMessage';
 import { teamRegister } from '../api/team';
 import { useHistory } from 'react-router';
 import Routes from '../utils/routes';
-import Lottie from 'react-lottie';
-import animationData from '../assets/animations/teamwork.json';
 import Message from '../components/Message';
+import Animation from '../components/Animation';
 
 const validationSchema = Yup.object().shape({
   teamName: Yup.string().required().label("Team Name"),
@@ -45,14 +44,6 @@ function CreateTeam(props) {
   const [messageType,setMessageType] = useState('');
   const classes = useStyles();
   const History = useHistory();
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
-    }
-  };
   const handleSubmit = async({ teamName }, { resetForm }) => {
     const response = await teamRegister({
       teamName: teamName
@@ -83,11 +74,7 @@ function CreateTeam(props) {
     <CssBaseline />
     {info && <Message show={true} message={info} type={messageType} />}
     <div className={classes.paper}>
-        <Lottie options={defaultOptions}
-          height={200}
-          width={200}
-          style={{ marginTop: '20%' }}
-        />
+        <Animation AnimationRoute={'team'} />
         <Typography component="h1" variant="h5" style={{ fontFamily: 'Lucida Handwriting', fontWeight: 'bold' }}>
           Register your team
         </Typography>

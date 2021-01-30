@@ -57,7 +57,6 @@ function PictureClues(props) {
     //         console.log(response)
     //     });
     // }
-
     const onSucces = location=>{
         setLocation({
             loaded:true,

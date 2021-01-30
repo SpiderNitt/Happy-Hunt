@@ -1,12 +1,13 @@
 import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core';
-import { GroupAdd } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
 import * as Yup from "yup";
-import { userMobileNoVerify } from '../api/auth';
 import Routes from '../utils/routes';
 import { joinTeam } from '../api/team';
+import Animation from '../components/Animation';
+import { useHistory } from 'react-router';
+import Message from '../components/Message';
 
 const validationSchema = Yup.object().shape({
     teamId: Yup.string().required().label("Team ID"),
@@ -40,22 +41,30 @@ const useStyles = makeStyles((theme) => ({
 
 function JoinTeam(props) {
     const styles = useStyles();
+    const history = useHistory();
+    const [message, setmessage] = useState('')
+    const [messageType, setmessageType] = useState('')
     const handleSubmit = async({teamId}, { resetForm }) => {
         const response = await joinTeam(teamId);
         if(!response.ok){
-            console.log(response.problem);
-            console.log(response);
+            console.log(response.status ,response.originalError, response.problem);
+            console.log(response.data.message);
+            setmessage(response.data.message);
+            setmessageType("error");
             return;
         }
-        console.log(response.data);
+        setmessage(response.data.message);
+        setmessageType("success");
         resetForm();
-        // props.history.push(Routes.USER_PROFILE);
+        setTimeout(() => {
+            history.push(Routes.USER_PROFILE);
+        }, 1000);
     }
+
     return (
         <Container className={styles.root}>
-            <div style={{ fontSize: 50 }}>
-                <GroupAdd fontSize="inherit" />
-            </div>
+            {message && <Message message={message} show={true} type={messageType} />}
+            <Animation AnimationRoute={'team'} />
             <Formik
             initialValues={{ teamId: '' }}
             validationSchema={validationSchema}

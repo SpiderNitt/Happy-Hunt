@@ -41,7 +41,7 @@ function LocationClues(props) {
         fetch();
     },[]);
 
-    const onSucces = location=>{
+    const onSuccess = location=>{
         setLocation({
             loaded:true,
             coordinates:{
@@ -52,7 +52,7 @@ function LocationClues(props) {
     };
 
     const getLocation=()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
+        navigator.geolocation.getCurrentPosition(onSuccess);
     };
 
     const body= {
@@ -123,7 +123,7 @@ function LocationClues(props) {
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button}  href="/photo">Take Picture!</Button>
-                <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                <Button className={classes.Button} onClick={submitAnswer}>Submit</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal

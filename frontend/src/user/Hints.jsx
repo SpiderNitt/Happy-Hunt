@@ -11,24 +11,6 @@ function Hints(props) {
     const [disable2, setDisable2] = useState(false);
     const [data, setData]= useState([]);
     const [hints, setHints] = useState(props.data);
-    // useEffect(() => {
-    //     setHints(props.data);
-    //     console.log(hints);
-    // }, [])
-
-    // const body={
-    //     MissionId: `${props.id}`
-    // }
-    
-    // const fetch = async () => {
-    //     const result = await client.post('/api/player/hint', body);
-    //     console.log(result.data);
-    //     setData(result.data);
-    // }
-
-    // useEffect(() => {
-    // fetch();
-    // }, []);
 
     const onButtonClickHandler1 = () => {
         hints.length > 1 && setshowSecondHint(true);
@@ -36,7 +18,8 @@ function Hints(props) {
     };
 
     const onButtonClickHandler2 = () => {
-        hints.length === 3 && setshowThirdHint(true);
+        console.log(hints.length)
+        hints.length > 2 && setshowThirdHint(true);
         setDisable2(true);
     };
 
@@ -60,25 +43,20 @@ function Hints(props) {
             {showThirdHint && 
             <ul>
                 {hints[2].Content}
-
                 <span style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic"}}>
                 -{hints[2].MaxPoints}
                 </span>
 
             </ul>
             }
-        
-            {/* <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
-                Back
-            </Button> */}
             <Button variant="contained" onClick={onButtonClickHandler1} disabled={disable1} color="primary" style={{margin:5}}>
                  View second hint
             </Button>
-            {/* {showSecondHint && 
+            {showThirdHint && 
                 <Button variant="contained" onClick={onButtonClickHandler2} disabled={disable2} color="primary" style={{margin:5}}>
                     Hint 3
                 </Button>
-            } */}
+            }
            </>}
         </div>
     );

@@ -55,7 +55,6 @@ function TextClues(props) {
       useEffect(() => {
         fetch();
       }, [props.match.params.id]);
-
       console.log(data)
 
       const body= {
@@ -109,6 +108,7 @@ function TextClues(props) {
 
       }
 
+      console.log(data)
     const handleOpen = () => {
       setOpen(true);
     };
