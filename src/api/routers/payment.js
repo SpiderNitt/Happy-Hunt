@@ -14,26 +14,23 @@ payment.post("/payment", async (req, res) => {
     if (!user) {
       user = await User.findOne({ phoneNo });
       if (!user) {
-        return res.status(404);
+        console.log(`${phoneNo}(${emailId}) cant be found`);
+        return res.status(200).json({ message: "Success" });
       }
     }
     let result;
-    if (user.team) {
-      if (amount >= 399 && amount < 499)
-        result = await Team.updateOne({ _id: user.team }, { Paid: 4 });
-      else if (amount >= 499)
-        result = await Team.updateOne({ _id: user.team }, { Paid: 6 });
-    } else if (amount >= 399 && amount < 499)
+    if (amount >= 399 && amount < 499)
       result = await User.updateOne({ emailId }, { Paid: 4 });
     else if (amount >= 499)
       result = await User.updateOne({ emailId }, { Paid: 6 });
     if (result.nModified === 1) {
-      return res.status(200);
+      return res.status(200).json({ message: "Success" });
     }
-    return res.status(400);
+    console.log(`${phoneNo}(${emailId}) has already paid and is paying again`);
+    return res.status(200).json({ message: "Success" });
   } catch (err) {
     console.log(err.message);
-    return res.status(500);
+    return res.status(500).json({ message: "Server error, try again later" });
   }
 });
 payment.post("/payment_1", async (req, res) => {
