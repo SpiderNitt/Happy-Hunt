@@ -9,6 +9,7 @@ import { useHistory } from 'react-router';
 import Routes from '../utils/routes';
 import Message from '../components/Message';
 import Animation from '../components/Animation';
+import { Link } from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
   teamName: Yup.string().required().label("Team Name"),
@@ -97,6 +98,12 @@ function CreateTeam(props) {
               <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
                 Register
               </Button>
+              <br/>
+              <br/>
+              <span>Pay for the event </span>
+              <a href={Routes.USER_PAYMENT}>
+                here!
+              </a>
           </Form>
         )}
         </Formik>

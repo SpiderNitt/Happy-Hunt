@@ -24,6 +24,7 @@ import VerificationEmail from "../user/VerificationEmail";
 import { AuthContext } from "../api/authContext";
 import AdminNav from "./AdminNavigation";
 import MessageBot from "../components/MessageBot";
+import PaymentPage from "../user/PaymentPage";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
   const authContext = useContext(AuthContext);
@@ -78,6 +79,12 @@ function UserNav() {
           <TopNav />
           <div style={{ marginTop: 70 }}>
             <JoinTeam />
+          </div>
+        </UserAuthenticatedRoute>
+        <UserAuthenticatedRoute path={Routes.USER_PAYMENT} exact>
+          <TopNav />
+          <div style={{ marginTop: 70 }}>
+            <PaymentPage />
           </div>
         </UserAuthenticatedRoute>
         <Route path="/photo" exact component={Capture} />
