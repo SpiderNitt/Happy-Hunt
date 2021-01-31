@@ -22,7 +22,12 @@ const dummyData = {
     mission: {
         Location: { Lat: 23, Long: 24 },
         Category: 'Picture and Location',
-        clue: 'I am clueless yaaar',
+        clue: [
+            {
+                text: 'Hey, yo',
+                photos: ""
+            }
+        ],
         answer_Type: 'Picture and Location',
         answer: ['orange', 'apple', 'mango'],
         Other_Info: 'I am orange'
