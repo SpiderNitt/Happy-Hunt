@@ -23,10 +23,8 @@ function PictureClues(props) {
     const [data, setData]= useState([]);
     const [imageSelected, setImageSelected] = useState("");
     const [evaluation, showEvaluation]= useState(false);
-    
+    const [clues,setClues] = useState([]);
     const [open, setOpen] = useState(false);
-    const [resultoutput, showResultoutput]= useState(false);
-    const [result, setResult]= useState([]);
     const [onCam, setonCam] = useState(false);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
@@ -38,7 +36,8 @@ function PictureClues(props) {
     const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
         console.log(result.data);
-        setData(result.data.mission);
+        await setData(result.data.mission);
+        await setClues(result.data.mission.clue);
     }
 
       useEffect(() => {
@@ -46,17 +45,6 @@ function PictureClues(props) {
       }, [props.match.params.id]);
 
       console.log(data)
-    
-    // const uploadImage=()=>{
-    //     const formData= new FormData();
-    //     formData.append("file", imageSelected);
-    //     formData.append("upload_preset", "haqdfpiu");
-
-    //     api.post ("/upload", formData)
-    //     .then((response)=>{
-    //         console.log(response)
-    //     });
-    // }
  
     const onSuccess = location=>{
         setLocation({
@@ -77,8 +65,8 @@ function PictureClues(props) {
         "MissionId":props.match.params.id,
         "Location":{
             "coords":{
-                "latitude":`${location.coordinates.Lat}`,
-                "longitude":`${location.coordinates.Long}`
+                "latitude":`${location.coordinates.lat}`,
+                "longitude":`${location.coordinates.long}`
             }
         }
     }
@@ -88,7 +76,7 @@ function PictureClues(props) {
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
           console.log(result.data.message)
-          setAns(result.data.message)
+          await setAns(result.data.message)
           showEvaluation(true)
           return;
         }
@@ -98,28 +86,6 @@ function PictureClues(props) {
         console.log(ans);
         console.log(dataUri);
       }
-     
-      
-    const handleSubmit = async() => {
-        const body = {
-            mission: `${props.match.params.id}`,
-            answer: `${dataUri}`
-        }
-        
-
-        const response = await client.post('api/player/submission', body)
-        if(!response.ok){
-          console.log(response.problem);
-          console.log(response.data);
-          setResult(response.data.message)
-          showResultoutput(true)
-          return;
-        }
-        setResult(response.data)
-        console.log(result)
-        showResultoutput(true)
-
-      }
     
     const handleOpen = () => {
         setOpen(true);
@@ -128,10 +94,6 @@ function PictureClues(props) {
       const handleClose = () => {
         setOpen(false);
     };
-
-    // if(onCam && !dataUri){
-    //     return <Capture setDataUri={setDataUri} setonCam={setonCam} />;
-    // }
     
     return (       
         <React.Fragment >
@@ -150,65 +112,53 @@ function PictureClues(props) {
                     <div style= {{display:'flex', alignItems:'center', justifyContent:'center' }}>
                     <img src={Sample3} />
                     </div>
-                <div className={classes.task}>  
-                   <p>
-                   {data.isBonus ? data.clue[0] : ''} 
-                    </p>
-                    <p className={classes.points}>{data.maxPoints}</p>
-                </div>
-                {dataUri && <img src={dataUri} width="250" height="250"/>}
-                
-                {!data.isBonus ? 
-                <div>
-                    <LocationOnIcon className={classes.icon} onClick={getLocation}/>
-                </div>
-                 : ''} 
+                    {clues !== [] && clues.map((clue, index) => (
+                    <div key={index} index={index + 1}>
+                    <p>{clue.text}</p>
+                    {clue.photos && <img src={clue.photos} style={{width:350, height:350}}/>}
+                    </div>
+                    ))}
                     
-                {evaluation? <p>{ans}</p>: ''}
-               {/* <input type="file" onChange={(e)=>{
-                    setImageSelected(e.target.files[0]);
-                    }
-                }/>
+                    {!data.isBonus ? 
+                    <div>
+                        <LocationOnIcon className={classes.icon} onClick={getLocation}/>
+                    </div>
+                    : ''} 
+                        
+                    {evaluation? <p>{ans}</p>: ''}
+                    <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
+                    <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
+                    <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Take Picture!</Button>
+                    {!data.isBonus ? 
+                    <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                    : ''} 
                 
-                <Button type="submit" onClick={uploadImage}  style={{backgroundColor:"#4863A0", color:"whitesmoke"}}>
-                    Submit
-                </Button> */}
-                {resultoutput?  <p>{result}</p> :''}
-                <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
-                <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} onClick={() => setonCam(true)}>Take Picture!</Button>
-                <Button className={classes.Button} onClick={handleSubmit}>Submit Picture</Button>
-                {!data.isBonus ? 
-                 <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
-                 : ''} 
-               
-                {!data.isBonus ? (<div>
-                    <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
-                <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                timeout: 500,
-                }}
-                >
-                <Fade in={open}>
-                <div className={classes.paper}>
-                    <Hints id={data._id}/>
-                </div>
-                </Fade>                
-                </Modal>
-                </div>) :''}
+                    {!data.isBonus ? (<div>
+                        <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                    <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={open}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                    timeout: 500,
+                    }}
+                    >
+                    <Fade in={open}>
+                    <div className={classes.paper}>
+                        <Hints id={data._id}/>
+                    </div>
+                    </Fade>                
+                    </Modal>
+                    </div>) :''}
                 
             </Container>}
         </React.Fragment>
       );
 }
-
 
 const useStyles = makeStyles((theme)=>({
     task: {
@@ -260,4 +210,3 @@ const useStyles = makeStyles((theme)=>({
   }));
 
 export default PictureClues;
-

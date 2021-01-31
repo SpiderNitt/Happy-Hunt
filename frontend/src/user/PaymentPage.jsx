@@ -2,14 +2,23 @@ import React from 'react';
 import Lottie from 'react-lottie';
 import useScript from '../hooks/useScript';
 import animationData from '../assets/animations/payment.json';
+import { Grid } from '@material-ui/core';
 
 function PaymentPage(props) {
     useScript(
         "https://checkout.razorpay.com/v1/payment-button.js", 
-        "form", 
+        "form1", 
         { 
             key: "data-payment_button_id", 
-            value: "pl_GMLD1LEpcdAsm6" 
+            value: "pl_GVu6sNoBacor2N" 
+        }
+    );
+    useScript(
+        "https://checkout.razorpay.com/v1/payment-button.js", 
+        "form1", 
+        { 
+            key: "data-payment_button_id", 
+            value: "pl_GVuB6WNY5eOgND" 
         }
     );
     const defaultOptions = {
@@ -28,9 +37,14 @@ function PaymentPage(props) {
                     height={200}
                 />
             </div>
-            <div style={{ marginTop: 100 }}>
-                <form className="form"></form>
-            </div>
+            <Grid container style={{ marginTop: '10%' }}>
+                <Grid item sm={12} style={{ marginLeft: '7%' }}>
+                    <form className="form1"></form>
+                </Grid>
+                <Grid item sm={12} style={{ marginLeft: '7%' }}>
+                    <form className="form2"></form>
+                </Grid>
+            </Grid>
         </div>
     );
 }

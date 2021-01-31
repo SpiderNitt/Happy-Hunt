@@ -10,6 +10,8 @@ const Routes = {
   USER_LOCATION_CLUE: "/user/happy-hunt/location-clue/:id",
   USER_TEXT_CLUE: "/user/happy-hunt/text-clue/:id",
   USER_ACTIVITY: "/user/happy-hunt/activities",
+  USER_PAYMENT: "/user/happy-hunt/payment",
+  USER_CAPTURE: "/user/happy-hunt/camera/:id",
   USER_NOTIFICATION: "/user/happy-hunt/notifications",
   USER_REGISTER_TEAM: "/user/happy-hunt/register/team",
   USER_JOIN_TEAM: "/user/happy-hunt/join/team",
