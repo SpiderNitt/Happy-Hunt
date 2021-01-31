@@ -70,8 +70,6 @@ export default function UserLogin(props) {
       setmessageType("error");
       return;
     }
-    setInfo("Login Successful!");
-    setmessageType("success");
     setLoading(false);
     setSuccessLogin(true);
     const {exp} = await jwtDecode(response.data.token)

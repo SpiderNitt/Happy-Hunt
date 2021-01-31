@@ -20,6 +20,7 @@ function TextClues(props) {
     const [result, setResult]= useState([]);
     const [hints, setHints]= useState([]);
     const [evaluation, showEvaluation]= useState(false);
+    const [disable, setDisable]= useState(true);
     const [resultoutput, showResultoutput]= useState(false);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
@@ -27,46 +28,47 @@ function TextClues(props) {
         coordinates: {lat:"", long:""}
     });
 
-    const onSucces = location=>{
-        setLocation({
-            loaded:true,
+const onSucces = location=>{
+    setLocation({
+        loaded:true,
             coordinates:{
                 lat: location.coords.latitude,
                 long: location.coords.longitude
-            }
-        })
-    };
+        }
+    })
+};
 
-    const getLocation=()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
+const getLocation=()=>{
+    navigator.geolocation.getCurrentPosition(onSucces);
+    setDisable(false)
 
-    }
-    console.log(location);
-    console.log(props)
+}
+console.log(location);
+console.log(props)
     
-    const fetch = async () => {
+const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
         console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
-    }
+}
 
-      useEffect(() => {
+    useEffect(() => {
         fetch();
-      }, [props.match.params.id]);
-      console.log(data)
+    }, [props.match.params.id]);
+    console.log(data)
 
+      const submitAnswer = async () => {
       const body= {
-        "MissionId":props.match.params.id,
-        "Location":{
-            "coords":{
-                "latitude":`${location.coordinates.Lat}`,
-                "longitude":`${location.coordinates.Long}`
+            "MissionId":props.match.params.id,
+            "Location":{
+                "coords":{
+                    "latitude":`${location.coordinates.lat}`,
+                    "longitude":`${location.coordinates.long}`
+                }
             }
         }
-    }
-      const submitAnswer = async () => {
         const result = await client.post('api/player/locationSubmission', body)
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
@@ -108,7 +110,7 @@ function TextClues(props) {
 
       }
 
-      console.log(data)
+    console.log(data)
     const handleOpen = () => {
       setOpen(true);
     };
@@ -132,15 +134,24 @@ function TextClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info}
                 </p>
-                 {clues && clues.length > 1 ? (
-                        <>
-                        <p>{clues[0]}</p>
-                        <img alt="clue" src={clues[1]} width='100%' />
-                        </>
-                    ) : (
-                        <p>{clues[0]}</p>
-                    )
-                }
+                {clues !== [] && clues.map((clue, index) => (
+                    <div key={index} index={index + 1}>
+                    <p>{clue.text}</p>
+                    {clue.photos && <img src={clue.photos} style={{width:'100%'}} alt="text-clue" />}
+                    </div>
+                    
+                ))}
+                {/* { clues[0] !== [] && <>
+                    <p>{(clues[0]).text}</p>
+                    {clues[0].photos && <img src={clues[0].photos} style={{width:350, height:350}}/>}
+                </>}
+                {clues[1] ?
+                    <div>
+                        <p>{(clues[1]).text}</p>
+                        {clues[1].photos && <img src={clues[1].photos} style={{width:350, height:350}}/>}
+                    </div> :""
+                }              
+                <br/><br/> */}
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
                 {!data.isBonus?
@@ -165,10 +176,9 @@ function TextClues(props) {
                 {resultoutput ? <div>{result}</div> : ''}
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button}  href="/photo">Take Picture!</Button>
                 <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
                 {!data.isBonus ? 
-                 <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                 <Button className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
                  : ''} 
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
@@ -262,4 +272,3 @@ const useStyles = makeStyles((theme)=>({
     }));
 
 export default TextClues;
-
