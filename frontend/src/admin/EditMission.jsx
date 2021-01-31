@@ -15,7 +15,14 @@ const dummyData = {
         Category: 'Graphic',
         MissionName: 'Sample Mission Name',
         clue: [
-            'Sample clue 1', ''
+            {
+                text: 'Hi',
+                photos: ''
+            },
+            {
+                text: 'Hello world',
+                photos: ''
+            }
         ],
         Location: {
             Lat: 12.34,
@@ -75,12 +82,28 @@ const NewMission = (props) => {
             }
         }
     }
+    const getClueText = (index) => {
+        if (index <= data.mission.clue.length - 1) {
+            return data.mission.clue[0].text
+        }
+        else {
+            return '';
+        }
+    }
+    const checkBonus = (category) => {
+        if (category === 'Bonus') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     const formik = useFormik({
         initialValues: {
             Category: data.mission['Category'],
             MissionName: data.mission['MissionName'],
-            clue1: data.mission.clue[0],
-            clue2: '',
+            clue1: getClueText(0),
+            clue2: getClueText(1),
             Other_Info: data.mission['Other_Info'],
             maxPoints: data.mission['maxPoints'],
             answer: data.mission['answer'].join(","),
@@ -99,14 +122,11 @@ const NewMission = (props) => {
             let answerArray = [];
             answerArray = answer.split(',');
             const cluesArray = [];
-            if (clue2 === "") {
+            if (clue1 !== "") {
                 cluesArray.push(clue1);
             }
-            else {
-                cluesArray.push(clue1);
-                if (values.file !== undefined) {
-                    cluesArray.push(clue2);
-                }
+            if (clue2 !== "") {
+                cluesArray.push(clue2);
             }
             let hintsArray = [];
             if (Category !== 'Bonus') {
@@ -117,7 +137,9 @@ const NewMission = (props) => {
             const object = {
                 id: data.mission['_id'],
                 Category,
+                clue: cluesArray,
                 answer: answerArray,
+                isBonus: checkBonus(Category),
                 answer_Type,
                 Other_Info,
                 Location: {

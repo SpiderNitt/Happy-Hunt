@@ -90,10 +90,10 @@ function AdminMembers(props) {
       setData(result.data);
     }
     fetchData();
-  }, []);
-  const handleOpen = () => {
+  }, [data]);
+  function handleOpen() {
     setOpen(true);
-  };
+  }
   const handleClose = () => {
     setOpen(false);
   };

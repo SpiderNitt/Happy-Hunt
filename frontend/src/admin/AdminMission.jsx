@@ -51,7 +51,7 @@ function AdminMission(props) {
             setLoading(false);
         }
         fetchData();
-    }, []);
+    }, [data]);
     return (
         <div>
             {loading && <LoadingPage />}

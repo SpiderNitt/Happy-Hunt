@@ -61,7 +61,7 @@ function MissionDetail(props) {
             if (hint === null) {
                 return 'No hint';
             }
-            return `${hint.Content}: ${hint.MaxPoints}`;
+            return `"${hint.Content}": ${hint.MaxPoints}`;
         })
         return hintsArray.join(',')
     }

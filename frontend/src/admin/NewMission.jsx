@@ -17,6 +17,14 @@ const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const NewMission = (props) => {
     const { history } = props;
+    const checkBonus = (category) => {
+        if (category === 'Bonus') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     const formik = useFormik({
         initialValues: {
             Category: '',
@@ -34,19 +42,12 @@ const NewMission = (props) => {
         enableReinitialize: true,
         onSubmit: async (values) => {
 
-            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, file, hint1, maxPointsHint1, hint2, maxPointsHint2 } = values;
+            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, hint1, maxPointsHint1, hint2, maxPointsHint2, Photos } = values;
             let answerArray = [];
             answerArray = answer.split(',');
             const cluesArray = [];
-            if (clue2 === "") {
-                cluesArray.push(clue1);
-            }
-            else {
-                cluesArray.push(clue1);
-                if (values.file !== undefined) {
-                    cluesArray.push(clue2);
-                }
-            }
+            cluesArray.push(clue1);
+            cluesArray.push(clue2);
             let hintsArray = [];
             if (Category !== 'Bonus') {
                 hintsArray.push({ 'Content': hint1, 'MaxPoints': maxPointsHint1 });
@@ -58,8 +59,9 @@ const NewMission = (props) => {
             }
             const object = {
                 Category,
-                clue: cluesArray,
+                isBonus: checkBonus(Category),
                 answer: answerArray,
+                statement: cluesArray,
                 answer_Type,
                 Other_Info,
                 Location: {
@@ -71,7 +73,7 @@ const NewMission = (props) => {
                 ServerEvaluation: ServerEvaluationBoolean,
                 maxPoints,
                 Hints: hintsArray,
-                file
+                Photos
             };
             console.log(object)
             const response = await client.post('api/admin/mission/add', object);
@@ -99,7 +101,7 @@ const NewMission = (props) => {
                 width: '600px',
             }}>
                 <h3 style={{ textAlign: 'center' }}>Add a Mission</h3>
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} enctype='multipart/form-data'>
                     <TextField
                         fullWidth
                         id="Category"
@@ -147,12 +149,12 @@ const NewMission = (props) => {
                         error={formik.touched.clue2 && Boolean(formik.errors.clue2)}
                         helperText={formik.touched.clue2 && formik.errors.clue2}
                     />
-                    {(formik.values.clue2 !== "" && formik.values.clue1 !== "") &&
+                    {(formik.values.clue1 !== "") &&
                         <div>
                             <br /><br />
                             <div className="form-group">
                                 <input id="file" name="file" type="file" multiple onChange={(event) => {
-                                    formik.setFieldValue("file", event.currentTarget.files);
+                                    formik.setFieldValue("Photos", event.currentTarget.files);
                                 }} />
                             </div>
                         </div>
