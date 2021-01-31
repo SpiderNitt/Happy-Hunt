@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
  
-// import ImagePreview from './ImagePreview'; 
- 
 function Capture (props) {
   // const [dataUri, setDataUri] = useState('');
  
-  function handleTakePhotoAnimationDone (dataUri) {
+  async function handleTakePhotoAnimationDone (dataUri) {
     console.log('takePhoto');
+    const image = new Image();
+    image.src = dataUri;
+    console.log(image)
     props.setDataUri(dataUri);
     props.setonCam(false);
   }
