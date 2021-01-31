@@ -9,20 +9,20 @@ Router.get("/feed", async (req, res) => {
       .populate("mission")
       .exec();
     const feedToBeShown = [];
+    // console.log(feeds);
     for (let index = 0; index < feeds.length; index += 1) {
-      const details = {};
-      details.MissionName = feeds[index].mission.MissionName;
-      details.TeamName = feeds[index].team.teamName;
-      details.likes = feeds[index].likes;
-      details._id = feeds[index]._id;
-      details.team_id = feeds[index].team._id;
-      details.Date = feeds[index].Date;
-
+      console.log(feeds[index].mission);
       if (feeds[index].mission.Feed) {
-        feedToBeShown.push(details);
+        feedToBeShown.push({
+          MissionName: feeds[index].mission.MissionName,
+          TeamName: feeds[index].team.teamName,
+          likes: feeds[index].likes,
+          _id: feeds[index]._id,
+          team_id: feeds[index].team._id,
+          Date: feeds[index].Date,
+        });
       }
     }
-
     return res.status(200).json({ activityFeeds: feedToBeShown });
   } catch (err) {
     console.log(err);

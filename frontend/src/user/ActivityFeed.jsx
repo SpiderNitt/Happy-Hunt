@@ -49,10 +49,8 @@ function ActivityFeed() {
       setLoading(false);
       setData(result.data.activityFeeds);
   }
-    fetch();
-   
-}, []);
-console.log(data)
+  fetch();
+  }, []);
 
 const getLike= ()=>{
   setLikedColor("red")
