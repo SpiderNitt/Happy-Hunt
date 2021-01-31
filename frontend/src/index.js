@@ -19,9 +19,6 @@ import App from "./App";
 // import AdminRegistration from "./AdminRegistration";
 // import Template from "./user/Template";
 // import * as serviceWorker from "./serviceWorker";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 // import PaymentPage from "./user/PaymentPage";
 
 ReactDOM.render(<App />, document.getElementById("root"));
-
-serviceWorkerRegistration.register();

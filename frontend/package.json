@@ -21,6 +21,7 @@
     "image-size": "^0.9.3",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
+    "object-to-formdata": "^4.1.0",
     "query-string": "^6.13.8",
     "react": "^17.0.1",
     "react-copy-to-clipboard": "^5.0.3",
