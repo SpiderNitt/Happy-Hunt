@@ -17,6 +17,7 @@ function LocationClues(props) {
     const [clues,setClues] = useState([]);
     const [hints,setHints] = useState([]);
     const [evaluation, showEvaluation]= useState(false);
+    const [disable, setDisable]= useState(true);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
@@ -54,19 +55,20 @@ function LocationClues(props) {
 
     const getLocation=()=>{
         navigator.geolocation.getCurrentPosition(onSuccess);
+        setDisable(false);
     };
     console.log(location)
 
-    const body= {
-        "MissionId":props.match.params.id,
-        "Location":{
-            "coords":{
-                "latitude":`${location.coordinates.Lat}`,
-                "longitude":`${location.coordinates.Long}`
+      const submitAnswer = async () => {
+        const body= {
+            "MissionId":props.match.params.id,
+            "Location":{
+                "coords":{
+                    "latitude":`${location.coordinates.lat}`,
+                    "longitude":`${location.coordinates.long}`
+                }
             }
         }
-    }
-      const submitAnswer = async () => {
         const result = await client.post('api/player/locationSubmission', body)
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
@@ -104,14 +106,13 @@ function LocationClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info} 
                 </p>
-                <p>{(clues[0]).text}</p>
-                {clues[0].photos && <img src={clues[0].photos} style={{width:350, height:350}}/>}
-                {clues[1] ?
-                <div>
-                    <p>{(clues[1]).text}</p>
-                    {clues[1].photos && <img src={clues[1].photos} style={{width:350, height:350}}/>}
-                </div>
-                :''}
+                {clues !== [] && clues.map((clue, index) => (
+                    <div key={index} index={index + 1}>
+                    <p>{clue.text}</p>
+                    {clue.photos && <img src={clue.photos} style={{width:350, height:350}}/>}
+                    </div>
+                    
+                ))} 
                 <br/>
                 <br/>
                 <p className={classes.points}>{data.maxPoints} points</p>
@@ -125,7 +126,7 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} onClick={submitAnswer}>Submit my Location</Button>
+                <Button className={classes.Button} onClick={submitAnswer}  disabled={disable}>Submit my Location</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal

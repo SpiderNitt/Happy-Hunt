@@ -9,6 +9,7 @@ const Routes = {
   USER_PICTURE_CLUE: "/user/happy-hunt/picture-clue/:id",
   USER_LOCATION_CLUE: "/user/happy-hunt/location-clue/:id",
   USER_TEXT_CLUE: "/user/happy-hunt/text-clue/:id",
+  USER_CAPTURE: "/user/happy-hunt/camera/:id",
   USER_ACTIVITY: "/user/happy-hunt/activities",
   USER_PAYMENT: "/user/happy-hunt/payment",
   USER_NOTIFICATION: "/user/happy-hunt/notifications",

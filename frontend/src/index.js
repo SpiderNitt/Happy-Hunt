@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
-import App from "./App";
+ import App from "./App";
 // import Camera from "./components/Camera";
 // import WebShare from "./components/WebShare";
 // import Message from "./components/Message";

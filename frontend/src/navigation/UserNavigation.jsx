@@ -12,7 +12,7 @@ import CreateTeam from "../user/CreateTeam";
 import PictureClues from '../user/PictureClues';
 import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
-import Capture from '../user/Photogragh';
+import Camera from '../user/Camera';
 
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
@@ -81,13 +81,6 @@ function UserNav() {
             <JoinTeam />
           </div>
         </UserAuthenticatedRoute>
-        <UserAuthenticatedRoute path={Routes.USER_PAYMENT} exact>
-          <TopNav />
-          <div style={{ marginTop: 70 }}>
-            <PaymentPage />
-          </div>
-        </UserAuthenticatedRoute>
-        <Route path="/photo" exact component={Capture} />
         <UserAuthenticatedRoute path={Routes.HOME} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}>
@@ -121,6 +114,16 @@ function UserNav() {
               <div style={{ marginTop: 70 }}>
                   <TopNav />
                   <PictureClues {...props} />
+              </div>
+             ) : (<Redirect to={Routes.WELCOME} />)
+        )} /> 
+        <Route
+              path={Routes.USER_CAPTURE}
+              exact
+              render={(props) => (
+              authContext.isAuthenticated() ? (
+              <div style={{ marginTop: 70 }}>
+                  <Camera {...props} />
               </div>
              ) : (<Redirect to={Routes.WELCOME} />)
         )} /> 

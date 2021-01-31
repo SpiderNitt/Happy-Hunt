@@ -20,6 +20,7 @@ function TextClues(props) {
     const [result, setResult]= useState([]);
     const [hints, setHints]= useState([]);
     const [evaluation, showEvaluation]= useState(false);
+    const [disable, setDisable]= useState(true);
     const [resultoutput, showResultoutput]= useState(false);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
@@ -39,6 +40,7 @@ const onSucces = location=>{
 
 const getLocation=()=>{
     navigator.geolocation.getCurrentPosition(onSucces);
+    setDisable(false)
 
 }
 console.log(location);
@@ -57,16 +59,16 @@ const fetch = async () => {
     }, [props.match.params.id]);
     console.log(data)
 
-    const body= {
-        "MissionId":props.match.params.id,
-        "Location":{
-            "coords":{
-                "latitude":`${location.coordinates.Lat}`,
-                "longitude":`${location.coordinates.Long}`
+      const submitAnswer = async () => {
+      const body= {
+            "MissionId":props.match.params.id,
+            "Location":{
+                "coords":{
+                    "latitude":`${location.coordinates.lat}`,
+                    "longitude":`${location.coordinates.long}`
+                }
             }
         }
-    }
-      const submitAnswer = async () => {
         const result = await client.post('api/player/locationSubmission', body)
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
@@ -132,16 +134,24 @@ const fetch = async () => {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info}
                 </p>
-                <p>{(clues[0]).text}</p>
-                {clues[0].photos && <img src={clues[0].photos} style={{width:350, height:350}}/>}
+                {clues !== [] && clues.map((clue, index) => (
+                    <div key={index} index={index + 1}>
+                    <p>{clue.text}</p>
+                    {clue.photos && <img src={clue.photos} style={{width:350, height:350}}/>}
+                    </div>
+                    
+                ))}
+                {/* { clues[0] !== [] && <>
+                    <p>{(clues[0]).text}</p>
+                    {clues[0].photos && <img src={clues[0].photos} style={{width:350, height:350}}/>}
+                </>}
                 {clues[1] ?
-                <div>
-                    <p>{(clues[1]).text}</p>
-                    {clues[1].photos && <img src={clues[1].photos} style={{width:350, height:350}}/>}
-                </div>
-                :''}
-                
-                <br/><br/>
+                    <div>
+                        <p>{(clues[1]).text}</p>
+                        {clues[1].photos && <img src={clues[1].photos} style={{width:350, height:350}}/>}
+                    </div> :""
+                }              
+                <br/><br/> */}
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
                 {!data.isBonus?
@@ -168,7 +178,7 @@ const fetch = async () => {
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
                 {!data.isBonus ? 
-                 <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                 <Button className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
                  : ''} 
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
