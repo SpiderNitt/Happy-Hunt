@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
-import App from "./App";
+// import App from "./App";
+import Camera from "./components/Camera";
 // import WebShare from "./components/WebShare";
 // import Message from "./components/Message";
 // import LoadingPage from "./components/LoadingPage";
@@ -17,5 +18,9 @@ import App from "./App";
 // import CreateTeam from "./CreateTeam.jsx";
 // import AdminRegistration from "./AdminRegistration";
 // import Template from "./user/Template";
+// import * as serviceWorker from "./serviceWorker";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<Camera />, document.getElementById("root"));
+
+serviceWorkerRegistration.register();
