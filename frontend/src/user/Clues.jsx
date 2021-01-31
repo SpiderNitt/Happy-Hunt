@@ -70,7 +70,7 @@ function Clues(props){
   useEffect(() => {
     fetch();
   }, []);
-
+  console.log(data)
   console.log(props)
 
   const RenderClues=()=>{

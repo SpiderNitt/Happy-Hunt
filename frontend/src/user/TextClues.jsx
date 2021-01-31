@@ -27,37 +27,37 @@ function TextClues(props) {
         coordinates: {lat:"", long:""}
     });
 
-    const onSucces = location=>{
-        setLocation({
-            loaded:true,
+const onSucces = location=>{
+    setLocation({
+        loaded:true,
             coordinates:{
                 lat: location.coords.latitude,
                 long: location.coords.longitude
-            }
-        })
-    };
+        }
+    })
+};
 
-    const getLocation=()=>{
-        navigator.geolocation.getCurrentPosition(onSucces);
+const getLocation=()=>{
+    navigator.geolocation.getCurrentPosition(onSucces);
 
-    }
-    console.log(location);
-    console.log(props)
+}
+console.log(location);
+console.log(props)
     
-    const fetch = async () => {
+const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
         console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
-    }
+}
 
-      useEffect(() => {
+    useEffect(() => {
         fetch();
-      }, [props.match.params.id]);
-      console.log(data)
+    }, [props.match.params.id]);
+    console.log(data)
 
-      const body= {
+    const body= {
         "MissionId":props.match.params.id,
         "Location":{
             "coords":{
@@ -108,7 +108,7 @@ function TextClues(props) {
 
       }
 
-      console.log(data)
+    console.log(data)
     const handleOpen = () => {
       setOpen(true);
     };
@@ -132,15 +132,16 @@ function TextClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info}
                 </p>
-                 {clues && clues.length > 1 ? (
-                        <>
-                        <p>{clues[0]}</p>
-                        <img alt="clue" src={clues[1]} width='100%' />
-                        </>
-                    ) : (
-                        <p>{clues[0]}</p>
-                    )
-                }
+                <p>{(clues[0]).text}</p>
+                {clues[0].photos && <img src={clues[0].photos} style={{width:350, height:350}}/>}
+                {clues[1] ?
+                <div>
+                    <p>{(clues[1]).text}</p>
+                    {clues[1].photos && <img src={clues[1].photos} style={{width:350, height:350}}/>}
+                </div>
+                :''}
+                
+                <br/><br/>
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
                 {!data.isBonus?
@@ -165,7 +166,6 @@ function TextClues(props) {
                 {resultoutput ? <div>{result}</div> : ''}
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button}  href="/photo">Take Picture!</Button>
                 <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
                 {!data.isBonus ? 
                  <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>

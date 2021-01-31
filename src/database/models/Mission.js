@@ -22,6 +22,7 @@ const MissionSchema = new Schema({
       },
     },
   ],
+  
 
   answer_Type: {
     // Picture/Video/Picture and Location /Text

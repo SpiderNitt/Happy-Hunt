@@ -173,7 +173,7 @@ function PictureClues(props) {
                 <Button type="submit" onClick={uploadImage}  style={{backgroundColor:"#4863A0", color:"whitesmoke"}}>
                     Submit
                 </Button> */}
-                {resultoutput?  <p>{result}</p> :''}
+                {resultoutput ? <p>{result}</p> :''}
                 <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} onClick={() => setonCam(true)}>Take Picture!</Button>

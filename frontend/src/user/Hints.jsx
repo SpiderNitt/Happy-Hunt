@@ -25,7 +25,7 @@ function Hints(props) {
 
     return (
         <div>
-        {hints !== [] && <>
+        {/* {hints !== [] && <>
             <ul>
                 {hints[0].Content}
                 <span style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic"}}>
@@ -57,7 +57,7 @@ function Hints(props) {
                     Hint 3
                 </Button>
             }
-           </>}
+           </>} */}
         </div>
     );
 }

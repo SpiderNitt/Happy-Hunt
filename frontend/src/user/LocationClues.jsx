@@ -36,7 +36,8 @@ function LocationClues(props) {
         await setHints(result.data.hint)
         console.log(data);
     }
-
+    console.log(clues)
+    console.log(hints)
     useEffect(() => {
         fetch();
     },[]);
@@ -103,16 +104,17 @@ function LocationClues(props) {
                     display:'flex', alignItems:'center', justifyContent:'center'}}>
                         {data.Other_Info} 
                 </p>
-                {clues && clues.length > 1 ? (
-                        <>
-                        <p>{clues[0]}</p>
-                        <img alt="clue" src={clues[1]} width='100%' />
-                        </>
-                    ) : (
-                        <p>{clues[0]}</p>
-                    )
-                }
-                <p className={classes.points}>{data.maxPoints}</p>
+                <p>{(clues[0]).text}</p>
+                {clues[0].photos && <img src={clues[0].photos} style={{width:350, height:350}}/>}
+                {clues[1] ?
+                <div>
+                    <p>{(clues[1]).text}</p>
+                    {clues[1].photos && <img src={clues[1].photos} style={{width:350, height:350}}/>}
+                </div>
+                :''}
+                <br/>
+                <br/>
+                <p className={classes.points}>{data.maxPoints} points</p>
                 <br/>
                 <br/>
                 <br/>
@@ -123,8 +125,7 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button}  href="/photo">Take Picture!</Button>
-                <Button className={classes.Button} onClick={submitAnswer}>Submit</Button>
+                <Button className={classes.Button} onClick={submitAnswer}>Submit my Location</Button>
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
