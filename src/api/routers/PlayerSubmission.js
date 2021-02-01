@@ -11,7 +11,6 @@ const Hint = require("../../database/models/Hint");
 const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
-
 // player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
 //   try {
 //     const { team } = req.jwt_payload;
