@@ -38,39 +38,51 @@ payment.post("/payment_1", async (req, res) => {
     const emailId = req.body.emailID;
     const phoneNo = req.body.phoneNumber;
     const quantity = req.body.totalTicketQuantity;
-    let user = await User.findOne({ emailId });
+    const transId = req.body.transID;
+    await sendEmail(
+      "paarthiban7201@gmail.com",
+      "User payment details",
+      `Transaction Id: ${transId}`,
+      "<h1>hello<h1>"
+    );
+    if (quantity !== 4 && quantity !== 6) {
+      return res
+        .status(200)
+        .json({ successBool: false, errors: "Invalid totalTicketQuantity" });
+    }
+    const user = await User.findOne({ emailId });
     if (!user) {
-      user = await User.findOne({ phoneNo });
-      if (!user) {
-        const password = uid();
-        const user = await User.create({
-          emailId,
-          phoneNo,
-          password,
-          active: true,
-          Role: "Player",
-          Paid: quantity,
-        });
-        await sendEmail(
-          emailId,
-          "USER created",
-          `password:${password}`,
-          "<h1>hello</h1>"
-        );
-        return res.status(200).json({ message: "Success" });
-      }
+      const password = uid();
+      await User.create({
+        emailId,
+        phoneNo,
+        password,
+        active: true,
+        Role: "Player",
+        Paid: quantity,
+      });
+      await sendEmail(
+        emailId,
+        "USER created",
+        `password:${password}`,
+        "<h1>hello</h1>"
+      );
+      return res.status(200).json({ successBool: true });
     }
     let result;
     if (user.team)
       result = await Team.updateOne({ _id: user.team }, { Paid: quantity });
     else result = await User.updateOne({ emailId }, { Paid: quantity });
     if (result.nModified === 1) {
-      return res.status(200).json({ message: "Success" });
+      return res.status(200).json({ successBool: true });
     }
-    return res.status(400).json({ message: "Unable to update record" });
+    console.log(`Payment not updated for ${phoneNo},${emailId}`);
+    return res.status(200).json({ successBool: true });
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json({ message: "Server Error, Try again later" });
+    return res
+      .status(500)
+      .json({ successBool: false, errors: "Internal error" });
   }
 });
 module.exports = payment;
