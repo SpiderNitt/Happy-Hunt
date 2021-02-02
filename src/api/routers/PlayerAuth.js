@@ -155,9 +155,7 @@ player.get("/email", async (req, res) => {
 
     user.isEmailVerified = true;
     await user.save();
-    return res
-      .status(200)
-      .json({ message: "email address verified successfully" });
+    return res.redirect("www.hhc.eventspeciale.com/auth/login");
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
