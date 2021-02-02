@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Verify from "./components/Verify";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
-import App from "./App";
+// import App from "./App";
 // import Camera from "./components/Camera";
+// import Verify from "./components/Verify";
 // import WebShare from "./components/WebShare";
 // import Message from "./components/Message";
 // import LoadingPage from "./components/LoadingPage";
@@ -21,4 +23,4 @@ import App from "./App";
 // import * as serviceWorker from "./serviceWorker";
 // import PaymentPage from "./user/PaymentPage";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<Verify />, document.getElementById("root"));
