@@ -51,5 +51,14 @@ const UserSchema = new mongoose.Schema({
   Notifications: [{ type: String }],
   otpId: String,
   active: Boolean,
+  paymentAuthorize: {
+    type: Number,
+    default: -1,
+  },
+  paymentDetails: {
+    accountId: String,
+    entityId: String,
+    amount: Number,
+  },
 });
 module.exports = mongoose.model("User", UserSchema);

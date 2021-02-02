@@ -10,6 +10,43 @@ payment.post("/payment", async (req, res) => {
     const phoneNo = req.body.payload.payment.entity.contact;
     let { amount } = req.body.payload.payment.entity;
     amount /= 100;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      console.log(`${phoneNo}(${emailId}) has paid but cant be found`);
+      return res.status(200).json({ message: "Success" });
+    }
+    let result;
+    if (amount >= 399 && amount < 499)
+      result = await User.updateOne(
+        { emailId },
+        { Paid: 4, paymentAuthorize: 1, $unset: { paymentDetails: 1 } }
+      );
+    else if (amount >= 499)
+      result = await User.updateOne(
+        { emailId },
+        { Paid: 6, paymentAuthorize: false, $unset: { paymentDetails: 1 } }
+      );
+    if (result.nModified === 1) {
+      return res.status(200).json({ message: "Success" });
+    }
+    console.log(
+      `${phoneNo}(${emailId}) payment already updated or payed amount is less`
+    );
+    return res.status(200).json({ message: "Success" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server error, try again later" });
+  }
+});
+payment.post("/payment_authorize", async (req, res) => {
+  try {
+    const emailId = req.body.payload.payment.entity.email;
+    const phoneNo = req.body.payload.payment.entity.contact;
+    const paymentDetails = {
+      accountId: req.body.account_id,
+      entityId: req.body.payload.payment.entity.id,
+      amount: req.body.payload.payment.entity.amount / 100,
+    };
     let user = await User.findOne({ emailId });
     if (!user) {
       user = await User.findOne({ phoneNo });
@@ -18,15 +55,31 @@ payment.post("/payment", async (req, res) => {
         return res.status(200).json({ message: "Success" });
       }
     }
-    let result;
-    if (amount >= 399 && amount < 499)
-      result = await User.updateOne({ emailId }, { Paid: 4 });
-    else if (amount >= 499)
-      result = await User.updateOne({ emailId }, { Paid: 6 });
+    const result = await User.updateOne(
+      { emailId },
+      { paymentAuthorize: 0, paymentDetails }
+    );
     if (result.nModified === 1) {
       return res.status(200).json({ message: "Success" });
     }
-    console.log(`${phoneNo}(${emailId}) has already paid and is paying again`);
+    console.log(
+      `${phoneNo}(${emailId}) has not been authorized, issue in database`
+    );
+    return res.status(200).json({ message: "Success" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server error, try again later" });
+  }
+});
+payment.post("/payment_failed", async (req, res) => {
+  try {
+    const emailId = req.body.payload.payment.entity.email;
+    const phoneNo = req.body.payload.payment.entity.contact;
+    const result = await User.updateOne({ emailId }, { paymentAuthorize: -1 });
+    if (result.nModified === 1) {
+      return res.status(200).json({ message: "Success" });
+    }
+    console.log(`${phoneNo}(${emailId}) has failed payment again`);
     return res.status(200).json({ message: "Success" });
   } catch (err) {
     console.log(err.message);
