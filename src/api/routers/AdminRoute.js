@@ -46,7 +46,8 @@ Router.post(
           emailId,
           Role: "Admin",
           password,
-          active: true,
+          /* active: true, */
+          isEmailVerified: true,
         });
         await sendEmail(
           emailId,

@@ -14,7 +14,10 @@ commonAuth.post("/login", loginValidator, async (req, res) => {
     const { emailId, password } = req.body;
     if (!emailId || !password)
       return res.status(400).json({ message: "Enter all fields" });
-    const user = await User.findOne({ emailId, active: true });
+    const user = await User.findOne({
+      emailId,
+      /* active: true */ isEmailVerified: true,
+    });
     if (user === undefined || user === null)
       return res.status(400).json({ message: "User does not exist" });
     if (!(await bcrypt.compare(password, user.password)))
