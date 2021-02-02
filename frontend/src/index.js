@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Verify from "./components/Verify";
+// import Verify from "./components/Verify";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
@@ -35,4 +35,4 @@ import App from "./App";
 // import App from "./App";
 require("./utils/socketio");
 
-ReactDOM.render(<Verify />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
