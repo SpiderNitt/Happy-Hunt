@@ -12,7 +12,7 @@ const Activity = require("../../database/models/Activity");
 const Mission = require("../../database/models/Mission");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
-const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
+const { sendEmail } = require("../../helpers/EMAIL/SGemail");
 const algo = require("../../helpers/algo");
 
 Router.post(
@@ -51,8 +51,8 @@ Router.post(
         await sendEmail(
           emailId,
           "ADMIN created",
-          "hii ur invited to happy hunt as admin",
-          "<h1>hello</h1>"
+          `Hii ur invited to happy hunt as admin.`,
+          `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Admin added.</h4><p>Congratualtions! You have been successfully added to Happy Hunt as an admin.</p><p> This is your password: ${password} < We request you to keep it confidential. </p><p style="color:navy">Happy hunting!</p></body>`
         );
         return res
           .status(200)
