@@ -2,10 +2,10 @@ const team = require("express").Router();
 const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
-const { jwtVerify, createJWTtoken } = require("../../middlewares/jwt");
+const { createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
-const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
+const { sendEmail } = require("../../helpers/EMAIL/SGemail");
 
 team.post("/create", playerVerify, async (req, res) => {
   try {
@@ -70,6 +70,7 @@ team.post("/create", playerVerify, async (req, res) => {
 team.get("/request/:teamId", playerVerify, async (req, res) => {
   try {
     const { teamId } = req.params;
+    const user = await User.findById(req.jwt_payload.id);
     if (
       req.jwt_payload.Role === "TeamLeader" ||
       req.jwt_payload.Role === "TeamMember"
@@ -102,8 +103,8 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     await sendEmail(
       captain.emailId,
       "User Requested to join ur team",
-      "hii he/she wants to join ur team ",
-      "<h1>hello</h1>"
+      "Request to join ur team",
+      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>User request</h4><p>Congratualtions! ${user.name} has requested to join your team.</p><p> You can accept or reject the request.</p><button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: green; color: white; padding:5px ; border-radius: 3px">Accept</button> <button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: red; color: white; padding:5px ; border-radius: 3px">Reject</button><p style="color:navy">Happy hunting!</p></body>`
     );
     return res.status(200).json({ message: "Join request sent!" });
   } catch (error) {
@@ -132,7 +133,7 @@ team.get("/reject", leaderVerify, async (req, res) => {
       user.emailId,
       "leader rejected ur request",
       "your request to join the team was rejected",
-      "<h1>hello</h1>"
+      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Request rejected</h4><p>Oops! Your request to join the team ${existingTeam.teamName} has been rejected.</p><p style="color:navy">Happy hunting!</p></body>`
     );
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
@@ -167,7 +168,14 @@ team.get("/accept", leaderVerify, async (req, res) => {
       user.emailId,
       "leader accepted ur request",
       "your request to join the team was accepted",
-      "<h1>hello</h1>"
+      `<body style="font-family: tahoma">
+
+      <h2>Greetings from Happy Hunt!</h2>
+       <h4>Request Accepted</h4>
+      <p>Congratulations! Your request to join the team ${existingTeam.teamName} has been acepted.</p>
+      <p style="color:navy">Happy hunting!</p>
+        
+      </body>`
     );
     const date = new Date();
     date.setTime(date.getTime() + 86400000);
