@@ -34,19 +34,19 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       phoneNo,
       name,
       password: pwd,
-      active: false,
+      /* active: false, */
       isEmailVerified: false,
       VerificationToken: hash,
       Role: "Player",
     });
     // verification email
+    try {
+      await sendEmail(
+        emailId,
+        "Verification email",
+        `welcome ,click on the link to verify your email`,
 
-    await sendEmail(
-      emailId,
-      "Verification email",
-      `welcome ,click on the link to verify your email`,
-
-      `<body style="font-family: tahoma">
+        `<body style="font-family: tahoma">
 
       <h2>Greetings from Happy Hunt!</h2>
        <h4>Verify your Email</h4>
@@ -56,7 +56,15 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       <p style="color:navy">Happy hunting!</p>
         
       </body>`
-    );
+      );
+      return res
+        .status(200)
+        .json({ message: "User created successfully , verify ur emailID" });
+    } catch (e) {
+      return res
+        .status(403)
+        .json({ message: "user created but email not send " });
+    }
 
     /* const timeR = Date.now();
     await sendEmail(
@@ -66,14 +74,14 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       "<h1>hello</h1>"
     ); */
 
-    try {
+    /* try {
       if (await send(phoneNo))
         return res.status(200).json({ message: "OTP sent" });
       return res.status(400).json({ message: "OTP not sent" });
     } catch (err) {
       console.log(err.message);
       return res.status(400).json({ message: "OTP not sent" });
-    }
+    } */
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });

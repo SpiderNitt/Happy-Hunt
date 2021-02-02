@@ -57,7 +57,8 @@ payment.post("/payment_1", async (req, res) => {
         emailId,
         phoneNo,
         password,
-        active: true,
+        /* active: true, */
+        isEmailVerified: true,
         Role: "Player",
         Paid: quantity,
       });
