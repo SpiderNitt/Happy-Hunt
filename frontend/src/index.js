@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import Verify from "./components/Verify";
+// import Footer from "./Footer";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
- import App from "./App";
+// import App from "./App";
+import SampleHomePage from "./SampleHomePage";
+import StickyFooter from "./StickyFooter";
 // import Camera from "./components/Camera";
 // import Verify from "./components/Verify";
 // import WebShare from "./components/WebShare";
@@ -23,4 +25,11 @@ import ReactDOM from "react-dom";
 // import * as serviceWorker from "./serviceWorker";
 // import PaymentPage from "./user/PaymentPage";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <>
+    <SampleHomePage />
+    <StickyFooter />
+  </>,
+
+  document.getElementById("root")
+);
