@@ -31,6 +31,17 @@ team.post("/create", playerVerify, async (req, res) => {
 
     const user = await User.findById(req.jwt_payload.id);
     if (user.Paid === 0) {
+      if (user.paymentAuthorize === 0) {
+        return res.status(401).json({
+          message:
+            "Your payment is authorized but not transferred, Pleast try after your amount is transferred",
+        });
+      }
+      if (user.paymentAuthorize === -1) {
+        return res.status(401).json({
+          message: "Your payment has failed please pay again",
+        });
+      }
       return res
         .status(401)
         .json({ message: "make a payment to create a team" });

@@ -164,5 +164,18 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
-
+Router.get("/paymentPending", adminVerify, async (req, res) => {
+  try {
+    const result = await User.find({ paymentAuthorize: 0 });
+    const details = {
+      name: result.name,
+      emailId: result.emailId,
+      paymentDetails: result.paymentDetails,
+    };
+    return res.status(200).json(details);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, try again later " });
+  }
+});
 module.exports = Router;
