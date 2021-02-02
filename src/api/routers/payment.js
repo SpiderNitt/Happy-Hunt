@@ -2,7 +2,7 @@ const payment = require("express").Router();
 const { uid } = require("uid");
 const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
-const { sendEmail } = require("../../helpers/EMAIL/nodemailer");
+const { sendEmail } = require("../../helpers/EMAIL/SGemail");
 
 payment.post("/payment", async (req, res) => {
   try {
@@ -64,8 +64,8 @@ payment.post("/payment_1", async (req, res) => {
       await sendEmail(
         emailId,
         "USER created",
-        `password:${password}`,
-        "<h1>hello</h1>"
+        `sucess`,
+        `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Payment Successful!</h4><p>Congratulations! You have successfully registered for the hunt.</p><p>your password is ${password}</p><p>You can join a team or create one to start the hunt.</p><p style="color:navy">Happy hunting!</p></body>`
       );
       return res.status(200).json({ successBool: true });
     }
