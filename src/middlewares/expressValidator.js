@@ -13,6 +13,11 @@ module.exports = {
     body("emailId").isEmail().notEmpty(),
     body("password").isString().notEmpty(),
   ],
+  resetValidator: [
+    body("verificationId").notEmpty(),
+    body("emailId").isEmail().notEmpty(),
+    body("password").isString().notEmpty(),
+  ],
   MissionValidator: [
     body("Category").isString().notEmpty(),
     body("isBonus").isBoolean().notEmpty(),

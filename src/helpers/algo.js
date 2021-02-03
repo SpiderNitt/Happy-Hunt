@@ -26,6 +26,10 @@ const BonusAsync = async () => {
 };
 
 const missionGenerator = async (points, teams, category) => {
+  if (!teams.avgLocation.Lat || !teams.avgLocation.Long) {
+    console.log(`Location not there for team${teams.teamName}`);
+    return { _id: null };
+  }
   const result = await Mission.find({
     maxPoints: points,
     isBonus: false,
@@ -55,9 +59,48 @@ const missionGenerator = async (points, teams, category) => {
 };
 // 0.009 latitude =1km 0.00947 longitude =1 km
 BonusAsync();
-const algo = () => {
+const algo = async () => {
+  const teams = await Team.find({});
+  // mission distribution
+  for (let index = 0; index < teams.length; index += 1) {
+    // console.log(index);
+    const category = [];
+    const mission1 = await missionGenerator(100, teams[index], category);
+    teams[index].assignedMissions.push(mission1._id);
+    await teams[index].save();
+    await Mission.findByIdAndUpdate(mission1._id, {
+      $push: { assignedTeams: teams[index]._id },
+    });
+    category.push(mission1.Category);
+    const mission2 = await missionGenerator(100, teams[index], category);
+    teams[index].assignedMissions.push(mission2._id);
+    await teams[index].save();
+    await Mission.findByIdAndUpdate(mission2._id, {
+      $push: { assignedTeams: teams[index]._id },
+    });
+    category.push(mission2.Category);
+    const mission3 = await missionGenerator(200, teams[index], category); // 200 missions dont exist
+    teams[index].assignedMissions.push(mission3._id);
+    await teams[index].save();
+    await Mission.findByIdAndUpdate(mission3._id, {
+      $push: { assignedTeams: teams[index]._id },
+    });
+    // bonus missions
+    if (BonusMission100.length <= counter) {
+      console.log("No bonus missions found");
+    } else {
+      teams[index].assignedBonus.push(BonusMission100[counter]._id);
+    }
+    if (BonusMission200.length <= counter) {
+      console.log("No bonus missions found");
+    } else {
+      teams[index].assignedBonus.push(BonusMission200[counter]._id);
+    }
+    await teams[index].save();
+  }
+  counter += 1;
+  io.emit("missions");
   const algorithm = setInterval(async () => {
-    const teams = await Team.find({});
     // mission distribution
     for (let index = 0; index < teams.length; index += 1) {
       // console.log(index);
