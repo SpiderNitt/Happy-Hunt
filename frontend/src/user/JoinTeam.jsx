@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex', 
         flexDirection: 'column',  
         alignItems: 'center',
-        paddingTop: '20%',
+        paddingTop: '10%',
     },
     form: {
         justifyContent: 'center',

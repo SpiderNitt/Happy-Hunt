@@ -43,12 +43,12 @@ const getLocation=()=>{
     setDisable(false)
 
 }
-console.log(location);
-console.log(props)
+// console.log(location);
+// console.log(props)
     
 const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
-        console.log(result.data);
+        // console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
@@ -57,7 +57,7 @@ const fetch = async () => {
     useEffect(() => {
         fetch();
     }, [props.match.params.id]);
-    console.log(data)
+    // console.log(data)
 
       const submitAnswer = async () => {
       const body= {
@@ -80,12 +80,11 @@ const fetch = async () => {
         showEvaluation(true)
         setAns(result.data.message)
       }
-      console.log(ans);
 
     const handleChange= (e)=>{
         setInput(e.target.value)
     }
-    console.log(input)
+    // console.log(input)
 
     
     const handleSubmit = async() => {
@@ -110,7 +109,7 @@ const fetch = async () => {
 
       }
 
-    console.log(data)
+    // console.log(data)
     const handleOpen = () => {
       setOpen(true);
     };

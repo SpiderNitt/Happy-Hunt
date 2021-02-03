@@ -31,11 +31,11 @@ function LocationClues(props) {
             console.log(result.status, result.problem, result.originalError);
             return;
         }
-        console.log(result.data);
+        // console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
-        console.log(data);
+        // console.log(data);
     }
 
     useEffect(() => {
@@ -78,7 +78,7 @@ function LocationClues(props) {
         showEvaluation(true)
         setAns(result.data.message)
       }
-      console.log(ans);
+    //   console.log(ans);
   
     const handleOpen = () => {
         setOpen(true);
@@ -138,7 +138,7 @@ function LocationClues(props) {
                 >
                 <Fade in={open}>
                 <div className={classes.paper}>
-                    {hints && <Hints id={data._id} data={hints}/>}
+                    {hints && <Hints id={data._id} data={hints} />}
                 </div>
                 </Fade>                
                 </Modal>

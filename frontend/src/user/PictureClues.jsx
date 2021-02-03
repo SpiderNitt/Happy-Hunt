@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import Sample3 from '../assets/sample3.jpg';
-import { create } from 'apisauce';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
@@ -11,40 +9,33 @@ import Hints from './Hints';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
 import client from '../api/client';
-import Capture from './Photogragh';
-
-const api = create({
-    baseURL: 'https://api.cloudinary.com/v1_1/dqj309mtu/image',
-})
 
 function PictureClues(props) {
     const classes = useStyles();
-    const [dataUri, setDataUri] = useState('');
     const [data, setData]= useState([]);
-    const [imageSelected, setImageSelected] = useState("");
     const [evaluation, showEvaluation]= useState(false);
     const [clues,setClues] = useState([]);
     const [open, setOpen] = useState(false);
-    const [onCam, setonCam] = useState(false);
+    const [hints,setHints] = useState([]);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
     });
-    console.log(onCam);
 
     const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
-        console.log(result.data);
+        // console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
+        await setHints(result.data.hint);
     }
 
       useEffect(() => {
         fetch();
       }, [props.match.params.id]);
 
-      console.log(data)
+    //   console.log(data)
  
     const onSuccess = location=>{
         setLocation({
@@ -59,7 +50,7 @@ function PictureClues(props) {
     const getLocation=()=>{
         navigator.geolocation.getCurrentPosition(onSuccess);
     };
-    console.log(location)
+    // console.log(location)
 
     const locationBody= {
         "MissionId":props.match.params.id,
@@ -83,8 +74,7 @@ function PictureClues(props) {
         showEvaluation(true)
         setAns(result.data.message)
 
-        console.log(ans);
-        console.log(dataUri);
+        // console.log(ans);
       }
     
     const handleOpen = () => {
@@ -97,8 +87,7 @@ function PictureClues(props) {
     
     return (       
         <React.Fragment >
-            {onCam ?
-            <Capture setDataUri={setDataUri} setonCam={setonCam} /> :
+            
             <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh" }}>
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
@@ -110,7 +99,6 @@ function PictureClues(props) {
                     fontFamily:'calibri',
                     display:'flex', alignItems:'center', justifyContent:'center'}}>{data.Other_Info}</p>
                     <div style= {{display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <img src={Sample3} />
                     </div>
                     {clues !== [] && clues.map((clue, index) => (
                     <div key={index} index={index + 1}>
@@ -149,13 +137,13 @@ function PictureClues(props) {
                     >
                     <Fade in={open}>
                     <div className={classes.paper}>
-                        <Hints id={data._id}/>
+                        <Hints id={data._id} data={hints}/>
                     </div>
                     </Fade>                
                     </Modal>
                     </div>) :''}
                 
-            </Container>}
+            </Container>
         </React.Fragment>
       );
 }
