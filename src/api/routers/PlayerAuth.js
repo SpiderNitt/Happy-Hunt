@@ -161,4 +161,46 @@ player.get("/email", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
+player.get("/resendEmail", async (req, res) => {
+  try {
+    const { emailId } = req.query;
+    const user = await User.findOne({ emailId });
+    if (user === null) {
+      return res.status(402).json({ message: "No such user found" });
+    }
+    if (user.isEmailVerified) {
+      return res.status(401).json({ message: "user is already verified" });
+    }
+
+    const hash = cryptoRandomString({ length: 128, type: "alphanumeric" });
+    console.log(hash);
+    user.VerificationToken = hash;
+    await user.save();
+
+    try {
+      await sendEmail(
+        emailId,
+        "Verification email",
+        `welcome ,click on the link to verify your email`,
+
+        `<body style="font-family: tahoma">
+
+      <h2>Greetings from Happy Hunt!</h2>
+       <h4>Verify your Email</h4>
+      <p> <otp> is your one time password.
+        </br/> Please use this to verify your Email.</p>
+        <button href="www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
+      <p style="color:navy">Happy hunting!</p>
+        
+      </body>`
+      );
+      return res.status(200).json({ message: "Email sent" });
+    } catch (e) {
+      return res.status(403).json({ message: " email not send " });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
 module.exports = player;
