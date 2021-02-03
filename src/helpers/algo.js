@@ -140,6 +140,6 @@ const algo = async () => {
       clearInterval(algorithm);
       console.log("All missions assigned to all teams");
     }
-  }, 300000);
+  }, 1800000);
 };
 module.exports = algo;
