@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import Verify from "./components/Verify";
+// import Footer from "./Footer";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
