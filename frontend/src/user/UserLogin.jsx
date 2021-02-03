@@ -58,7 +58,7 @@ export default function UserLogin(props) {
   const handleSubmit = async({ email, password },{ resetForm }) => {
     setLoading(true);
     const body = {
-      emailId:email,
+      emailId:email.trim(),
       password:password
     }
     const response = await userLogin(body);

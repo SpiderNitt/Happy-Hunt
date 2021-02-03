@@ -61,9 +61,9 @@ export default function UserRegistration(props) {
   const handleSubmit = async ({ username, email, phoneNo, password },{ resetForm }) => {
     setLoading(true);
     const body = {
-      name:username,
-      emailId:email, 
-      phoneNo:phoneNo,
+      name:username.trim(),
+      emailId:email.trim(), 
+      phoneNo:phoneNo.trim(),
       password:password,
     }
     const response = await userRegister(body);

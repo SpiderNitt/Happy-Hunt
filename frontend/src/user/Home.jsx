@@ -1,17 +1,17 @@
-import Button from '@material-ui/core/Button';
-import React, {useState, useEffect} from 'react';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import Rules from './Rules';
-import Routes from '../utils/routes';
-import client from '../api/client';
-import Message from '../components/Message';
-import { CssBaseline } from '@material-ui/core';
+// import Button from '@material-ui/core/Button';
+import React from 'react';
+// import Modal from '@material-ui/core/Modal';
+// import Backdrop from '@material-ui/core/Backdrop';
+// import Fade from '@material-ui/core/Fade';
+// import Rules from './Rules';
+// import Routes from '../utils/routes';
+// import client from '../api/client';
+// import Message from '../components/Message';
+// import { CssBaseline } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+// import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
@@ -214,9 +214,7 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.paper,
     margin:10,
-    border: "black"
   }
 }));
 
@@ -235,9 +233,8 @@ function Home() {
 
   return (
     <Box clone style={{ marginLeft:window.innerWidth*0.08, marginRight:window.innerWidth*0.08, 
-      marginBottom:window.innerHeight*0.03, backgroundColor:"#E8E8E8", borderRadius:5,  boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)"}}>
+      marginBottom:window.innerHeight*0.03}}>
       <div className={classes.root}>
-      <AppBar position="static" color="default">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -249,7 +246,6 @@ function Home() {
           <Tab label="Create team" {...a11yProps(0)} />
           <Tab label="Join team" {...a11yProps(1)} />
         </Tabs>
-      </AppBar>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={value}

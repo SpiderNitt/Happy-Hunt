@@ -344,6 +344,7 @@ player.get("/profile", playerVerify, async (req, res) => {
     const user = await User.findById(req.jwt_payload.id)
       .populate("team", "teamId teamName")
       .lean();
+    console.log(user);
     if (user === undefined || user === null) {
       return res.status(400).json({ message: "User not found" });
     }

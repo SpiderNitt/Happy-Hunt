@@ -59,7 +59,8 @@ function ProfilePage(props) {
             return;
         }
         setUserInfo(result.data);
-        result.data.team && setTeamInfo(result.data.team);
+        console.log(result.data.team !== undefined, TeamInfo);
+        if(result.data.team !== undefined) setTeamInfo(result.data.team);
     }
 
     useEffect(() => {
@@ -105,7 +106,7 @@ function ProfilePage(props) {
                 </ListItem>
                 <Divider />
                 {
-                TeamInfo ?
+                TeamInfo !== {} ?
                 <>
                 <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
                 <ListItem className={classes.items}>
