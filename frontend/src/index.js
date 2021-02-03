@@ -1,12 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import Verify from "./components/Verify";
+// import Footer from "./Footer";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
 // import ScoreNav from "../src/user/ScoreNav";
 // import Pricing from "./components/Pricing";
-
 // import SampleHomePage from "./SampleHomePage";
 // import StickyFooter from "./StickyFooter";
 // import Camera from "./components/Camera";
