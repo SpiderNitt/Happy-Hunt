@@ -94,7 +94,7 @@ Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
     });
   }
 });
-Router.get("/start", adminVerify, async (req, res) => {
+Router.get("/start", superAdminVerify, async (req, res) => {
   try {
     algo();
     return res.status(200).json({ message: "Success" });
