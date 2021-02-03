@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex', 
         flexDirection: 'column',  
         alignItems: 'center',
-        paddingTop: '20%',
     },
     form: {
         justifyContent: 'center',
@@ -45,7 +44,7 @@ function JoinTeam(props) {
     const [message, setmessage] = useState('')
     const [messageType, setmessageType] = useState('')
     const handleSubmit = async({teamId}, { resetForm }) => {
-        const response = await joinTeam(teamId);
+        const response = await joinTeam(teamId.trim());
         if(!response.ok){
             console.log(response.status ,response.originalError, response.problem);
             console.log(response.data.message);

@@ -1,10 +1,13 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { Typography } from '@material-ui/core';
+import { Container, Divider, Typography } from '@material-ui/core';
 import Routes from '../utils/routes';
 import {AuthContext} from '../api/authContext';
 import { useHistory } from 'react-router';
+import logo from '../assets/android-chrome-512x512.png';
+import StickyFooter from '../components/StickyFooter';
+import Footer from '../components/Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,10 +30,8 @@ export default function GameIntro() {
     }
   }
   return (
-    <div className={classes.root}>
-        <Typography variant="button" display="block" style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>
-            Happy Hunt Challenge
-        </Typography>
+    <Container fixed maxWidth="xl" className={classes.root}>
+        <img alt="hhc-logo" src={logo} width={300} />
         <Button variant="outlined" color="secondary" href={Routes.USER_REGISTER}>
             Register
         </Button>
@@ -38,6 +39,11 @@ export default function GameIntro() {
         <Button variant="outlined" color="secondary" onClick={handleLogin}>
             Login
         </Button>
-    </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <Footer />
+    </Container>
   );
 }

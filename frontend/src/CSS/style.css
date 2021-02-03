@@ -1,0 +1,14 @@
+.container {
+    background-color: #8EC5FC;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+}
+
+.footer {
+    left: 0;
+    bottom: 0;
+    padding: 20;
+    width: 100%;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    color: rgb(85, 84, 84);
+}

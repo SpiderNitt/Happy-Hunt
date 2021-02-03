@@ -9,7 +9,7 @@
       name="happy hunt challenge"
       content="Online treasure hunt event conducted across different cities by event scepiale."
     />
-    <link rel="apple-touch-icon" href="./logo192.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./manifest.json" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Londrina+Solid&display=swap" rel="stylesheet">
@@ -20,10 +20,10 @@
     <div id="root"></div>
     </script>
     <script type="application/javascript" >
-      if('serviceWorker' in navigator) {
+      if( process.env.NODE_ENV === "production" && 'serviceWorker' in navigator ) {
         window.addEventListener('load', async () => {
           try {
-            const res = await navigator.serviceWorker.register('./serviceWorker.js');
+            const res = await navigator.serviceWorker.register('./serviceWorker.js', { scope: "/user/" });
             console.log('Success: ', res.scope)
           } catch (error) {
             console.log('Failure: ', error)
