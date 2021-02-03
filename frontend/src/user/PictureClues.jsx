@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import Sample3 from '../assets/sample3.jpg';
 import { create } from 'apisauce';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -110,7 +109,6 @@ function PictureClues(props) {
                     fontFamily:'calibri',
                     display:'flex', alignItems:'center', justifyContent:'center'}}>{data.Other_Info}</p>
                     <div style= {{display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <img src={Sample3} />
                     </div>
                     {clues !== [] && clues.map((clue, index) => (
                     <div key={index} index={index + 1}>

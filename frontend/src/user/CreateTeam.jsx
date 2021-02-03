@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
-import { TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
+import { TextField, Container, makeStyles, CssBaseline, Button } from '@material-ui/core';
 
 import ErrorMessage from '../components/ErrorMessage';
 import { teamRegister } from '../api/team';
@@ -9,7 +9,6 @@ import { useHistory } from 'react-router';
 import Routes from '../utils/routes';
 import Message from '../components/Message';
 import Animation from '../components/Animation';
-import { Link } from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
   teamName: Yup.string().required().label("Team Name"),
@@ -17,7 +16,6 @@ const validationSchema = Yup.object().shape({
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -47,7 +45,7 @@ function CreateTeam(props) {
   const History = useHistory();
   const handleSubmit = async({ teamName }, { resetForm }) => {
     const response = await teamRegister({
-      teamName: teamName
+      teamName: teamName.trim()
     });
     if(!response.ok){
       console.log(response.status ,response.originalError, response.problem);
@@ -76,9 +74,6 @@ function CreateTeam(props) {
     {info && <Message show={true} message={info} type={messageType} />}
     <div className={classes.paper}>
         <Animation AnimationRoute={'team'} />
-        <Typography component="h1" variant="h5" style={{ fontFamily: 'Lucida Handwriting', fontWeight: 'bold' }}>
-          Register your team
-        </Typography>
         <Formik
         initialValues={{ teamName: '' }}
         validationSchema={validationSchema}
@@ -100,9 +95,9 @@ function CreateTeam(props) {
               </Button>
               <br/>
               <br/>
-              <span>Pay for the event </span>
+              <span>Not paid? </span>
               <a href={Routes.USER_PAYMENT}>
-                here!
+                Pay here!
               </a>
           </Form>
         )}
