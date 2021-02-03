@@ -315,7 +315,7 @@ player.post("/forgotPassword", async (req, res) => {
       return res.status(400).json({ message: "Unable to reset password" });
     await sendEmail(
       emailId,
-      "Verification email",
+      "Reset Password",
       `welcome ,click on the link to reset your password`,
 
       `<body style="font-family: tahoma">
