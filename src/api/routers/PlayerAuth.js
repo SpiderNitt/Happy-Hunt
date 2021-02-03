@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const cryptoRandomString = require("crypto-random-string");
 const {
   playerRegisterValidator,
+  resetValidator,
 } = require("../../middlewares/expressValidator");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
@@ -198,6 +199,64 @@ player.get("/resendEmail", async (req, res) => {
     } catch (e) {
       return res.status(403).json({ message: " email not send " });
     }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
+player.post("/forgotPassword", async (req, res) => {
+  try {
+    const { emailId } = req.body;
+    const hash = cryptoRandomString({ length: 5, type: "alphanumeric" });
+    const result = await User.updateOne(
+      { emailId },
+      { VerificationToken: hash }
+    );
+    if (result.nModified !== 1)
+      return res.status(400).json({ message: "Unable to reset password" });
+    await sendEmail(
+      emailId,
+      "Verification email",
+      `welcome ,click on the link to reset your password`,
+
+      `<body style="font-family: tahoma">
+
+    <h2>Greetings from Happy Hunt!</h2>
+     <h4>Reset your password</h4>
+      </br/> Please use this to reset your password.</p>
+      <b>VERIFICATION ID: ${hash}</b>
+    <p style="color:navy">Happy hunting!</p>
+      
+    </body>`
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Reset password email sent successfully" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Server Error, Try again later" });
+  }
+});
+player.post("/reset", resetValidator, async (req, res) => {
+  try {
+    const { verificationId, emailId, password } = req.body;
+    const user = await User.findOne({
+      VerificationToken: verificationId,
+      emailId,
+    });
+    if (user === null) {
+      return res.status(404).json({
+        message: "Incorrect verification Token",
+      });
+    }
+    const pwd = await bcrypt.hash(
+      password,
+      parseInt(10, process.env.TOKEN_SECRET)
+    );
+    user.password = pwd;
+    await user.save();
+    return res.status(200).json({ message: "Success" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
