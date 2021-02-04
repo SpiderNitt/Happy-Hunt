@@ -75,7 +75,7 @@ export default function Pricing() {
     "form1", 
     { 
         key: "data-payment_button_id", 
-        value: "pl_GXYv2JLVl2xfRY" 
+        value: "pl_GVu6sNoBacor2N" 
     }
   );
   useScript(
@@ -83,7 +83,7 @@ export default function Pricing() {
     "form2", 
     { 
         key: "data-payment_button_id", 
-        value: "pl_GXYvwmvk3p0w5Y" 
+        value: "pl_GVuB6WNY5eOgND" 
     }
   );
   return (
