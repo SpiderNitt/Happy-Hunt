@@ -56,7 +56,7 @@ function AdminMissionListItem(props) {
                 </Avatar>
             </ListItemAvatar>
             <ListItemText
-                primary={`Mission ${props.index}`}
+                primary={props.values['MissionName']}
                 secondary={secondary ? 'Secondary text' : null}
             />
             <ListItemSecondaryAction>

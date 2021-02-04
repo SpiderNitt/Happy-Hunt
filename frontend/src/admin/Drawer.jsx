@@ -19,6 +19,8 @@ import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
 import Routes from '../utils/routes';
 import { AuthContext } from "../api/authContext";
+import Button from '@material-ui/core/Button';
+
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -132,6 +134,13 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            <div style={{
+                marginTop:'20px'
+            }}>
+                <Button variant="outlined" color="secondary">
+                  START GAME
+                </Button>
+            </div>
             </>
             )}
         </MUIDrawer>
