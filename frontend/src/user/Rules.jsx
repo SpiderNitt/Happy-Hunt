@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Rules(props) {
+function Rules() {
     return (
         <div style={{maxWidth:window.innerWidth*0.7, maxHeight:window.innerHeight*0.7, overflowY:"scroll",scrollBehavior:"smooth"}}>
             <h1>

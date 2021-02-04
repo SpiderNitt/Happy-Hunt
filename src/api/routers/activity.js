@@ -9,7 +9,7 @@ Router.get("/feed", async (req, res) => {
       .populate("mission")
       .exec();
     const feedToBeShown = [];
-    // console.log(feeds);
+    console.log(feeds);
     for (let index = 0; index < feeds.length; index += 1) {
       console.log(feeds[index].mission);
       if (feeds[index].mission.Feed) {
@@ -23,6 +23,7 @@ Router.get("/feed", async (req, res) => {
         });
       }
     }
+    console.log(feedToBeShown)
     return res.status(200).json({ activityFeeds: feedToBeShown });
   } catch (err) {
     console.log(err);
