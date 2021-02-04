@@ -22,5 +22,7 @@ import App from "./App";
 // import Template from "./user/Template";
 // import * as serviceWorker from "./serviceWorker";
 // import PaymentPage from "./user/PaymentPage";
+import Pricing from "./components/Pricing";
+import ForgotPassword from "./user/ForgotPassword";
 
 ReactDOM.render(<App />, document.getElementById("root"));

@@ -1,5 +1,4 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -9,11 +8,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import StarIcon from '@material-ui/icons/StarBorder';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
 import Footer from './Footer';
+import useScript from '../hooks/useScript';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,19 +52,16 @@ const useStyles = makeStyles((theme) => ({
 const tiers = [
   {
     title: '4 Players',
-    price: '399',
-    description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
+    price: 399,
+    description: ['4 Players'],
     buttonText: 'Pay now',
     buttonVariant: 'outlined',
   },
   {
     title: '6 Players',
-    price: '499',
+    price: 499,
     description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
+      '6 Players',
     ],
     buttonText: 'Pay Now',
     buttonVariant: 'outlined',
@@ -75,7 +70,22 @@ const tiers = [
 
 export default function Pricing() {
   const classes = useStyles();
-
+  useScript(
+    "https://checkout.razorpay.com/v1/payment-button.js", 
+    "form1", 
+    { 
+        key: "data-payment_button_id", 
+        value: "pl_GVu6sNoBacor2N" 
+    }
+  );
+  useScript(
+    "https://checkout.razorpay.com/v1/payment-button.js", 
+    "form2", 
+    { 
+        key: "data-payment_button_id", 
+        value: "pl_GVuB6WNY5eOgND" 
+    }
+  );
   return (
     <React.Fragment>
       <CssBaseline />
@@ -89,7 +99,7 @@ export default function Pricing() {
         <Grid container spacing={5} alignItems="flex-end">
           {tiers.map((tier) => (
             // Enterprise card is full width at sm breakpoint
-            <Grid item key={tier.title} xs={12} sm={tier.title === 'Enterprise' ? 12 : 6} md={4}>
+            <Grid item key={tier.title} xs={12} sm={tier.title === 'Enterprise' ? 12 : 6}>
               <Card>
                 <CardHeader
                   title={tier.title}
@@ -116,10 +126,8 @@ export default function Pricing() {
                     ))}
                   </ul>
                 </CardContent>
-                <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant} color="primary">
-                    {tier.buttonText}
-                  </Button>
+                <CardActions style={{ justifyContent: 'center' }}>
+                  {tier.price === 399 ? <form className="form1"></form> : <form className="form2"></form> }
                 </CardActions>
               </Card>
             </Grid>

@@ -18,7 +18,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import CreateTeam from './CreateTeam';
 import JoinTeam from './JoinTeam';
-
+import { Container } from '@material-ui/core';
+import logo from '../assets/android-chrome-512x512.png';
 
 // const useStyles = makeStyles((theme) => ({
 //   modal: {
@@ -218,10 +219,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
+
 function Home() {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const teamInfo = JSON.parse(localStorage.getItem("userInfo"));
+  console.log(teamInfo.team);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -232,6 +237,8 @@ function Home() {
   };
 
   return (
+    <Container>
+    {teamInfo.team === undefined ?
     <Box clone style={{ marginLeft:window.innerWidth*0.08, marginRight:window.innerWidth*0.08, 
       marginBottom:window.innerHeight*0.03}}>
       <div className={classes.root}>
@@ -259,8 +266,13 @@ function Home() {
         </TabPanel>
       </SwipeableViews>
     </div>
-    </Box>
-    
+    </Box> : 
+    <>
+    <img src={logo} alt="hhc-logo" width="300" />
+    <h2>Coming soon!</h2>
+    </>
+    }
+    </Container>
   );
 }
 

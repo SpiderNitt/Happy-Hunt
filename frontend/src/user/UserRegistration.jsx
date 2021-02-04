@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LockOutlined } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
-import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
+import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography, Link } from '@material-ui/core';
 
 import ErrorMessage from '../components/ErrorMessage';
 import { userRegister } from '../api/auth';
@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
 import Message from '../components/Message';
+import Footer from '../components/Footer';
 
 
 const validationSchema = Yup.object().shape({
@@ -21,7 +22,7 @@ const validationSchema = Yup.object().shape({
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -77,11 +78,12 @@ export default function UserRegistration(props) {
     resetForm();
     setTimeout(() => {
       setLoading(false);
-      history.push(`${Routes.USER_VERIFY}?mobileNo=${phoneNo}`);
+      history.push(`${Routes.USER_VERIFY}?email=${email}`);
     }, 500);
   }
 
   return (
+    <>
     <Container component="main" maxWidth="xs">
     <CssBaseline />
     {loading && <LoadingPage /> }
@@ -153,10 +155,13 @@ export default function UserRegistration(props) {
             <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
               Register
             </Button>
+            <p>Already have account? <Link href={Routes.USER_LOGIN}>Login</Link></p>
           </Form>
         )}
         </Formik>
     </div>}
     </Container>
+    <Footer />
+    </>
   );
 }
