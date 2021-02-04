@@ -14,6 +14,7 @@ import LoadingPage from '../components/LoadingPage';
 import SuccessAnimation from '../components/SuccessAnimation';
 import Message from '../components/Message';
 import Footer from '../components/Footer';
+import logo from '../assets/android-chrome-512x512.png';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -22,7 +23,6 @@ const validationSchema = Yup.object().shape({
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -111,10 +111,8 @@ export default function UserLogin(props) {
     {successLogin && <SuccessAnimation />}
     {info && <Message message={info} show={true} type={messageType} />}
     {(!loading && !successLogin) && <div className={classes.paper}>
-        <Avatar className={classes.avatar} sizes='large' >
-          <ArrowForward style={{ fontSize: 40 }} />
-        </Avatar>
-        <Typography component="h1" variant="h4" style={{ fontWeight: 'bold' }}>
+        <img alt="hhc-logo" src={logo} width={200} />
+        <Typography component="h1" variant="h4" style={{ fontWeight: 'bold', textDecorationLine: 'underline', color: '#EE5C53' }}>
           Login
         </Typography>
         <Formik
@@ -150,8 +148,8 @@ export default function UserLogin(props) {
                 <ErrorMessage visible={touched.password} error={errors.password} />
               </Grid>
             </Grid>
-            <p style={{ color: '#2C73D2', textAlign: 'left', marginLeft: 10, cursor: 'pointer' }} onClick={() => handleForgotPassword(values["email"])}>forgot password?</p>
-            <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
+            <p style={{ color: '#2C73D2', textAlign: 'right', cursor: 'pointer' }} onClick={() => handleForgotPassword(values["email"])}>forgot password?</p>
+            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53' }} fullWidth className={classes.submit}>
               Login
             </Button>
           </Form>

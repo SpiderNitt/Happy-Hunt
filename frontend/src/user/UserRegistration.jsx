@@ -11,6 +11,7 @@ import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
 import Message from '../components/Message';
 import Footer from '../components/Footer';
+import logo from '../assets/android-chrome-512x512.png';
 
 
 const validationSchema = Yup.object().shape({
@@ -89,10 +90,8 @@ export default function UserRegistration(props) {
     {loading && <LoadingPage /> }
     {info && <Message message={info} show={true} type={messageType} />}
     {!loading && <div className={classes.paper}>
-        <div className={classes.avatar}>
-          <LockOutlined style={{ fontSize: 40 }} />
-        </div>
-        <Typography component="h1" variant="h5">
+        <img alt="hhc-logo" src={logo} width={200} />
+        <Typography component="h1" variant="h5" style={{ fontWeight: 'bold', textDecorationLine: 'underline', color: '#EE5C53' }}>
           Register
         </Typography>
         <Formik
@@ -152,7 +151,7 @@ export default function UserRegistration(props) {
                 <ErrorMessage visible={touched.password} error={errors.password} />
               </Grid>
             </Grid>
-            <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
+            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53' }} fullWidth className={classes.submit}>
               Register
             </Button>
             <p>Already have account? <Link href={Routes.USER_LOGIN}>Login</Link></p>
