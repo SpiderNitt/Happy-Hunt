@@ -46,29 +46,6 @@ import Footer from '../components/Footer';
 //   }
 // }));
 
-// const useStyles = makeStyles((theme) => ({
-//   modal: {
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   paper: {
-//     backgroundColor: theme.palette.background.paper,
-//     border: '2px solid #000',
-//     boxShadow: theme.shadows[5],
-//     padding: theme.spacing(2, 4, 3),
-//   },
-//   welcome: {
-//     display: 'flex',
-//     alignItems: 'center',
-//     flexDirection: 'column',
-//   },
-//   video: {
-//     width: '100%',
-//     height: 200,
-//   }
-// }));
-
 
 // function Home(props) {
 //   const classes = useStyles();
