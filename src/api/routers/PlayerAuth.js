@@ -53,7 +53,7 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
        <h4>Verify your Email</h4>
       <p> <otp> is your one time password.
         </br/> Please use this to verify your Email.</p>
-        <button href="www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
+        <button href="https://www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
       <p style="color:navy">Happy hunting!</p>
         
       </body>`
@@ -138,7 +138,7 @@ player.post("/verify", async (req, res) => {
 player.get("/email", async (req, res) => {
   try {
     const { verificationId } = req.query;
-
+    console.log(verificationId);
     if (verificationId === null) {
       return res.status(401).json({
         message: "Verification token wasn't provided to verify account",
@@ -156,7 +156,7 @@ player.get("/email", async (req, res) => {
 
     user.isEmailVerified = true;
     await user.save();
-    return res.redirect("www.hhc.eventspeciale.com/auth/login");
+    return res.redirect("https://www.hhc.eventspeciale.com/user/login");
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server Error, Try again later" });
@@ -190,9 +190,8 @@ player.get("/resendEmail", async (req, res) => {
        <h4>Verify your Email</h4>
       <p> <otp> is your one time password.
         </br/> Please use this to verify your Email.</p>
-        <button href="www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
+        <button href="https://www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
       <p style="color:navy">Happy hunting!</p>
-        
       </body>`
       );
       return res.status(200).json({ message: "Email sent" });
@@ -224,7 +223,7 @@ player.post("/forgotPassword", async (req, res) => {
     <h2>Greetings from Happy Hunt!</h2>
      <h4>Reset your password</h4>
       </br/> Please use this to reset your password.</p>
-      <button href="www.hhc.eventspeciale.com/auth/player/resetPwd?id=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
+      <button href="https://www.hhc.eventspeciale.com/auth/player/resetPwd?id=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
     <p style="color:navy">Happy hunting!</p>
       
     </body>`

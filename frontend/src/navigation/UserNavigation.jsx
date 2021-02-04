@@ -26,6 +26,8 @@ import { AuthContext } from "../api/authContext";
 import AdminNav from "./AdminNavigation";
 import MessageBot from "../components/MessageBot";
 import PaymentPage from "../user/PaymentPage";
+import Pricing from '../components/Pricing';
+import ForgotPassword from "../user/ForgotPassword";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
   const authContext = useContext(AuthContext);
@@ -66,6 +68,12 @@ function UserNav() {
             <MessageBot />
           </>
         )} />
+        <Route path={Routes.USER_FORGOTPASSWORD} exact render={(props) => (
+          <>
+            <ForgotPassword {...props} />
+            <MessageBot />
+          </>
+        )} />
         <Route path={Routes.WELCOME} exact>
           <GameIntro />
           <MessageBot />
@@ -82,12 +90,9 @@ function UserNav() {
             <JoinTeam />
           </div>
         </UserAuthenticatedRoute>
-        <UserAuthenticatedRoute path={Routes.USER_PAYMENT} exact>
-          <TopNav />
-          <div style={{ marginTop: 70 }}>
-            <PaymentPage />
-          </div>
-        </UserAuthenticatedRoute>
+        <Route path={Routes.USER_PAYMENT} exact>
+            <Pricing />
+        </Route>
         <Route path="/photo" exact component={Capture} />
         <UserAuthenticatedRoute path={Routes.HOME} exact>
           <TopNav />

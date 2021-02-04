@@ -1,4 +1,4 @@
-import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core';
+import { Button, Container, CssBaseline, Grid, makeStyles, TextField } from '@material-ui/core';
 import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import ErrorMessage from '../components/ErrorMessage';
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
 
 function JoinTeam(props) {
     const styles = useStyles();
-    const history = useHistory();
     const [message, setmessage] = useState('')
     const [messageType, setmessageType] = useState('')
     const handleSubmit = async({teamId}, { resetForm }) => {
@@ -55,13 +54,13 @@ function JoinTeam(props) {
         setmessage(response.data.message);
         setmessageType("success");
         resetForm();
-        setTimeout(() => {
-            history.push(Routes.USER_PROFILE);
-        }, 1000);
+        return;
     }
 
     return (
-        <Container className={styles.root}>
+        <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={styles.root}>
             {message && <Message message={message} show={true} type={messageType} />}
             <Animation AnimationRoute={'team'} />
             <Formik
@@ -91,6 +90,7 @@ function JoinTeam(props) {
                 </Form>
             )}
             </Formik>
+        </div>
         </Container>
     );
 }

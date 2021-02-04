@@ -30,6 +30,7 @@ export default function GameIntro() {
     }
   }
   return (
+    <>
     <Container fixed maxWidth="xl" className={classes.root}>
         <img alt="hhc-logo" src={logo} width={300} />
         <Button variant="outlined" color="secondary" href={Routes.USER_REGISTER}>
@@ -43,7 +44,9 @@ export default function GameIntro() {
         <br/>
         <br/>
         <br/>
-        <Footer />
+        
     </Container>
+    <Footer />
+    </>
   );
 }

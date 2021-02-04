@@ -34,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+
+const ObjIsEmpty = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
 function ProfilePage(props) {
     const authContext = useContext(AuthContext)
     const classes = useStyles();
@@ -106,7 +111,7 @@ function ProfilePage(props) {
                 </ListItem>
                 <Divider />
                 {
-                TeamInfo !== {} ?
+                !ObjIsEmpty(TeamInfo) &&
                 <>
                 <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
                 <ListItem className={classes.items}>
@@ -133,21 +138,21 @@ function ProfilePage(props) {
                     </ListItemSecondaryAction>
                 </ListItem>
                 </>
-                :
-                <>
-                <ListItem style={{ marginTop: 20 }} component={Link} to={Routes.USER_REGISTER_TEAM}>
-                    <ListItemIcon>
-                        <Add />
-                    </ListItemIcon>
-                        <ListItemText primary="Create Team" />
-                    </ListItem>
-                <ListItem component={Link} to={Routes.USER_JOIN_TEAM}>
-                <ListItemIcon>
-                    <GroupAdd />
-                </ListItemIcon>
-                    <ListItemText primary="Join Team" />
-                </ListItem>
-                </>
+                // :
+                // <>
+                // <ListItem style={{ marginTop: 20 }} component={Link} to={Routes.USER_REGISTER_TEAM}>
+                //     <ListItemIcon>
+                //         <Add />
+                //     </ListItemIcon>
+                //         <ListItemText primary="Create Team" />
+                //     </ListItem>
+                // <ListItem component={Link} to={Routes.USER_JOIN_TEAM}>
+                // <ListItemIcon>
+                //     <GroupAdd />
+                // </ListItemIcon>
+                //     <ListItemText primary="Join Team" />
+                // </ListItem>
+                // </>
                 }
                 <ListItem style={{ marginBottom: 20 }} component={Link} onClick={handleLogout}>
                 <ListItemIcon>

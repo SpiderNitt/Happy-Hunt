@@ -57,8 +57,6 @@ function CreateTeam(props) {
     setInfo("Team registered successfully!");
     setMessageType("success");
     console.log(response.data);
-    // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    // localStorage.setItem("userInfo", JSON.stringify({...userInfo, teamID: response.data.TeamId}));
     await localStorage.setItem("token", response.data.JWTtoken);
     await localStorage.setItem("userInfo", JSON.stringify(response.data.userInfo));
     await localStorage.setItem("expiresAt", response.data.expiration);
@@ -71,7 +69,7 @@ function CreateTeam(props) {
   return (
     <Container component="main" maxWidth="xs">
     <CssBaseline />
-    {info && <Message show={true} message={info} type={messageType} />}
+    {info && <Message show={true} message={info} type={messageType} setMessage={setInfo} />}
     <div className={classes.paper}>
         <Animation AnimationRoute={'team'} />
         <Formik

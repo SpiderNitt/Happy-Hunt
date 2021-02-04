@@ -4,6 +4,8 @@ const Routes = {
   USER_VERIFY: "/user/verify",
   USER_LOGIN: "/user/login",
   HOME: "/user/home",
+  PRICING: "/pricing",
+  USER_FORGOTPASSWORD: "/user/forgotPassword",
   USER_PROFILE: "/user/profile",
   USER_CLUES: "/user/happy-hunt/clues",
   USER_PICTURE_CLUE: "/user/happy-hunt/picture-clue/:id",

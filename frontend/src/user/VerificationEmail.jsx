@@ -1,21 +1,19 @@
-import { Button, Container, CssBaseline, Grid, Link, makeStyles, TextField, Typography } from '@material-ui/core';
-import { MessageOutlined } from '@material-ui/icons';
-import { Form, Formik } from 'formik';
-import React, { useContext, useState } from 'react';
-import ErrorMessage from '../components/ErrorMessage';
-import * as Yup from "yup";
-import { userMobileNoVerify } from '../api/auth';
-import Routes from '../utils/routes';
-import jwtDecode from 'jwt-decode';
-import { AuthContext } from '../api/authContext';
+import { Container, CssBaseline, Link, makeStyles, Typography } from '@material-ui/core';
+import { EmailOutlined } from '@material-ui/icons';
+// import { Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+// import ErrorMessage from '../components/ErrorMessage';
+// import * as Yup from "yup";
+// import { userMobileNoVerify } from '../api/auth';
+// import Routes from '../utils/routes';
+// import jwtDecode from 'jwt-decode';
+// import { AuthContext } from '../api/authContext';
 import LoadingPage from '../components/LoadingPage';
 import SuccessAnimation from '../components/SuccessAnimation';
 import Message from '../components/Message';
+import Footer from '../components/Footer';
+import { resendEmail } from '../api/auth';
 const queryString = require('query-string');
-
-const validationSchema = Yup.object().shape({
-    otp: Yup.string().required().label("OTP"),
-});
 
 const useStyles = makeStyles((theme) => ({
     root: { 
@@ -45,54 +43,66 @@ const useStyles = makeStyles((theme) => ({
 
 function VerificationEmail(props) {
     const styles = useStyles();
-    const [loading, setLoading] = useState(false);
-    const [info, setInfo] = useState('');
-    const [messageType, setmessageType] = useState('');
-    const [successVerify, setSuccessVerify] = useState(false);
-    const auth = useContext(AuthContext);
+    // const [loading, setLoading] = useState(false);
+    // const [info, setInfo] = useState('');
+    // const [messageType, setmessageType] = useState('');
+    // const [successVerify, setSuccessVerify] = useState(false);
+    const [email,setEmail] = useState('');
+    // const auth = useContext(AuthContext);
     const parsed = queryString.parse(props.location.search);
-    const handleSubmit = async({otp}, { resetForm }) => {
-        setLoading(true);
-        const body = {
-            mobileNo:parsed.mobileNo,   
-            otp:otp
-        }
-        const response = await userMobileNoVerify(body);
+    useEffect(() => {
+        setEmail(parsed.email);
+    },[parsed.email])
+    // const handleSubmit = async({otp}, { resetForm }) => {
+    //     setLoading(true);
+    //     const body = {
+    //         mobileNo:parsed.mobileNo,   
+    //         otp:otp
+    //     }
+    //     const response = await userMobileNoVerify(body);
+    //     if(!response.ok){
+    //         console.log(response.problem);
+    //         console.log(response.data);
+    //         setInfo(response.data.message);
+    //         setmessageType("error");
+    //         setLoading(false);
+    //         return;
+    //     }
+    //     setInfo("Registration successful!");
+    //     setmessageType("success");
+    //     setLoading(false);
+    //     setSuccessVerify(true);
+    //     const {exp} = await jwtDecode(response.data.token)
+    //     const data = {
+    //       token: response.data.token,
+    //       expiresAt: exp,
+    //       userInfo: response.data.result
+    //     }
+    //     await auth.setAuthState(data);
+    //     resetForm();
+    //     setTimeout(() => {
+    //         props.history.push(Routes.HOME);
+    //     }, 2000);
+    // }
+    const handleResend = async() => {
+        const response = await resendEmail(email);
         if(!response.ok){
-            console.log(response.problem);
-            console.log(response.data);
-            setInfo(response.data.message);
-            setmessageType("error");
-            setLoading(false);
+            console.log(response.status, response.originalError, response.problem);
             return;
         }
-        setInfo("Registration successful!");
-        setmessageType("success");
-        setLoading(false);
-        setSuccessVerify(true);
-        const {exp} = await jwtDecode(response.data.token)
-        const data = {
-          token: response.data.token,
-          expiresAt: exp,
-          userInfo: response.data.result
-        }
-        await auth.setAuthState(data);
-        resetForm();
-        setTimeout(() => {
-            props.history.push(Routes.HOME);
-        }, 2000);
+        return;
     }
     return (
         <Container maxWidth="md">
             <CssBaseline />
-            {loading && <LoadingPage /> }
+            {/* {loading && <LoadingPage /> }
             {successVerify && <SuccessAnimation />}
-            {info && <Message message={info} show={true} type={messageType} />}
-            {(!loading && !successVerify) && <div className={styles.root}>
+            {info && <Message message={info} show={true} type={messageType} />} */}
+            <div className={styles.root}>
             <div style={{ fontSize: 50 }}>
-                <MessageOutlined fontSize="inherit" />
+                <EmailOutlined fontSize="inherit" />
             </div>
-            <Formik
+            {/* <Formik
             initialValues={{ otp: '' }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
@@ -118,20 +128,19 @@ function VerificationEmail(props) {
                 </Button>
                 </Form>
             )}
-            </Formik>
+            </Formik> */}
             <Typography variant="button" style={{ marginTop: 30, fontWeight: 'bold' }}>
-                Verify your Mobile Number
+                Verify your Email Address {email}
             </Typography>
             <Link
             component="button"
             variant="body1"
-            onClick={() => {
-                console.info("resent email!!");
-            }}
+            onClick={handleResend}
             >
-                resend OTP
+                resend email
             </Link>
-            </div>}
+            </div>
+            <Footer />
         </Container>
     );
 }
