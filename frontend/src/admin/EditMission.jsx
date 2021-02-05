@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import client from '../api/client';
 import { withRouter } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
+import Message from '../components/Message';
 
 const categories = ['Riddles', 'Cryptic', 'Graphic', 'Factoids', 'Bonus'];
 const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
@@ -48,6 +49,8 @@ const dummyData = {
 const NewMission = (props) => {
     const { history } = props;
     const [data, setData] = useState(dummyData)
+    const [messageType, setmessageType] = useState('');
+    const [info, setInfo] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             const result = await client.get(`api/mission/${props.match.params.id}`);
@@ -55,7 +58,7 @@ const NewMission = (props) => {
             setData(result.data);
         }
         fetchData()
-    }, []);
+    }, [data]);
     const getLocation = (term) => {
         if (data.mission.Location) {
             if (term === 'Lat') {
@@ -153,6 +156,14 @@ const NewMission = (props) => {
             console.log(object)
             const response = await client.patch('api/admin/mission/update', object);
             console.log(response);
+            if(response.ok){
+              setInfo(response.data.message);
+              setmessageType("success")
+            }
+            else{
+              setInfo('Cannot update mission. Fill all the fields properly');
+              setmessageType("error")
+            }
         },
     });
 
@@ -166,6 +177,7 @@ const NewMission = (props) => {
             }} onClick={() => history.push('/admin/mission/update')}>
                 <ArrowBackIcon fontSize="large" color="info" />
             </div>
+            {info && <Message message={info} show={true} type={messageType} />}
             <div style={{
                 position: 'absolute',
                 left: '50%',

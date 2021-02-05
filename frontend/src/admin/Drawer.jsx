@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useState } from "react";
 import {
     Drawer as MUIDrawer,
     ListItem,
@@ -20,7 +20,7 @@ import { deepOrange } from '@material-ui/core/colors';
 import Routes from '../utils/routes';
 import { AuthContext } from "../api/authContext";
 import Button from '@material-ui/core/Button';
-import AlertMessage from '../components/AlertMessage';
+import Message from '../components/Message';
 import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
 const Drawer = props => {
     const { history } = props;
     const authContext = useContext(AuthContext);
+    const [disable,setDisable] = useState(false);
+    const [messageType, setmessageType] = useState('');
+    const [info, setInfo] = useState('');
     const classes = useStyles();
     const itemsList = [
         {
@@ -94,11 +97,20 @@ const Drawer = props => {
     ]
     const startGame = async () => {
         const response= await client.get('api/admin/start');
-        console.log(response);
-        // if response status is 200, show success alert
+        if(response.ok){
+          // display message saying that game has been started
+          setDisable(true);
+          console.log(response.data.message)
+          setInfo('Game started successfully');
+          setmessageType('success')
+        }
+        else{
+          console.log(response.data.message)
+        }  
     }
     return (
         <MUIDrawer variant="permanent" className={classes.drawer} open="true">
+            {info && <Message message={info} show={true} type={messageType} />}
             <div className={classes.toolbarIcon}>
                 <Avatar className={classes.orange}>{props.title}</Avatar>
                 <div>
@@ -143,9 +155,17 @@ const Drawer = props => {
             <div style={{
                 marginTop:'20px'
             }}>
+                {!disable && 
                 <Button variant="outlined" color="secondary" onClick={startGame} >
                   START GAME
                 </Button>
+                }
+                {
+                 disable && 
+                 <Button variant="outlined" color="secondary" disabled>
+                     GAME IS ON
+                 </Button>
+                }
             </div>
             </>
             )}

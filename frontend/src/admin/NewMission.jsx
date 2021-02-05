@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState} from 'react';
 import { useFormik } from 'formik';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
@@ -11,12 +11,15 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Message from '../components/Message';
 
 const categories = ['Riddles', 'Cryptic', 'Graphic', 'Factoids', 'Bonus'];
 const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const NewMission = (props) => {
     const { history } = props;
+    const [messageType, setmessageType] = useState('');
+    const [info, setInfo] = useState('');
     const checkBonus = (category) => {
         if (category === 'Bonus') {
             return true;
@@ -78,7 +81,14 @@ const NewMission = (props) => {
             console.log(object)
             const response = await client.post('api/admin/mission/add', object);
             console.log(response);
-
+            if(response.ok){
+              setInfo(response.data.message);
+              setmessageType("success")
+            }
+            else{
+              setInfo('Cannot add mission. Fill all the fields properly');
+              setmessageType("error")
+            }
         },
     });
 
@@ -92,6 +102,7 @@ const NewMission = (props) => {
             }} onClick={() => history.push('/admin/mission/update')}>
                 <ArrowBackIcon fontSize="large" color="info" />
             </div>
+            {info && <Message message={info} show={true} type={messageType} />}
             <div style={{
                 position: 'absolute',
                 left: '50%',

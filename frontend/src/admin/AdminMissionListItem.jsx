@@ -44,7 +44,8 @@ function AdminMissionListItem(props) {
             'Picture': <CameraAltIcon />,
             'Text': <TextFormatIcon />,
             'Picture and Location': <LocationOnIcon />,
-            'Video': <CameraAltIcon />
+            'Video': <CameraAltIcon />,
+            '':<LocationOnIcon />
         }
         return object[type];
     }
@@ -52,7 +53,7 @@ function AdminMissionListItem(props) {
         <ListItem key={props.key}>
             <ListItemAvatar>
                 <Avatar>
-                    {renderType(props.values.Category)}
+                    {renderType(props.values['answer_Type'])}
                 </Avatar>
             </ListItemAvatar>
             <ListItemText
