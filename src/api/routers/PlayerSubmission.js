@@ -343,11 +343,18 @@ player.get("/profile", playerVerify, async (req, res) => {
     const user = await User.findById(req.jwt_payload.id)
       .populate("team", "teamId teamName")
       .lean();
-    console.log(user);
+    // console.log(user);
     if (user === undefined || user === null) {
       return res.status(400).json({ message: "User not found" });
     }
-    const filter = ["password", "otpId"];
+    const filter = [
+      "password",
+      "otpId",
+      "VerificationToken",
+      "isEmailVerified",
+      "paymentAuthorize",
+      "Paid",
+    ];
     const response = Object.keys(user).reduce((object, key) => {
       if (!filter.includes(key)) {
         object[key] = user[key];

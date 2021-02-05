@@ -20,6 +20,8 @@ import CreateTeam from './CreateTeam';
 import JoinTeam from './JoinTeam';
 import { Container } from '@material-ui/core';
 import logo from '../assets/android-chrome-512x512.png';
+import '../CSS/style.css';
+import Footer from '../components/Footer';
 
 // const useStyles = makeStyles((theme) => ({
 //   modal: {
@@ -383,7 +385,6 @@ function Home() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const teamInfo = JSON.parse(localStorage.getItem("userInfo"));
-  console.log(teamInfo.team);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -394,6 +395,7 @@ function Home() {
   };
 
   return (
+    <>
     <Container>
     {teamInfo.team === undefined ?
     <Box clone style={{ marginLeft:window.innerWidth*0.08, marginRight:window.innerWidth*0.08, 
@@ -426,10 +428,14 @@ function Home() {
     </Box> : 
     <>
     <img src={logo} alt="hhc-logo" width="300" />
-    <h2>Coming soon!</h2>
+    <p className='fontStyles' style={{ fontSize: 24, color:'#EE5C53' }}>Hunt starts</p>
+    <span className='fontStyles' style={{ fontSize: 24, color:'#EE5C53' }}>on</span>
+    <h2 className='fontStyles' style={{ fontSize: 36, color: '#213B4B' }}>feburary 14</h2>
     </>
     }
     </Container>
+    <Footer />
+    </>
   );
 }
 

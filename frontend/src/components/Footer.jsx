@@ -1,5 +1,6 @@
 import { Box, Container, Grid, Link, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
+import Routes from '../utils/routes';
 
 function Copyright() {
     return (
@@ -37,21 +38,33 @@ const useStyles = makeStyles((theme) => ({
 const footers = [
     {
       title: 'Company',
-      description: ['Team', 'History', 'Contact us', 'Locations'],
+      description: [
+        ['About us', Routes.ABOUT_US], 
+        ['Contact us:', '#'], 
+        ['info@eventspeciale.com', '#'], 
+        ['Location:', '#'], 
+        ['107, Sahajanand Complex, 2416 East Street, Camp, Pune – 411001', '#']
+      ],
     },
-    {
-      title: 'Features',
-      description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
-    },
-    {
-      title: 'Resources',
-      description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
-    },
+    // {
+    //   title: 'Features',
+    //   description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
+    // },
+    // {
+    //   title: 'Resources',
+    //   description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
+    // },
     {
       title: 'Legal',
-      description: ['Privacy policy', 'Terms of use'],
+      description: [
+        ['Privacy policy', Routes.PRIVACY_POLICY], 
+        ['Terms of use', Routes.TERMS_OF_USE], 
+        ['Rules and regulations', Routes.RULES]
+      ],
     },
 ];
+
+
 
 function Footer(props) {
     const classes = useStyles();
@@ -65,9 +78,9 @@ function Footer(props) {
             </Typography>
             <ul>
               {footer.description.map((item) => (
-                <li key={item}>
-                  <Link href="#" variant="subtitle1" color="textSecondary">
-                    {item}
+                <li key={item[0]}>
+                  <Link href={item[1]}variant="subtitle1" color="textSecondary">
+                    {item[0]}
                   </Link>
                 </li>
               ))}

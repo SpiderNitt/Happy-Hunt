@@ -28,6 +28,11 @@ import MessageBot from "../components/MessageBot";
 import PaymentPage from "../user/PaymentPage";
 import Pricing from '../components/Pricing';
 import ForgotPassword from "../user/ForgotPassword";
+import PrivacyPolicy from "../static/PrivacyPolicy";
+import TermsOfUse from "../static/TermsOfUse";
+import AboutUs from "../static/AboutUs";
+import RulesAndRegulations from "../static/RulesAndRegulations";
+import UserAcceptReject from "../user/UserAcceptReject";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
   const authContext = useContext(AuthContext);
@@ -54,6 +59,10 @@ function UserNav() {
   return (
     <>
       <Switch>
+        <Route path={Routes.PRIVACY_POLICY} exact component={PrivacyPolicy} />
+        <Route path={Routes.TERMS_OF_USE} exact component={TermsOfUse} />
+        <Route path={Routes.ABOUT_US} exact component={AboutUs} />
+        <Route path={Routes.RULES} exact component={RulesAndRegulations} />
         <Route path={Routes.USER_REGISTER} exact>
           <UserRegistration />
           <MessageBot />
@@ -100,7 +109,6 @@ function UserNav() {
             <Home />
           </div>
         </UserAuthenticatedRoute>
-
         <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}>
@@ -161,7 +169,15 @@ function UserNav() {
                   <TextClues {...props} />
               </div>
              ) : (<Redirect to={Routes.WELCOME} />)
-        )} />     
+        )} /> 
+        <Route
+          path={Routes.USER_REQUEST}
+          exact
+          render={(props) => (
+          authContext.isAuthenticated() ? (
+            <UserAcceptReject {...props} />
+          ) : (<Redirect to={Routes.WELCOME} />)
+        )} />  
         <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>

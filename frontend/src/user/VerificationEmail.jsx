@@ -43,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
 
 function VerificationEmail(props) {
     const styles = useStyles();
-    // const [loading, setLoading] = useState(false);
-    // const [info, setInfo] = useState('');
-    // const [messageType, setmessageType] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [info, setInfo] = useState('');
+    const [messageType, setmessageType] = useState('');
     // const [successVerify, setSuccessVerify] = useState(false);
     const [email,setEmail] = useState('');
     // const auth = useContext(AuthContext);
@@ -85,19 +85,24 @@ function VerificationEmail(props) {
     //     }, 2000);
     // }
     const handleResend = async() => {
+        setLoading(true)
         const response = await resendEmail(email);
+        setLoading(false)
         if(!response.ok){
             console.log(response.status, response.originalError, response.problem);
+            setInfo('Error sending email');
+            setmessageType('error');
             return;
         }
+        setInfo('Email sent successfully!');
+        setmessageType('success');
         return;
     }
     return (
         <Container maxWidth="md">
             <CssBaseline />
-            {/* {loading && <LoadingPage /> }
-            {successVerify && <SuccessAnimation />}
-            {info && <Message message={info} show={true} type={messageType} />} */}
+            {loading && <LoadingPage />}
+            {info && <Message message={info} show={true} type={messageType} />}
             <div className={styles.root}>
             <div style={{ fontSize: 50 }}>
                 <EmailOutlined fontSize="inherit" />

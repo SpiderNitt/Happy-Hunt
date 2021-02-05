@@ -29,7 +29,7 @@ team.post("/create", playerVerify, async (req, res) => {
         .json({ message: "you already joined or created a team" });
     }
 
-    const user = await User.findById(req.jwt_payload.id);
+    const user = await User.findById(req.jwt_payload.id).lean();
     if (user.Paid === 0) {
       if (user.paymentAuthorize === 0) {
         return res.status(401).json({
@@ -39,7 +39,7 @@ team.post("/create", playerVerify, async (req, res) => {
       }
       if (user.paymentAuthorize === -1) {
         return res.status(401).json({
-          message: "Your payment has failed please pay again",
+          message: "make a payment to create a team",
         });
       }
       return res
@@ -63,9 +63,23 @@ team.post("/create", playerVerify, async (req, res) => {
     user.team = newTeam._id;
     await user.save();
     const token = createJWTtoken(user);
+    const filter = [
+      "password",
+      "otpId",
+      "VerificationToken",
+      "isEmailVerified",
+      "paymentAuthorize",
+      "Paid",
+    ];
+    const response = Object.keys(user).reduce((object, key) => {
+      if (!filter.includes(key)) {
+        object[key] = user[key];
+      }
+      return object;
+    }, {});
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
-      userInfo: user,
+      userInfo: response,
       JWTtoken: token,
       expiration: req.jwt_payload.exp,
     });
@@ -115,7 +129,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
       captain.emailId,
       "User Requested to join ur team",
       "Request to join ur team",
-      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>User request</h4><p>Congratualtions! ${user.name} has requested to join your team.</p><p> You can accept or reject the request.</p><button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: green; color: white; padding:5px ; border-radius: 3px">Accept</button> <button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: red; color: white; padding:5px ; border-radius: 3px">Reject</button><p style="color:navy">Happy hunting!</p></body>`
+      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>User request</h4><p>Congratualtions! ${user.name} has requested to join your team.</p><p> You can accept or reject the request.</p><button href="www.hhc.eventspeciale.com/user/team/request?userId=${req.jwt_payload.id}&name=${user.name}" style="background-color: green; color: white; padding:5px ; border-radius: 3px">Accept</button> <button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: red; color: white; padding:5px ; border-radius: 3px">Reject</button><p style="color:navy">Happy hunting!</p></body>`
     );
     return res.status(200).json({ message: "Join request sent!" });
   } catch (error) {
@@ -142,7 +156,7 @@ team.get("/reject", leaderVerify, async (req, res) => {
     io.emit(`Request ${userId}`, "Reject");
     await sendEmail(
       user.emailId,
-      "leader rejected ur request",
+      "leader rejected your request",
       "your request to join the team was rejected",
       `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Request rejected</h4><p>Oops! Your request to join the team ${existingTeam.teamName} has been rejected.</p><p style="color:navy">Happy hunting!</p></body>`
     );
@@ -177,7 +191,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
     io.emit(`Request ${userId}`, "Accept");
     await sendEmail(
       user.emailId,
-      "leader accepted ur request",
+      "leader accepted your request",
       "your request to join the team was accepted",
       `<body style="font-family: tahoma">
 
