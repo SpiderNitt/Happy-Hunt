@@ -20,7 +20,8 @@ import { deepOrange } from '@material-ui/core/colors';
 import Routes from '../utils/routes';
 import { AuthContext } from "../api/authContext";
 import Button from '@material-ui/core/Button';
-
+import AlertMessage from '../components/AlertMessage';
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -91,6 +92,11 @@ const Drawer = props => {
             }
         }
     ]
+    const startGame = async () => {
+        const response= await client.get('api/admin/start');
+        console.log(response);
+        // if response status is 200, show success alert
+    }
     return (
         <MUIDrawer variant="permanent" className={classes.drawer} open="true">
             <div className={classes.toolbarIcon}>
@@ -137,7 +143,7 @@ const Drawer = props => {
             <div style={{
                 marginTop:'20px'
             }}>
-                <Button variant="outlined" color="secondary">
+                <Button variant="outlined" color="secondary" onClick={startGame} >
                   START GAME
                 </Button>
             </div>
