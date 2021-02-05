@@ -96,10 +96,12 @@ export default function UserLogin(props) {
       // setLoading(false);
       console.log(response.problem);
       console.log(response.data);
-      // setInfo(response.data.message);
-      // setmessageType("error");
+      setInfo(response.data.message);
+      setmessageType("error");
       return;
     }
+    setInfo(response.data.message);
+    setmessageType("success");
     return;
   }
 
@@ -148,7 +150,15 @@ export default function UserLogin(props) {
                 <ErrorMessage visible={touched.password} error={errors.password} />
               </Grid>
             </Grid>
-            <p style={{ color: '#2C73D2', textAlign: 'right', cursor: 'pointer' }} onClick={() => handleForgotPassword(values["email"])}>forgot password?</p>
+            <p style={{ color: '#2C73D2', textAlign: 'right', cursor: 'pointer' }} onClick={() => {
+              if(!values["email"]){
+                errors.email='email is required';
+                setInfo('email is required');
+                setmessageType('error');
+                return;
+              }
+              handleForgotPassword(values["email"])
+            }}>forgot password?</p>
             <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53' }} fullWidth className={classes.submit}>
               Login
             </Button>

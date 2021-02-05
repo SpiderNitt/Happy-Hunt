@@ -223,7 +223,7 @@ player.post("/forgotPassword", async (req, res) => {
     <h2>Greetings from Happy Hunt!</h2>
      <h4>Reset your password</h4>
       </br/> Please use this to reset your password.</p>
-      <button href="https://www.hhc.eventspeciale.com/auth/player/resetPwd?id=${hash}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Verify</button>
+      <button href="https://www.hhc.eventspeciale.com/user/forgotPassword?id=${hash}&emailId=${emailId}" style="background-color: green; color: white; border-radius: 3px; padding:5px">Reset</button>
     <p style="color:navy">Happy hunting!</p>
       
     </body>`

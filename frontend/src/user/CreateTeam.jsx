@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
-import { TextField, Container, makeStyles, CssBaseline, Button } from '@material-ui/core';
+import { TextField, Container, makeStyles, CssBaseline, Button, Link } from '@material-ui/core';
 
 import ErrorMessage from '../components/ErrorMessage';
 import { teamRegister } from '../api/team';
@@ -93,10 +93,9 @@ function CreateTeam(props) {
               </Button>
               <br/>
               <br/>
-              <span>Not paid? </span>
-              <a href={Routes.USER_PAYMENT}>
+              <Link href={Routes.USER_PAYMENT}>
                 Pay here!
-              </a>
+              </Link>
           </Form>
         )}
         </Formik>

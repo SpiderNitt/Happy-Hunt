@@ -106,7 +106,7 @@ export default function UserRegistration(props) {
                 <TextField 
                     type="text" 
                     name="username" 
-                    label="Username" 
+                    label="Full name" 
                     variant="outlined" 
                     value={values.username}
                     onChange={e => setFieldValue( "username", e.target.value)}

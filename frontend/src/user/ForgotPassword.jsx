@@ -76,6 +76,8 @@ export default function ForgotPassword(props) {
       return;
     }
     setLoading(false);
+    setInfo("Password reset successful!");
+    setmessageType("success");
     resetForm();
     setTimeout(() => {
       History.push(Routes.USER_LOGIN);
