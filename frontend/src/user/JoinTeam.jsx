@@ -79,13 +79,13 @@ function JoinTeam(props) {
                         variant="outlined" 
                         value={values.otp}
                         onChange={e => setFieldValue( "teamId", e.target.value)}
-                        className={styles.TextField} 
+                        className={styles.TextField}
                     />
                     <ErrorMessage visible={touched.teamId} error={errors.teamId} />
                     </Grid>
                 </Grid>
-                <Button type="submit" variant="outlined" color="secondary" fullWidth className={styles.submit}>
-                Join
+                <Button type="submit" onSubmit={handleSubmit} variant="outlined" color="secondary" fullWidth className={styles.submit}>
+                    Join
                 </Button>
                 </Form>
             )}

@@ -33,6 +33,8 @@ const Routes = {
   TERMS_OF_USE: "/terms&conditions",
   ABOUT_US: "/aboutUs",
   RULES: "/rules",
+
+  USER_REQUEST: "/user/team/request",
 };
 
 export default Routes;

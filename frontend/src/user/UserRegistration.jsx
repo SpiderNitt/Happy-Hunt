@@ -53,6 +53,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function phonenumber(inputtxt)
+{
+  const phoneno = /^\d{10}$/;
+  if(inputtxt.match(phoneno))
+  {
+    return true;
+  } else{
+    return false;
+  }
+}
+
+
 export default function UserRegistration(props) {
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
@@ -61,10 +73,16 @@ export default function UserRegistration(props) {
   const history = useHistory();
 
   const handleSubmit = async ({ username, email, phoneNo, password },{ resetForm }) => {
+    
+    if(!phonenumber(phoneNo)){
+      setInfo('Mobile number must be 10 digit');
+      setmessageType("error");
+      return;
+    }
     setLoading(true);
     const body = {
       name:username.trim(),
-      emailId:email.trim(), 
+      emailId:email.trim().toLowerCase(), 
       phoneNo:phoneNo.trim(),
       password:password,
     }
@@ -88,7 +106,7 @@ export default function UserRegistration(props) {
     <Container component="main" maxWidth="xs">
     <CssBaseline />
     {loading && <LoadingPage /> }
-    {info && <Message message={info} show={true} type={messageType} />}
+    {info && <Message message={info} show={true} type={messageType} setMessage={setInfo} />}
     {!loading && <div className={classes.paper}>
         <img alt="hhc-logo" src={logo} width={200} />
         <Typography component="h1" variant="h5" style={{ fontWeight: 'bold', textDecorationLine: 'underline', color: '#EE5C53' }}>
@@ -134,7 +152,7 @@ export default function UserRegistration(props) {
                   variant="outlined"
                   value={values.phoneNo}
                   onChange={e => setFieldValue( "phoneNo", e.target.value)}
-                  className={classes.TextField} 
+                  className={classes.TextField}
                 />
                 <ErrorMessage visible={touched.phoneNo} error={errors.phoneNo} />
               </Grid>

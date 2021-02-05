@@ -129,7 +129,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
       captain.emailId,
       "User Requested to join ur team",
       "Request to join ur team",
-      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>User request</h4><p>Congratualtions! ${user.name} has requested to join your team.</p><p> You can accept or reject the request.</p><button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: green; color: white; padding:5px ; border-radius: 3px">Accept</button> <button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: red; color: white; padding:5px ; border-radius: 3px">Reject</button><p style="color:navy">Happy hunting!</p></body>`
+      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>User request</h4><p>Congratualtions! ${user.name} has requested to join your team.</p><p> You can accept or reject the request.</p><button href="www.hhc.eventspeciale.com/user/team/request?userId=${req.jwt_payload.id}&name=${user.name}" style="background-color: green; color: white; padding:5px ; border-radius: 3px">Accept</button> <button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: red; color: white; padding:5px ; border-radius: 3px">Reject</button><p style="color:navy">Happy hunting!</p></body>`
     );
     return res.status(200).json({ message: "Join request sent!" });
   } catch (error) {

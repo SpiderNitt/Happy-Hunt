@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ObjIsEmpty = (obj) => {
+    if(!obj || obj === undefined){
+        return true;
+    }
     return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 

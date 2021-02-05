@@ -32,6 +32,7 @@ import PrivacyPolicy from "../static/PrivacyPolicy";
 import TermsOfUse from "../static/TermsOfUse";
 import AboutUs from "../static/AboutUs";
 import RulesAndRegulations from "../static/RulesAndRegulations";
+import UserAcceptReject from "../user/UserAcceptReject";
 
 const UserAuthenticatedRoute = ({ children, ...rest }) => {
   const authContext = useContext(AuthContext);
@@ -168,7 +169,15 @@ function UserNav() {
                   <TextClues {...props} />
               </div>
              ) : (<Redirect to={Routes.WELCOME} />)
-        )} />     
+        )} /> 
+        <Route
+          path={Routes.USER_REQUEST}
+          exact
+          render={(props) => (
+          authContext.isAuthenticated() ? (
+            <UserAcceptReject {...props} />
+          ) : (<Redirect to={Routes.WELCOME} />)
+        )} />  
         <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
           <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>
