@@ -10,6 +10,15 @@ const listener = (...args) => {
   console.log(args);
 };
 
-const teamID = "abcd123";
+const setUnlock = () => {
+  console.log("New set Unlocked");
+};
 
-socket.on(`Notification ${teamID}`, listener);
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const teamID = userInfo.team;
+
+socket.on(`Notifications ${teamID}`, listener);
+
+socket.on(`Notifications`, listener);
+
+socket.on(`missions`, setUnlock);

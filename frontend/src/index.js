@@ -27,5 +27,6 @@ import App from "./App";
 // import PaymentPage from "./user/PaymentPage";
 // import Pricing from "./components/Pricing";
 // import ForgotPassword from "./user/ForgotPassword";
+require("./utils/socketio");
 
 ReactDOM.render(<App />, document.getElementById("root"));
