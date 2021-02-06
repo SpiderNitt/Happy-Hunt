@@ -46,7 +46,7 @@ const dummyData = {
     ]
 }
 
-const NewMission = (props) => {
+const EditMission = (props) => {
     const { history } = props;
     const [data, setData] = useState(dummyData)
     const [messageType, setmessageType] = useState('');
@@ -136,7 +136,6 @@ const NewMission = (props) => {
                 hintsArray.push({ 'Content': hint1, 'MaxPoints': maxPointsHint1 });
                 hintsArray.push({ 'Content': hint2, 'MaxPoints': maxPointsHint2 });
             }
-            // Todo: should add clues field to the result object
             const object = {
                 id: data.mission['_id'],
                 Category,
@@ -183,7 +182,7 @@ const NewMission = (props) => {
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
-                marginTop: '150px',
+                marginTop: '250px',
                 width: '600px',
             }}>
                 <h3 style={{ textAlign: 'center' }}>Edit Mission</h3>
@@ -225,6 +224,14 @@ const NewMission = (props) => {
                         error={formik.touched.clue1 && Boolean(formik.errors.clue1)}
                         helperText={formik.touched.clue1 && formik.errors.clue1}
                     />
+                    {
+                        data.mission.clue[0].text!=="" && data.mission.clue[0].photos!=="" &&
+                        <div style={{
+                            marginTop: '10px'
+                        }}>
+                           <img src={data.mission.clue[0].photos} alt='clue image' style={{ width: '250px', height: '250px' }}/>
+                        </div>
+                    }
                     <TextField
                         fullWidth
                         id="clue2"
@@ -235,6 +242,14 @@ const NewMission = (props) => {
                         error={formik.touched.clue2 && Boolean(formik.errors.clue2)}
                         helperText={formik.touched.clue2 && formik.errors.clue2}
                     />
+                    {
+                        data.mission.clue1!==undefined && data.mission.clue[1].text!=="" && data.mission.clue[1].photos!=="" &&
+                        <div style={{
+                            marginTop: '10px'
+                        }}>
+                           <img src={data.mission.clue[1].photos} alt='clue image' style={{ width: '250px', height: '250px' }}/>
+                        </div>
+                    }
                     <TextField
                         fullWidth
                         id="answer_Type"
@@ -360,5 +375,5 @@ const NewMission = (props) => {
 };
 
 
-export default withRouter(NewMission);
+export default withRouter(EditMission);
 

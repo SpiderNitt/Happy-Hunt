@@ -63,8 +63,6 @@ const NewMission = (props) => {
             const object = {
                 Category,
                 isBonus: checkBonus(Category),
-                answer: answerArray,
-                statement: cluesArray,
                 answer_Type,
                 Other_Info,
                 Location: {
@@ -75,11 +73,29 @@ const NewMission = (props) => {
                 Feed: true,
                 ServerEvaluation: ServerEvaluationBoolean,
                 maxPoints,
-                Hints: hintsArray,
-                Photos
             };
-            console.log(object)
-            const response = await client.post('api/admin/mission/add', object);
+            const formData = new FormData();
+            for(let key in object) {
+               if(typeof(object[key]) === 'object') {
+                   for (let subKey in object[key]) {
+                      formData.append(`${key}[${subKey}]`, object[key][subKey]);
+                   }
+               }
+               else {
+                    formData.append(key, object[key]);
+                }
+            }
+            for(let i=0;i<answerArray.length;i++){
+                formData.append('answer',answerArray[i]);
+            }
+            for(let i=0;i<cluesArray.length;i++){
+                formData.append('statement',cluesArray[i]);
+            }
+            if(hintsArray.length > 0){
+                formData.append('Hints',JSON.stringify(hintsArray));
+            }
+            //adding hints and files are left
+            const response = await client.post('api/admin/mission/add', formData);
             console.log(response);
             if(response.ok){
               setInfo(response.data.message);

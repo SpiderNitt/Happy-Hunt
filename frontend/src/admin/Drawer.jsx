@@ -57,7 +57,7 @@ const Drawer = props => {
             }
         },
         {
-            text: "Activity",
+            text: "Submissions",
             icon: <DynamicFeedIcon />,
             onClick: () => {
                 history.push(Routes.ADMIN_ACTIVITY_FEED);
