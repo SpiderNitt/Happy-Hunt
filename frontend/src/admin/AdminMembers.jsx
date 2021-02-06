@@ -24,6 +24,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import Message from '../components/Message';
 
 const admins = [
   {
@@ -84,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
 function AdminMembers(props) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [messageType, setmessageType] = useState('');
+  const [info, setInfo] = useState('');
   const [data, setData] = useState(admins);
   const styles = useStyles();
   useEffect(() => {
@@ -114,12 +117,21 @@ function AdminMembers(props) {
         `api/admin/deleteAdmin?emailId=${email}`
       );
       console.log(response);
+      if(response.ok){
+        setInfo(`Deleted admin with email '${email}'`)
+        setmessageType('success');
+      }
+      else{
+         setInfo(`Cannot delete Admin with email '${email}'`)
+         setmessageType('error');
+      }
     };
     confirmDelete();
   };
   return (
     <Container className={styles.root}>
       <div className={styles.box}>
+        {info && <Message message={info} show={true} type={messageType} />}
         <List>
           {data.map((element, index) => (
             <>

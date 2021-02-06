@@ -34,7 +34,6 @@ module.exports = {
     body("Location.Lat").isNumeric(),
   ],
   UpdateMissionValidator: [
-    body("id").notEmpty(),
     body("Category").isString().optional(),
     body("clue").isArray().optional(),
     body("isBonus").isBoolean().optional(),

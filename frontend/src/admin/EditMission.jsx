@@ -13,7 +13,6 @@ const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const dummyData = {
     mission: {
-        id: '',
         Category: 'Graphic',
         MissionName: 'Sample Mission Name',
         clue: [
