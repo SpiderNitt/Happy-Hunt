@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
@@ -10,10 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { GroupOutlined } from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
 import moment from 'moment';
 import client from '../api/client';
 
@@ -51,6 +47,7 @@ export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
   const [isLiked, setIsLiked]= useState(false);
+  const [disable, setDisabled]= useState(false);
 
   useEffect(() => {
     setData(activity);
@@ -65,9 +62,13 @@ export default function FeedCard({ data:activity }) {
       return;
     }
     console.log(result);
-    setIsLiked(true);
-    
+    setIsLiked(true);  
   }
+
+  const handleDisable=()=>{
+    setDisabled(true)
+  }
+  setTimeout(handleDisable,3000)
 
   return (
     <Card className={classes.root}>
@@ -96,7 +97,7 @@ export default function FeedCard({ data:activity }) {
       <div className={classes.button}>
         <CardActions>  
           <IconButton>
-            <FavoriteIcon onClick={likePost} color={isLiked ? "secondary" : "disabled"} disabled={isLiked}/>
+            <FavoriteIcon onClick={likePost} color={isLiked ? "secondary" : "disabled"} />
             <span>{data.likes}</span>
           </IconButton>
         </CardActions>

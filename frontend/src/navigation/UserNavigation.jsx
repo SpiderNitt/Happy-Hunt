@@ -14,6 +14,7 @@ import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
 import Camera from '../user/Camera';
+import ScoreNav from '../user/ScoreNav';
 import Hints from "../user/Hints";
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
@@ -117,6 +118,7 @@ function UserNav() {
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_ACTIVITY} exact>
           <TopNav />
+          <ScoreNav/>
           <div style={{ marginTop: 70 }}><NavBar select="activity" /></div>
           <Container>
             <ActivityFeed />
@@ -124,6 +126,7 @@ function UserNav() {
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_CLUES} exact>
           <TopNav />
+          <ScoreNav/>
           <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
           <ClueTabs />
         </UserAuthenticatedRoute>
@@ -134,6 +137,7 @@ function UserNav() {
               authContext.isAuthenticated() ? (
               <div style={{ marginTop: 70 }}>
                   <TopNav />
+                  <ScoreNav/>
                   <PictureClues {...props} />
               </div>
              ) : (<Redirect to={Routes.WELCOME} />)
@@ -155,6 +159,7 @@ function UserNav() {
               authContext.isAuthenticated() ? (
               <div style={{ marginTop: 70 }}>
                   <TopNav />
+                  <ScoreNav/>
                   <LocationClues {...props} />
               </div>
              ) : (<Redirect to={Routes.WELCOME} />)
@@ -166,6 +171,7 @@ function UserNav() {
               authContext.isAuthenticated() ? (
               <div style={{ marginTop: 70 }}>
                   <TopNav />
+                  <ScoreNav/>
                   <TextClues {...props} />
               </div>
              ) : (<Redirect to={Routes.WELCOME} />)

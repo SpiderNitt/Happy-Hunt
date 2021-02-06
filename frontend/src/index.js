@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
+// import ScoreNav from "../src/user/ScoreNav";
 import Pricing from "./components/Pricing";
 // import SampleHomePage from "./SampleHomePage";
 // import StickyFooter from "./StickyFooter";
