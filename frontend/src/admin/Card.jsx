@@ -16,6 +16,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import client from "../api/client";
+import Message from '../components/Message';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ActivityFeedCard(props) {
+  const [messageType, setmessageType] = useState('');
+  const [info, setInfo] = useState('');
   const [open, setOpen] = useState(false);
   const classes = useStyles();
   const handleOpen = () => {
@@ -44,15 +47,23 @@ export default function ActivityFeedCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleAccept = (isAccepted, activityfeedId) => {
+  const handleAccept = async (isAccepted, activityfeedId) => {
     console.log(isAccepted, activityfeedId);
     const object = {
       isAccepted,
       activityfeedId,
     };
     //route for accepting
-    const response = client.post("api/admin/accept", object);
+    const response = await client.post("api/admin/accept", object);
     console.log(response);
+    if(response.ok){
+      setmessageType('success');
+      setInfo(response.data.message)
+    }
+    else{
+      setmessageType('error');
+      setInfo(response.data.message)
+    }
   };
   const handleReject = () => {
     handleOpen();
@@ -70,13 +81,14 @@ export default function ActivityFeedCard(props) {
   };
   return (
     <Card className={classes.root}>
+      {info && <Message message={info} show={true} type={messageType} setMessage={setInfo}/>}
       <CardHeader
         avatar={
           <Avatar className={classes.avatar}>
             <GroupIcon />
           </Avatar>
         }
-        title={`Team id: ${props.data.team.teamName}`}
+        title={`Team name: ${props.data.team.teamName}`}
         subheader={props.data.Date}
       />
       <CardMedia
@@ -86,7 +98,7 @@ export default function ActivityFeedCard(props) {
       />
       <CardContent>
         <Typography variant='body2' color='textSecondary' component='p'>
-          {`Mission id: ${props.data.mission.MissionName}`}
+          {`Mission name: ${props.data.mission.MissionName}`}
         </Typography>
       </CardContent>
       <CardActions className={classes.buttonGroup}>

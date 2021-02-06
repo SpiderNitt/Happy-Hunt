@@ -17,12 +17,10 @@ const Activity = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await client.get('api/admin/submissions');
-      console.log(result);
       setData(result.data.submissions);
-      console.log(result.data.submissions);
     }
     fetchData();
-  }, []);
+  }, [data]);
   return (
     <Grid container className={styles.container}>
       {
