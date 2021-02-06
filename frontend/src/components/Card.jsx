@@ -11,6 +11,7 @@ import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { GroupOutlined } from '@material-ui/icons';
 import moment from 'moment';
+import ShareIcon from '@material-ui/icons/Share';
 import client from '../api/client';
 import WebShare from './WebShare';
 const useStyles = makeStyles((theme) => ({
@@ -63,11 +64,6 @@ export default function FeedCard({ data:activity }) {
     console.log(result);
     setIsLiked(true);  
   }
-
-  const handleDisable=()=>{
-    setDisabled(true)
-  }
-  setTimeout(handleDisable,3000)
 
   return (
     <Card className={classes.root}>
