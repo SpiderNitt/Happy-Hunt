@@ -3,7 +3,7 @@ import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon  } f
 import { Facebook, Twitter } from '@material-ui/icons'
 function WebShare(props) {
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '25%' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
             <FacebookShareButton
                 url="https://source.unsplash.com/random"
                 children={<FacebookIcon borderRadius="50%" />}

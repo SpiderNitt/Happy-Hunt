@@ -55,21 +55,10 @@ const RedirectUrl = (category, id) => {
 
 function Clues(props){
   const classes= useStyles();
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const fetch = async () => {
-    const result = await client.get('api/player/mission')
-    if(!result.ok){
-      console.log(result.originalError, result.problem, result.status);
-      return;
-    }
-    // console.log(result.data)
-    setData(result.data.missions);
-    setLoading(false);
-  }
+  const data = props.data.data;
   useEffect(() => {
-    fetch();
+    setLoading(false);
   }, []);
 
   // console.log(props)
