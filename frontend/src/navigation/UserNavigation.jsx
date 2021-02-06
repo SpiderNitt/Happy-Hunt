@@ -14,7 +14,7 @@ import TextClues from '../user/TextClues';
 import LocationClues from '../user/LocationClues';
 import Capture from '../user/Photogragh';
 import Camera from '../user/Camera';
-
+import Hints from "../user/Hints";
 import ClueTabs from "../user/ClueTabs";
 import Routes from "../utils/routes";
 import ProfilePage from "../user/ProfilePage";

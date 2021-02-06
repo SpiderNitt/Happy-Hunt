@@ -377,6 +377,7 @@ player.patch(
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
+      console.log(req.body, userDetails, id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }
@@ -388,7 +389,7 @@ player.patch(
           ? req.file.buffer.toString("base64")
           : userDetails.photo;
       } catch (err) {
-        console.log(err.message);
+        console.log(err);
         return res.status(400).json({ message: "Image upload failed" });
       }
       const result = await User.updateOne({ _id: id }, update);

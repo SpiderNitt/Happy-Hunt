@@ -20,6 +20,7 @@ function PictureClues(props) {
     const classes = useStyles();
     const [dataUri, setDataUri] = useState('');
     const [data, setData]= useState([]);
+    const [hints,setHints] = useState([]);
     const [imageSelected, setImageSelected] = useState("");
     const [evaluation, showEvaluation]= useState(false);
     const [clues,setClues] = useState([]);
@@ -37,6 +38,7 @@ function PictureClues(props) {
         console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
+        await setHints(result.data.hint)
     }
 
       useEffect(() => {
@@ -108,8 +110,6 @@ function PictureClues(props) {
                     fontSize:20,
                     fontFamily:'calibri',
                     display:'flex', alignItems:'center', justifyContent:'center'}}>{data.Other_Info}</p>
-                    <div style= {{display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    </div>
                     {clues !== [] && clues.map((clue, index) => (
                     <div key={index} index={index + 1}>
                     <p>{clue.text}</p>
@@ -124,9 +124,9 @@ function PictureClues(props) {
                     : ''} 
                         
                     {evaluation? <p>{ans}</p>: ''}
-                    <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"black", display:'flex', justifyContent:'center'}}>note: the picture should be taken from inside the car.</p>
+    
                     <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                    <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Take Picture!</Button>
+                    <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</Button>
                     {!data.isBonus ? 
                     <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
                     : ''} 
@@ -147,8 +147,9 @@ function PictureClues(props) {
                     >
                     <Fade in={open}>
                     <div className={classes.paper}>
-                        <Hints id={data._id}/>
+                        {hints && <Hints id={data._id} data={hints}/>}
                     </div>
+                    
                     </Fade>                
                     </Modal>
                     </div>) :''}

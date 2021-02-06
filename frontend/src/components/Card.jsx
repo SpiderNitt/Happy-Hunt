@@ -13,7 +13,9 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { GroupOutlined } from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
 import moment from 'moment';
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,16 +40,34 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontWeight: 'bold',
+  },
+  button: {
+    display:"flex",
+    justifyContent:"space-around"
   }
 }));
 
 export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
+  const [isLiked, setIsLiked]= useState(false);
 
   useEffect(() => {
     setData(activity);
   }, [])
+
+  console.log(data)
+
+  const likePost = async () => {
+    const result = await client.get(`api/activity/feed/likes/${data._id}`)
+    if(!result.ok){
+      console.log(result.originalError, result.problem, result.status);
+      return;
+    }
+    console.log(result);
+    setIsLiked(true);
+    
+  }
 
   return (
     <Card className={classes.root}>
@@ -68,25 +88,19 @@ export default function FeedCard({ data:activity }) {
           align: 'left',
         }}
       />
-      <CardMedia
-        className={classes.media}
-        image="https://source.unsplash.com/random"
-        title={data.MissionName}
-      />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {data.MissionName}
         </Typography>
       </CardContent>
-      <CardActions>
-        <IconButton>
-          <FavoriteIcon />
-          <span>{data.likes}</span>
-        </IconButton>
-        <IconButton>
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
+      <div className={classes.button}>
+        <CardActions>  
+          <IconButton>
+            <FavoriteIcon onClick={likePost} color={isLiked ? "secondary" : "disabled"} disabled={isLiked}/>
+            <span>{data.likes}</span>
+          </IconButton>
+        </CardActions>
+      </div>
       </>
     }
     </Card>

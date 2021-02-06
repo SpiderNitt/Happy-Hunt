@@ -64,6 +64,7 @@ function Clues(props){
       console.log(result.originalError, result.problem, result.status);
       return;
     }
+    console.log(result.data)
     setData(result.data.missions);
     setLoading(false);
   }
