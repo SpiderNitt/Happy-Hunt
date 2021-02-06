@@ -96,10 +96,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
   try {
     const { teamId } = req.params;
     const user = await User.findById(req.jwt_payload.id);
-    if (
-      req.jwt_payload.Role === "TeamLeader" ||
-      req.jwt_payload.Role === "TeamMember"
-    ) {
+    if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
       return res
         .status(402)
         .json({ message: "you are already part of a team" });
@@ -110,6 +107,9 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
       .exec();
     if (teamId === undefined || teamId === null || existingTeam === null) {
       return res.status(400).json({ message: "Invalid teamId" });
+    }
+    if (existingTeam.requests.includes(user._id)) {
+      return res.status(400).json({ message: "Request already sent" });
     }
     let CaptainID;
     for (let i = 0; i < existingTeam.members.length; i += 1) {
@@ -122,8 +122,14 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Oops! Team is already full" });
     }
-    existingTeam.requests.push(req.jwt_payload.id);
-    existingTeam.save();
+    // existingTeam.requests.push(req.jwt_payload.id);
+    await Team.updateOne(
+      { teamId },
+      {
+        $push: { requests: req.jwt_payload.id },
+      }
+    );
+    // await existingTeam.save();
     const captain = await User.findById(CaptainID);
     await sendEmail(
       captain.emailId,
@@ -152,7 +158,13 @@ team.get("/reject", leaderVerify, async (req, res) => {
     const existingTeam = await Team.findById(req.jwt_payload.team);
     io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
-    existingTeam.save();
+    // await existingTeam.save();
+    await Team.updateOne(
+      { _id: req.jwt_payload.team },
+      {
+        $pull: { requests: userId },
+      }
+    );
     io.emit(`Request ${userId}`, "Reject");
     await sendEmail(
       user.emailId,
@@ -181,12 +193,21 @@ team.get("/accept", leaderVerify, async (req, res) => {
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Team is full" });
     }
+
     user.team = existingTeam._id;
-    existingTeam.members.push(user);
+    existingTeam.members.push(userId);
     existingTeam.Paid -= 1;
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
-    existingTeam.save();
-    user.save();
+    // await existingTeam.save();
+    await Team.updateOne(
+      { _id: req.jwt_payload.team },
+      {
+        $pull: { requests: userId },
+        $push: { members: userId },
+        Paid: existingTeam.Paid,
+      }
+    );
+    await user.save();
     const token = createJWTtoken(user);
     io.emit(`Request ${userId}`, "Accept");
     await sendEmail(

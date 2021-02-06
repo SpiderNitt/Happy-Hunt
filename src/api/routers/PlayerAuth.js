@@ -206,7 +206,7 @@ player.get("/resendEmail", async (req, res) => {
 player.post("/forgotPassword", async (req, res) => {
   try {
     const { emailId } = req.body;
-    const hash = cryptoRandomString({ length: 5, type: "alphanumeric" });
+    const hash = cryptoRandomString({ length: 128, type: "alphanumeric" });
     const result = await User.updateOne(
       { emailId },
       { VerificationToken: hash }
