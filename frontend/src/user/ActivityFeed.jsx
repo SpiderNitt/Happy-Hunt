@@ -41,15 +41,14 @@ function ActivityFeed() {
   const [data, setData] = useState([]);
   const [likedColor, setLikedColor]= useState("");
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const result = await client.get('api/activity/feed')
-      console.log(result);
-      setLoading(false);
-      setData(result.data.activityFeeds);
+  const fetch = async () => {
+    const result = await client.get('api/activity/feed')
+    console.log(result);
+    setLoading(false);
+    setData(result.data.activityFeeds);
   }
-  fetch();
+  useEffect(() => {
+    fetch();
   }, []);
 
 const getLike= ()=>{

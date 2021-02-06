@@ -12,7 +12,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { GroupOutlined } from '@material-ui/icons';
 import moment from 'moment';
 import client from '../api/client';
-
+import WebShare from './WebShare';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -47,8 +47,7 @@ export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
   const [isLiked, setIsLiked]= useState(false);
-  const [disable, setDisabled]= useState(false);
-
+  const [sharePost,setSharePost] = useState(false);
   useEffect(() => {
     setData(activity);
   }, [])
@@ -100,10 +99,14 @@ export default function FeedCard({ data:activity }) {
             <FavoriteIcon onClick={likePost} color={isLiked ? "secondary" : "disabled"} />
             <span>{data.likes}</span>
           </IconButton>
+          <IconButton>
+            <ShareIcon onClick={()=>{setSharePost(true)}}></ShareIcon>
+          </IconButton>
         </CardActions>
       </div>
       </>
     }
+    {sharePost?(<WebShare></WebShare>):(<></>)}
     </Card>
   );
 }
