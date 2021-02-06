@@ -66,7 +66,7 @@ export default function AdminRegistration() {
           <div className={classes.avatar}>
             <SupervisorAccount style={{ fontSize: 40 }} />
           </div>
-          {info && <Message message={info} show={true} type={messageType} />}
+          {info && <Message message={info} show={true} type={messageType} setMessage={setInfo} />}
           <Typography component="h1" variant="h5">
             Add Admin
           </Typography>

@@ -131,7 +131,7 @@ function AdminMembers(props) {
   return (
     <Container className={styles.root}>
       <div className={styles.box}>
-        {info && <Message message={info} show={true} type={messageType} />}
+        {info && <Message message={info} show={true} type={messageType} setMessage={setInfo}/>}
         <List>
           {data.map((element, index) => (
             <>

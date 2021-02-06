@@ -197,7 +197,7 @@ const EditMission = (props) => {
             }} onClick={() => history.push('/admin/mission/update')}>
                 <ArrowBackIcon fontSize="large" color="info" />
             </div>
-            {info && <Message message={info} show={true} type={messageType} />}
+            {info && <Message message={info} show={true} type={messageType} setMessage={setInfo}/>}
             <div style={{
                 position: 'absolute',
                 left: '50%',
