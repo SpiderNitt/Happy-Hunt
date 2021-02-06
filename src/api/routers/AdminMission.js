@@ -68,7 +68,7 @@ Router.post(
       if (Hints) {
         const hintarray = JSON.parse(Hints);
         for (let i = 0; i < hintarray.length; i += 1) {
-          const newhint = await Hint.create(Hints[i]);
+          const newhint = await Hint.create(hintarray[i]);
           newHints.push(newhint);
         }
       }

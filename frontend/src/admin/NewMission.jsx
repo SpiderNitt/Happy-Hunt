@@ -94,7 +94,11 @@ const NewMission = (props) => {
             if(hintsArray.length > 0){
                 formData.append('Hints',JSON.stringify(hintsArray));
             }
-            //adding hints and files are left
+            if(Photos){
+                for(let i=0;i<Photos.length;i++){
+                    formData.append('Photos',Photos[i]);
+                }
+            }
             const response = await client.post('api/admin/mission/add', formData);
             console.log(response);
             if(response.ok){
