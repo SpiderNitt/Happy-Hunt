@@ -216,7 +216,6 @@ team.get("/accept", leaderVerify, async (req, res) => {
       }
     );
     await user.save();
-
     const token = createJWTtoken(user);
 
     io.emit(`Request ${userId}`, "Accept");
