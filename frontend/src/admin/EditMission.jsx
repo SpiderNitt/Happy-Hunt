@@ -13,6 +13,7 @@ const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const dummyData = {
     mission: {
+        id: '',
         Category: 'Graphic',
         MissionName: 'Sample Mission Name',
         clue: [
@@ -58,7 +59,7 @@ const EditMission = (props) => {
             setData(result.data);
         }
         fetchData()
-    }, [data]);
+    }, []);
     const getLocation = (term) => {
         if (data.mission.Location) {
             if (term === 'Lat') {
@@ -121,7 +122,7 @@ const EditMission = (props) => {
         enableReinitialize: true,
         onSubmit: async (values) => {
 
-            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, clue1, hint1, maxPointsHint1, hint2, maxPointsHint2 } = values;
+            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, clue1, hint1, maxPointsHint1, hint2, maxPointsHint2,Photos } = values;
             let answerArray = [];
             answerArray = answer.split(',');
             const cluesArray = [];
@@ -139,8 +140,6 @@ const EditMission = (props) => {
             const object = {
                 id: data.mission['_id'],
                 Category,
-                clue: cluesArray,
-                answer: answerArray,
                 isBonus: checkBonus(Category),
                 answer_Type,
                 Other_Info,
@@ -150,10 +149,33 @@ const EditMission = (props) => {
                 },
                 MissionName,
                 maxPoints,
-                Hints: hintsArray,
             };
-            console.log(object)
-            const response = await client.patch('api/admin/mission/update', object);
+            const formData = new FormData();
+            for(let key in object) {
+               if(typeof(object[key]) === 'object') {
+                   for (let subKey in object[key]) {
+                      formData.append(`${key}[${subKey}]`, object[key][subKey]);
+                   }
+               }
+               else {
+                    formData.append(key, object[key]);
+                }
+            }
+            for(let i=0;i<answerArray.length;i++){
+                formData.append('answer',answerArray[i]);
+            }
+            for(let i=0;i<cluesArray.length;i++){
+                formData.append('clue',cluesArray[i]);
+            }
+            if(hintsArray.length > 0){
+                formData.append('Hints',JSON.stringify(hintsArray));
+            }
+            if(Photos){
+                for(let i=0;i<Photos.length;i++){
+                    formData.append('Photos',Photos[i]);
+                }
+            }
+            const response = await client.post('api/admin/mission/update', formData);
             console.log(response);
             if(response.ok){
               setInfo(response.data.message);
@@ -182,10 +204,11 @@ const EditMission = (props) => {
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
-                marginTop: '250px',
+                marginTop: '150px',
                 width: '600px',
             }}>
                 <h3 style={{ textAlign: 'center' }}>Edit Mission</h3>
+                <p>Please upload images if necessary while editing any field.</p>
                 <form onSubmit={formik.handleSubmit}>
                     <TextField
                         fullWidth
@@ -224,14 +247,6 @@ const EditMission = (props) => {
                         error={formik.touched.clue1 && Boolean(formik.errors.clue1)}
                         helperText={formik.touched.clue1 && formik.errors.clue1}
                     />
-                    {
-                        data.mission.clue[0].text!=="" && data.mission.clue[0].photos!=="" &&
-                        <div style={{
-                            marginTop: '10px'
-                        }}>
-                           <img src={data.mission.clue[0].photos} alt='clue image' style={{ width: '250px', height: '250px' }}/>
-                        </div>
-                    }
                     <TextField
                         fullWidth
                         id="clue2"
@@ -242,12 +257,15 @@ const EditMission = (props) => {
                         error={formik.touched.clue2 && Boolean(formik.errors.clue2)}
                         helperText={formik.touched.clue2 && formik.errors.clue2}
                     />
-                    {
-                        data.mission.clue1!==undefined && data.mission.clue[1].text!=="" && data.mission.clue[1].photos!=="" &&
-                        <div style={{
-                            marginTop: '10px'
-                        }}>
-                           <img src={data.mission.clue[1].photos} alt='clue image' style={{ width: '250px', height: '250px' }}/>
+                    {(formik.values.clue1 !== "") &&
+                        <div>
+                            <br /><br />
+                            <div className="form-group">
+                                <input id="file" name="file" type="file" multiple onChange={(event) => {
+                                    formik.setFieldValue("Photos", event.currentTarget.files);
+                                }} />
+                            </div>
+                            <br />
                         </div>
                     }
                     <TextField
