@@ -162,7 +162,11 @@ team.get("/reject", leaderVerify, async (req, res) => {
         $pull: { requests: userId },
       }
     );
+<<<<<<< HEAD
     // io.emit(`Request ${userId}`, "Reject");
+=======
+    io.emit(`Request ${userId}`, "Reject");
+>>>>>>> eae66c6... production code changes
     await sendEmail(
       user.emailId,
       "Team request",
@@ -216,7 +220,12 @@ team.get("/accept", leaderVerify, async (req, res) => {
       }
     );
     await user.save();
+<<<<<<< HEAD
     // io.emit(`Request ${userId}`, "Accept");
+=======
+    const token = createJWTtoken(user);
+    io.emit(`Request ${userId}`, "Accept");
+>>>>>>> eae66c6... production code changes
     await sendEmail(
       user.emailId,
       "leader accepted your request",
