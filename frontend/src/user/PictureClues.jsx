@@ -31,7 +31,7 @@ function PictureClues(props) {
         loaded:false,
         coordinates: {lat:"", long:""}
     });
-    console.log(onCam);
+    // console.log(onCam);
 
     const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
@@ -45,7 +45,7 @@ function PictureClues(props) {
         fetch();
       }, [props.match.params.id]);
 
-      console.log(data)
+    //   console.log(data)
  
     const onSuccess = location=>{
         setLocation({
@@ -60,7 +60,7 @@ function PictureClues(props) {
     const getLocation=()=>{
         navigator.geolocation.getCurrentPosition(onSuccess);
     };
-    console.log(location)
+    // console.log(location)
 
     const locationBody= {
         "MissionId":props.match.params.id,
@@ -84,8 +84,8 @@ function PictureClues(props) {
         showEvaluation(true)
         setAns(result.data.message)
 
-        console.log(ans);
-        console.log(dataUri);
+        // console.log(ans);
+        // console.log(dataUri);
       }
     
     const handleOpen = () => {

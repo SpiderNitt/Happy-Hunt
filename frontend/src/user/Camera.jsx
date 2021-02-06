@@ -51,7 +51,7 @@ function Camera(props) {
   const [inputFile,setInputFile]= useState(null);
       const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
-        console.log(result.data);
+        // console.log(result.data);
         await setData(result.data.mission.answer_Type);
     }
 
@@ -59,23 +59,23 @@ function Camera(props) {
         fetch();
       }, [props.match.params.id]);
 
-      console.log(data)
+      // console.log(data)
 
   const handleCapture = (target) => {
     if (target.files) {
       if (target.files.length !== 0) {
         const file = target.files[0];
-        console.log(file);
+        // console.log(file);
         const newUrl = URL.createObjectURL(file);
-        console.log(newUrl);
+        // console.log(newUrl);
         setSource(newUrl);
         setInputFile(file)
         setDisable(false)
       }
     }
   }
-  console.log(inputFile);
-  console.log(props)
+  // console.log(inputFile);
+  // console.log(props)
 
   const handleSubmit = async() => {
     var formData = new FormData();
@@ -85,14 +85,14 @@ function Camera(props) {
     const response = await api.post('api/player/submission', formData)
     console.log(response)
     if(!response.ok){
-      console.log(response.problem);
-      console.log(response.data);
+      // console.log(response.problem);
+      // console.log(response.data);
       setResponse(response.data.message);
       return;
     }
-    console.log(formData)
+    // console.log(formData)
     setResponse(response.data.message);
-    console.log(response);
+    // console.log(response);
   }
 
   const mediaType =(type)=>{

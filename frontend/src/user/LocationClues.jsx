@@ -32,11 +32,11 @@ function LocationClues(props) {
             console.log(result.status, result.problem, result.originalError);
             return;
         }
-        console.log(result.data);
+        // console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
-        console.log(data);
+        // console.log(data);
     }
 
     useEffect(() => {
@@ -57,7 +57,7 @@ function LocationClues(props) {
         navigator.geolocation.getCurrentPosition(onSuccess);
         setDisable(false);
     };
-    console.log(location)
+    // console.log(location)
       const submitAnswer = async () => {
         const body= {
             MissionId:props.match.params.id,
@@ -80,7 +80,7 @@ function LocationClues(props) {
         setAns(result.data.message)
         handleDisable(result);
       }
-      console.log(ans);
+    //   console.log(ans);
   
     const handleOpen = () => {
         setOpen(true);
@@ -95,7 +95,7 @@ function LocationClues(props) {
             setDisableHint(true)
         }
     }
-    console.log(disableHint)
+    // console.log(disableHint)
 
     return (
         

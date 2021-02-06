@@ -44,8 +44,8 @@ const getLocation=()=>{
     setDisable(false)
 
 }
-console.log(location);
-console.log(props)
+// console.log(location);
+// console.log(props)
     
 const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
@@ -58,7 +58,7 @@ const fetch = async () => {
     useEffect(() => {
         fetch();
     }, [props.match.params.id]);
-    console.log(data)
+    // console.log(data)
 
       const submitAnswer = async () => {
       const body= {
@@ -81,12 +81,12 @@ const fetch = async () => {
         showEvaluation(true)
         setAns(result.data.message)
       }
-      console.log(ans);
+    //   console.log(ans);
 
     const handleChange= (e)=>{
         setInput(e.target.value)
     }
-    console.log(input)
+    // console.log(input)
 
     
     const handleSubmit = async() => {
@@ -111,7 +111,7 @@ const fetch = async () => {
         handleDisable(result);
       }
 
-    console.log(data)
+    // console.log(data)
     const handleOpen = () => {
       setOpen(true);
     };
@@ -125,7 +125,7 @@ const fetch = async () => {
             setDisableHint(true)
         }
     }
-    console.log(disableHint)
+    // console.log(disableHint)
     return (
         
         <React.Fragment >

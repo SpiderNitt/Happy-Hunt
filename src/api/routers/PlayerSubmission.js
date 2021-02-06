@@ -468,8 +468,8 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         });
       }
     }
-
-    return res.status(200).json({ missions: arr, bonus: arr2 });
+    arr.concat(arr2);
+    return res.status(200).json({ missions: arr });
   } catch (e) {
     console.log(e);
     return res.status(500).json({

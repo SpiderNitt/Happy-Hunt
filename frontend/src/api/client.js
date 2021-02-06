@@ -1,7 +1,7 @@
 import apisauce from "apisauce";
 
 const client = apisauce.create({
-  baseURL: "https://www.hhc.eventspeciale.com/",
+  baseURL:  "http://localhost:3000/",
 });
 
 client.addAsyncRequestTransform(async (request) => {
