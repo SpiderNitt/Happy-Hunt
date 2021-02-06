@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ObjIsEmpty = (obj) => {
+    if(!obj || obj === undefined){
+        return true;
+    }
     return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
@@ -57,14 +60,14 @@ function ProfilePage(props) {
         const result = await client.get('api/player/profile')
         setloading(false);
         if(!result.ok){
-            console.log(result.status, result.originalError, result.problem);
-            console.log(result.data);
+            // console.log(result.status, result.originalError, result.problem);
+            // console.log(result.data);
             setmessage(result.data.message);
             setmessageType("error");
             return;
         }
         setUserInfo(result.data);
-        console.log(result.data.team !== undefined, TeamInfo);
+        // console.log(result.data.team !== undefined, TeamInfo);
         if(result.data.team !== undefined) setTeamInfo(result.data.team);
     }
 
@@ -86,27 +89,27 @@ function ProfilePage(props) {
                 <ListItem className={classes.items}>
                     <ListItemText primary={`Name: ${UserInfo.name}`} />
                     <ListItemSecondaryAction>
-                    <IconButton edge="end">
+                    {/* <IconButton edge="end">
                         <Edit />
-                    </IconButton>
+                    </IconButton> */}
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
                     <ListItemText primary={`Email Id: ${UserInfo.emailId}`} />
                     <ListItemSecondaryAction>
-                    <IconButton edge="end">
+                    {/* <IconButton edge="end">
                         <Edit />
-                    </IconButton>
+                    </IconButton> */}
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
                     <ListItemText primary={`Mobile no: ${UserInfo.phoneNo}`} />
                     <ListItemSecondaryAction>
-                    <IconButton edge="end">
+                    {/* <IconButton edge="end">
                         <Edit />
-                    </IconButton>
+                    </IconButton> */}
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />

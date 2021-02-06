@@ -4,7 +4,6 @@ const Routes = {
   USER_VERIFY: "/user/verify",
   USER_LOGIN: "/user/login",
   HOME: "/user/home",
-  PRICING: "/pricing",
   USER_FORGOTPASSWORD: "/user/forgotPassword",
   USER_PROFILE: "/user/profile",
   USER_CLUES: "/user/happy-hunt/clues",
@@ -29,6 +28,13 @@ const Routes = {
   ADMIN_NEW_MISSION: "/admin/mission/new",
   ADMIN_ACTIVITY_FEED: "/admin/activity",
   ADMIN_EDIT_MISSION: "/admin/mission/edit/:id",
+
+  PRIVACY_POLICY: "/privacy/policy",
+  TERMS_OF_USE: "/terms&conditions",
+  ABOUT_US: "/aboutUs",
+  RULES: "/rules",
+
+  USER_REQUEST: "/user/team/request",
 };
 
 export default Routes;

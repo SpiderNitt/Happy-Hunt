@@ -11,6 +11,7 @@ import Routes from '../utils/routes';
 import LoadingPage from '../components/LoadingPage';
 import Message from '../components/Message';
 import Footer from '../components/Footer';
+import logo from '../assets/android-chrome-512x512.png';
 
 
 const validationSchema = Yup.object().shape({
@@ -52,6 +53,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function phonenumber(inputtxt)
+{
+  const phoneno = /^\d{10}$/;
+  if(inputtxt.match(phoneno))
+  {
+    return true;
+  } else{
+    return false;
+  }
+}
+
+
 export default function UserRegistration(props) {
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
@@ -60,10 +73,16 @@ export default function UserRegistration(props) {
   const history = useHistory();
 
   const handleSubmit = async ({ username, email, phoneNo, password },{ resetForm }) => {
+    
+    if(!phonenumber(phoneNo)){
+      setInfo('Mobile number must be 10 digit');
+      setmessageType("error");
+      return;
+    }
     setLoading(true);
     const body = {
       name:username.trim(),
-      emailId:email.trim(), 
+      emailId:email.trim().toLowerCase(), 
       phoneNo:phoneNo.trim(),
       password:password,
     }
@@ -87,12 +106,10 @@ export default function UserRegistration(props) {
     <Container component="main" maxWidth="xs">
     <CssBaseline />
     {loading && <LoadingPage /> }
-    {info && <Message message={info} show={true} type={messageType} />}
+    {info && <Message message={info} show={true} type={messageType} setMessage={setInfo} />}
     {!loading && <div className={classes.paper}>
-        <div className={classes.avatar}>
-          <LockOutlined style={{ fontSize: 40 }} />
-        </div>
-        <Typography component="h1" variant="h5">
+        <img alt="hhc-logo" src={logo} width={200} />
+        <Typography component="h1" variant="h5" style={{ fontWeight: 'bold', textDecorationLine: 'underline', color: '#EE5C53' }}>
           Register
         </Typography>
         <Formik
@@ -107,7 +124,7 @@ export default function UserRegistration(props) {
                 <TextField 
                     type="text" 
                     name="username" 
-                    label="Username" 
+                    label="Full name" 
                     variant="outlined" 
                     value={values.username}
                     onChange={e => setFieldValue( "username", e.target.value)}
@@ -135,7 +152,7 @@ export default function UserRegistration(props) {
                   variant="outlined"
                   value={values.phoneNo}
                   onChange={e => setFieldValue( "phoneNo", e.target.value)}
-                  className={classes.TextField} 
+                  className={classes.TextField}
                 />
                 <ErrorMessage visible={touched.phoneNo} error={errors.phoneNo} />
               </Grid>
@@ -152,7 +169,7 @@ export default function UserRegistration(props) {
                 <ErrorMessage visible={touched.password} error={errors.password} />
               </Grid>
             </Grid>
-            <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
+            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53' }} fullWidth className={classes.submit}>
               Register
             </Button>
             <p>Already have account? <Link href={Routes.USER_LOGIN}>Login</Link></p>
