@@ -24,7 +24,7 @@ module.exports = {
     body("statement").isArray().notEmpty(),
     body("answer_Type").isString().notEmpty(),
     body("MissionName").isString().notEmpty(),
-    body("answer").isArray().notEmpty(),
+
     body("Feed").isBoolean().notEmpty(),
     body("ServerEvaluation").isBoolean().notEmpty(),
     body("Other_Info").isString().optional(),
@@ -39,7 +39,7 @@ module.exports = {
     body("clue").isArray().optional(),
     body("isBonus").isBoolean().optional(),
     body("answer_Type").isString().optional(),
-    body("answer").isArray().optional(),
+
     body("MissionName").isString().optional(),
     body("Feed").isBoolean().optional(),
     body("ServerEvaluation").isBoolean().optional(),

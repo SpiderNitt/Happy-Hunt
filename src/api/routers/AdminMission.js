@@ -118,7 +118,7 @@ Router.post(
     }
   }
 );
-Router.patch(
+Router.post(
   "/update",
   superAdminVerify,
   UpdateMissionValidator,
