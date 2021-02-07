@@ -12,7 +12,7 @@ import LoadingPage from '../components/LoadingPage';
 const useStyles = makeStyles({
   title: {
     fontSize: 20,
-    color: "olive",
+    color: "#213b4b",
     fontWeight: 300,
     textAlign: 'left',
     fontFamily: "tahoma"
@@ -34,7 +34,12 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 10
+  },
+  card:{
+    backgroundColor:'#f2f2f3',
+    color:'#213b4b',
+    borderColor:'#213b4b'
   }
 });
 
@@ -54,12 +59,8 @@ const RedirectUrl = (category, id) => {
 
 function Clues(props){
   const classes= useStyles();
-  const [loading, setLoading] = useState(true);
+  const loading = props.loading;
   const data = props.data.data;
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
   // console.log(props)
 
   const RenderClues=()=>{

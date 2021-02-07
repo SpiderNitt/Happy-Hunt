@@ -57,8 +57,7 @@ export default function ClueTabs() {
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [data, setData] = useState([]);
-  const [loading, setloading] = useState(true);
-  
+  const [loading,setLoading] = useState(true);
   const fetch = async () => {
     const result = await client.get('api/player/mission')
     if (!result.ok) {
@@ -73,6 +72,7 @@ export default function ClueTabs() {
     if (result.data.missions.length >= 15) {
       setOpen3(true);
     }
+    setLoading(false);
     setData(result.data.missions);
   }
   useEffect(() => {
@@ -130,13 +130,13 @@ export default function ClueTabs() {
         {open3 ? <Tab icon={<LockOpen {...a11yProps(2)} />} /> : <Tab icon={<Lock />} disabled />}
       </Tabs>
       <TabPanel value={value} index={0}>
-        {data !== [] && <Clues data={getSet1()} />}
+        <Clues loading={loading} data={getSet1()} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {data !== [] && <Clues data={getSet2()} />}
+        <Clues loading={loading} data={getSet2()} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        {data !== [] && <Clues data={getSet3()} />}
+        <Clues loading={loading} data={getSet3()} />
       </TabPanel>
       </>}
     </Container>

@@ -1,4 +1,4 @@
-import { Avatar, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
+import { Avatar, Card, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles, CardContent } from '@material-ui/core';
 import { Add, Edit, ExitToApp, FileCopyOutlined, GroupAdd } from '@material-ui/icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -37,6 +37,12 @@ const useStyles = makeStyles((theme) => ({
     input: {
        margin:5,
        float:"left"
+    },
+    teamCard: {
+        textAlign:'center',
+        paddingTop: 10,
+        paddingBottom: 10,
+        justifyContent: 'space-between'
     }
 }))
 
@@ -151,30 +157,34 @@ function ProfilePage(props) {
 
                 {!ObjIsEmpty(TeamInfo) &&
                 <>
-                <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
-                <ListItem className={classes.items}>
-                    <ListItemText primary={`Role`} secondary={UserInfo.Role==="TeamLeader" ? "Team Admin" : "Team Member"} />
-                </ListItem>
-                <Divider />
-                <ListItem className={classes.items}>
-                    <ListItemText primary={`Team Name`} secondary={TeamInfo.teamName} />
-                </ListItem>
-                <Divider />
-                <ListItem className={classes.items}>
-                    <ListItemText primary={`Team Id`} secondary={TeamInfo.teamId} />
-                    <ListItemSecondaryAction>
-                    <CopyToClipboard text={TeamInfo.teamId}
-                        onCopy={() => {
-                            setCopy(true);
-                            setmessage("Team ID copied!");
-                            setmessageType("success");
-                        }}>
-                        <IconButton edge="end">
-                            <FileCopyOutlined />
-                        </IconButton>
-                    </CopyToClipboard>
-                    </ListItemSecondaryAction>
-                </ListItem>
+                <Card>
+                    <CardContent>
+                        <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
+                        <ListItem className={classes.teamCard}>
+                            <ListItemText primary={`Role`} secondary={UserInfo.Role==="TeamLeader" ? "Team Admin" : "Team Member"} />
+                        </ListItem>
+                        <Divider />
+                        <ListItem className={classes.teamCard}>
+                            <ListItemText primary={`Team Name`} secondary={TeamInfo.teamName} />
+                        </ListItem>
+                        <Divider />
+                        <ListItem className={classes.teamCard} style={{paddingRight:'0px'}}>
+                            <ListItemText primary={`Team Id`} secondary={TeamInfo.teamId} />
+                            <ListItemSecondaryAction>
+                            <CopyToClipboard text={TeamInfo.teamId}
+                                onCopy={() => {
+                                    setCopy(true);
+                                    setmessage("Team ID copied!");
+                                    setmessageType("success");
+                                }}>
+                                <IconButton edge="end">
+                                    <FileCopyOutlined />
+                                </IconButton>
+                            </CopyToClipboard>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                        </CardContent>
+                </Card>
                 </>
                 // :
                 // <>
