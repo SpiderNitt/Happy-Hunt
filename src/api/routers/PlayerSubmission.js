@@ -20,7 +20,7 @@ const storageSubmission = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      ` ${file.fieldname} - ${Date.now()}${path.extname(file.originalname)}`
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
     );
   },
 });
@@ -32,7 +32,7 @@ const storageProfile = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      ` ${file.fieldname} - ${Date.now()}${path.extname(file.originalname)}`
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
     );
   },
 });
@@ -184,7 +184,7 @@ player.post(
           case "Video": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
-            answer = `../${req.file.path}`;
+            answer = req.file.path;
             break;
           }
           default: {
