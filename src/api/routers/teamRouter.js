@@ -20,16 +20,21 @@ team.post("/create", playerVerify, async (req, res) => {
         .status(401)
         .json({ message: "team of this name already exists" });
     }
-    if (
-      req.jwt_payload.Role === "TeamLeader" ||
-      req.jwt_payload.Role === "TeamMember"
-    ) {
+    // if (
+    //   req.jwt_payload.Role === "TeamLeader" ||
+    //   req.jwt_payload.Role === "TeamMember"
+    // ) {
+    //   return res
+    //     .status(402)
+    //     .json({ message: "you already joined or created a team" });
+    // }
+
+    const user = await User.findById(req.jwt_payload.id).lean();
+    if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
       return res
         .status(402)
         .json({ message: "you already joined or created a team" });
     }
-
-    const user = await User.findById(req.jwt_payload.id).lean();
     if (user.Paid === 0) {
       if (user.paymentAuthorize === 0) {
         return res.status(401).json({
@@ -58,28 +63,14 @@ team.post("/create", playerVerify, async (req, res) => {
       members: [],
     });
     newTeam.members.push(user);
-    if (user.Paid) newTeam.Paid = user.Paid;
+    if (user.Paid) newTeam.Paid = user.Paid - 1;
     await newTeam.save();
     user.team = newTeam._id;
     await user.save();
     const token = createJWTtoken(user);
-    const filter = [
-      "password",
-      "otpId",
-      "VerificationToken",
-      "isEmailVerified",
-      "paymentAuthorize",
-      "Paid",
-    ];
-    const response = Object.keys(user).reduce((object, key) => {
-      if (!filter.includes(key)) {
-        object[key] = user[key];
-      }
-      return object;
-    }, {});
     return res.status(200).json({
       Message: "Team created Successfully. Happy Hunting!!",
-      userInfo: response,
+      userInfo: user,
       JWTtoken: token,
       expiration: req.jwt_payload.exp,
     });
@@ -96,10 +87,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
   try {
     const { teamId } = req.params;
     const user = await User.findById(req.jwt_payload.id);
-    if (
-      req.jwt_payload.Role === "TeamLeader" ||
-      req.jwt_payload.Role === "TeamMember"
-    ) {
+    if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
       return res
         .status(402)
         .json({ message: "you are already part of a team" });
@@ -110,6 +98,9 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
       .exec();
     if (teamId === undefined || teamId === null || existingTeam === null) {
       return res.status(400).json({ message: "Invalid teamId" });
+    }
+    if (existingTeam.requests.includes(user._id)) {
+      return res.status(400).json({ message: "Request already sent" });
     }
     let CaptainID;
     for (let i = 0; i < existingTeam.members.length; i += 1) {
@@ -122,14 +113,26 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Oops! Team is already full" });
     }
-    existingTeam.requests.push(req.jwt_payload.id);
-    existingTeam.save();
+    // existingTeam.requests.push(req.jwt_payload.id);
+    await Team.updateOne(
+      { teamId },
+      {
+        $push: { requests: req.jwt_payload.id },
+      }
+    );
+    // await existingTeam.save();
     const captain = await User.findById(CaptainID);
     await sendEmail(
       captain.emailId,
-      "User Requested to join ur team",
-      "Request to join ur team",
-      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>User request</h4><p>Congratualtions! ${user.name} has requested to join your team.</p><p> You can accept or reject the request.</p><button href="www.hhc.eventspeciale.com/user/team/request?userId=${req.jwt_payload.id}&name=${user.name}" style="background-color: green; color: white; padding:5px ; border-radius: 3px">Accept</button> <button href="www.hhc.eventspeciale.com/api/team/accept?userId=${req.jwt_payload.id}" style="background-color: red; color: white; padding:5px ; border-radius: 3px">Reject</button><p style="color:navy">Happy hunting!</p></body>`
+      "User Requested to join your team",
+      "Request to join your team",
+      `<body style="font-family: tahoma">
+      <h2>Greetings from Happy Hunt Challenge!</h2>
+      <h4>Teammate Alert</h4>
+      <p>${user.name} has requested to join your team.</p>
+      <p> To accept or reject the request</p>
+      <a href="www.hhc.eventspeciale.com/user/team/request?userId=${req.jwt_payload.id}&name=${user.name}">Click here!</a>
+      <p style="color:navy">Happy hunting!</p></body>`
     );
     return res.status(200).json({ message: "Join request sent!" });
   } catch (error) {
@@ -152,13 +155,22 @@ team.get("/reject", leaderVerify, async (req, res) => {
     const existingTeam = await Team.findById(req.jwt_payload.team);
     io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
-    existingTeam.save();
+    // await existingTeam.save();
+    await Team.updateOne(
+      { _id: req.jwt_payload.team },
+      {
+        $pull: { requests: userId },
+      }
+    );
     io.emit(`Request ${userId}`, "Reject");
     await sendEmail(
       user.emailId,
-      "leader rejected your request",
+      "Team request",
       "your request to join the team was rejected",
-      `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Request rejected</h4><p>Oops! Your request to join the team ${existingTeam.teamName} has been rejected.</p><p style="color:navy">Happy hunting!</p></body>`
+      `<body style="font-family: tahoma">
+      <h2>Greetings from Happy Hunt Challenge!</h2>
+      <p>Your request to join the team ${existingTeam.teamName} has been rejected.</p>
+      <p style="color:navy">Happy hunting!</p></body>`
     );
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
@@ -176,18 +188,29 @@ team.get("/accept", leaderVerify, async (req, res) => {
     if (userId == null || userId === "" || user === null) {
       return res.status(200).json({ Message: "Fill all the fields " });
     }
+    if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
+      return res.status(402).json({ message: "User already part of a team" });
+    }
     user.Role = "TeamMember";
     const existingTeam = await Team.findById(req.jwt_payload.team);
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Team is full" });
     }
+
     user.team = existingTeam._id;
-    existingTeam.members.push(user);
+    existingTeam.members.push(userId);
     existingTeam.Paid -= 1;
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
-    existingTeam.save();
-    user.save();
-    const token = createJWTtoken(user);
+    // await existingTeam.save();
+    await Team.updateOne(
+      { _id: req.jwt_payload.team },
+      {
+        $pull: { requests: userId },
+        $push: { members: userId },
+        Paid: existingTeam.Paid,
+      }
+    );
+    await user.save();
     io.emit(`Request ${userId}`, "Accept");
     await sendEmail(
       user.emailId,
@@ -202,17 +225,14 @@ team.get("/accept", leaderVerify, async (req, res) => {
         
       </body>`
     );
-    const date = new Date();
-    date.setTime(date.getTime() + 86400000);
     return res.status(200).json({
-      Message: "Request Accepted",
-      jwttoken: token,
+      message: "Request Accepted",
     });
   } catch (error) {
     console.log(error);
     res
       .status(500)
-      .json({ Message: "Internal Server Error, Try again later!!" });
+      .json({ message: "Internal Server Error, Try again later!!" });
   }
   return 0;
 });

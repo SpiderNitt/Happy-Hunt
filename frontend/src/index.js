@@ -5,7 +5,8 @@ import ReactDOM from "react-dom";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
 // import ScoreNav from "../src/user/ScoreNav";
-import Pricing from "./components/Pricing";
+// import Pricing from "./components/Pricing";
+
 // import SampleHomePage from "./SampleHomePage";
 // import StickyFooter from "./StickyFooter";
 // import Camera from "./components/Camera";
@@ -28,5 +29,6 @@ import Pricing from "./components/Pricing";
 // import PaymentPage from "./user/PaymentPage";
 // import Pricing from "./components/Pricing";
 // import ForgotPassword from "./user/ForgotPassword";
+require("./utils/socketio");
 
 ReactDOM.render(<App />, document.getElementById("root"));

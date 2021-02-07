@@ -61,7 +61,7 @@ function JoinTeam(props) {
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={styles.root}>
-            {message && <Message message={message} show={true} type={messageType} />}
+            {message && <Message message={message} show={true} type={messageType} setMessage={setmessage} />}
             <Animation AnimationRoute={'team'} />
             <Formik
             initialValues={{ teamId: '' }}
@@ -77,11 +77,12 @@ function JoinTeam(props) {
                         name="teamId" 
                         label="Team ID" 
                         variant="outlined" 
-                        value={values.otp}
+                        value={values.teamId}
                         onChange={e => setFieldValue( "teamId", e.target.value)}
                         className={styles.TextField}
                     />
                     <ErrorMessage visible={touched.teamId} error={errors.teamId} />
+                    {message && <p style={{color: messageType=="error" ? "red" : "green"}}>{message}</p>}
                     </Grid>
                 </Grid>
                 <Button type="submit" onSubmit={handleSubmit} variant="outlined" color="secondary" fullWidth className={styles.submit}>
