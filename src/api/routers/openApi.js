@@ -51,14 +51,14 @@ openApi.get("/adminList", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-openApi.get("/start", superAdminVerify, async (req, res) => {
+/* openApi.get("/start", superAdminVerify, async (req, res) => {
   io.emit("start");
   setTimeout(() => {
     io.emit("end");
     console.log("enddddddddddd");
   }, 10800000);
   return res.status(200).json({ message: "scheduled" });
-});
+}); */
 
 openApi.get("/notifications", async (req, res) => {
   try {

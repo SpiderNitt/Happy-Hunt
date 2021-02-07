@@ -47,9 +47,11 @@ const UserSchema = new mongoose.Schema({
   Location: {
     Lat: {
       type: Number,
+      default: 18.516726,
     },
     Long: {
       type: Number,
+      default: 73.856255,
     },
   },
   Notifications: [{ type: String }],

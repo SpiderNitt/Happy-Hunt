@@ -4,7 +4,7 @@ const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
-const { io } = require("../../helpers/timer");
+// const { io } = require("../../helpers/timer");
 const { sendEmail } = require("../../helpers/EMAIL/SGemail");
 
 team.post("/create", playerVerify, async (req, res) => {
@@ -109,7 +109,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
         CaptainID = member._id;
       }
     }
-    io.emit(`Request ${CaptainID}`);
+    // io.emit(`Request ${CaptainID}`);
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Oops! Team is already full" });
     }
@@ -153,7 +153,7 @@ team.get("/reject", leaderVerify, async (req, res) => {
         .json({ message: "Invalid userId or Provide userId" });
     }
     const existingTeam = await Team.findById(req.jwt_payload.team);
-    io.emit(`Request ${userId}`, "Reject");
+    // io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     // await existingTeam.save();
     await Team.updateOne(
@@ -162,7 +162,7 @@ team.get("/reject", leaderVerify, async (req, res) => {
         $pull: { requests: userId },
       }
     );
-    io.emit(`Request ${userId}`, "Reject");
+    // io.emit(`Request ${userId}`, "Reject");
     await sendEmail(
       user.emailId,
       "Team request",
@@ -211,7 +211,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
       }
     );
     await user.save();
-    io.emit(`Request ${userId}`, "Accept");
+    // io.emit(`Request ${userId}`, "Accept");
     await sendEmail(
       user.emailId,
       "leader accepted your request",
