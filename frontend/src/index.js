@@ -28,6 +28,7 @@ import App from "./App";
 // import PaymentPage from "./user/PaymentPage";
 // import Pricing from "./components/Pricing";
 // import ForgotPassword from "./user/ForgotPassword";
+require("./utils/socketio");
 
 import App from "./App";
 // require("./utils/socketio");
