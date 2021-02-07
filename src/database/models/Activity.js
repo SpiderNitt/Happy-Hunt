@@ -24,6 +24,12 @@ const activitySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  likeList: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   mission: {
     type: mongoose.Types.ObjectId,
     ref: "Mission",

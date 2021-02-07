@@ -13,7 +13,9 @@ const {
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 
 const storageMission = multer.diskStorage({
-  destination: "/missionMedia",
+  destination: (req, file, cb) => {
+    cb(null, "./media/missionMedia");
+  },
   filename: (req, file, cb) => {
     cb(
       null,
@@ -36,7 +38,7 @@ Router.get("/", adminVerify, async (req, res) => {
 
 Router.post(
   "/add",
-  multer({ storageMission }).array("Photos", 2),
+  multer({ storage: storageMission }).array("Photos", 2),
   MissionValidator,
   superAdminVerify,
 
@@ -118,7 +120,7 @@ Router.patch(
   "/update",
   superAdminVerify,
   UpdateMissionValidator,
-  multer({ storageMission }).array("Photos", 2),
+  multer({ storage: storageMission }).array("Photos", 2),
 
   async (req, res) => {
     try {
