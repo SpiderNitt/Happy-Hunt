@@ -25,7 +25,7 @@
       if( process.env.NODE_ENV === "production" && 'serviceWorker' in navigator ) {
         window.addEventListener('load', async () => {
           try {
-            const res = await navigator.serviceWorker.register('./serviceWorker.js');
+            const res = await navigator.serviceWorker.register('./serviceWorker.js', { scope: "/user/" });
             console.log('Success: ', res.scope)
           } catch (error) {
             console.log('Failure: ', error)
