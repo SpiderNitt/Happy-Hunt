@@ -1,11 +1,18 @@
 require("dotenv").config({ path: "./src/env/.env" });
 const express = require("express");
+const fs = require("fs");
 const cors = require("cors");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const { app } = require("./src/helpers/timer");
 
+if (!fs.existsSync("./media")) {
+  fs.mkdirSync("./media");
+  fs.mkdirSync("./media/profileMedia");
+  fs.mkdirSync("./media/submissionMedia");
+  fs.mkdirSync("./media/missionMedia");
+}
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json());
 
