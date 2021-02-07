@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, Grid, Avatar, Divider } from "@material-ui/core";
+import client from "../api/client";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,6 +34,20 @@ for(let i=0; i<10; i++){
 
 function Notifications(props) {
   const classes = useStyles();
+  const [data,setData] = useState([]);
+  const getNotifications = async() => {
+    const response = await client.get('/api/notifications');
+    if(!response.ok){
+      console.log(response.status, response.originalError);
+      return;
+    }
+    console.log(response.data);
+  }
+
+  useEffect(() => {
+    getNotifications();
+  },[])
+
   return (
     <div className={classes.container}>
       <Grid container>
