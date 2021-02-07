@@ -41,44 +41,11 @@ const setUnlock = () => {
   console.log("New set Unlocked");
 };
 
-let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-if (userInfo) {
-  if (userInfo.team !== undefined) {
-    socket.on(`Notifications ${userInfo.team}`, listener);
-  }
-}
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const teamID = userInfo.team;
+
+socket.on(`Notifications ${teamID}`, listener);
+
 socket.on(`Notifications`, listener);
 
 socket.on(`missions`, setUnlock);
-
-function Socketio(props) {
-  const [message, setMessage] = useState("");
-  const listener = (...args) => {
-    console.log(args);
-    setMessage(args[0]);
-  };
-  if (userInfo) {
-    if (userInfo.team !== undefined) {
-      socket.on(`Notifications ${userInfo.team}`, listener);
-    }
-  }
-  const setUnlock = () => {
-    console.log("New set Unlocked");
-    setMessage("New set Unlocked");
-  };
-  socket.on(`missions`, setUnlock);
-  return (
-    <>
-      {message && (
-        <Message
-          message={message}
-          type='info'
-          show={true}
-          setMessage={setMessage}
-        />
-      )}
-    </>
-  );
-}
-
-export default Socketio;

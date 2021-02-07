@@ -39,12 +39,10 @@ function Notifications(props) {
   const getNotifications = async() => {
     const response = await client.get('/api/notifications');
     if(!response.ok){
-      console.log(response);
       console.log(response.status, response.originalError);
       return;
     }
-    console.log(response.data.TeamsNotification.Notifications);
-    setData(response.data.TeamsNotification.Notifications);
+    console.log(response.data);
   }
 
   useEffect(() => {
