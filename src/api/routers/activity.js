@@ -25,7 +25,9 @@ Router.get("/feed", async (req, res) => {
           _id: feeds[index]._id,
           team_id: feeds[index].team._id,
           Date: feeds[index].Date,
-          like
+
+          like,
+
         });
       }
     }
