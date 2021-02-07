@@ -16,11 +16,8 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 752,
     },
     position: {
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
-        marginTop: '10px',
+        margin:'auto',
+        marginTop: '10%',
         width: '600px',
         height: '500px',
         overflow: 'auto',
@@ -53,7 +50,7 @@ function AdminMission(props) {
         fetchData();
     }, [data]);
     return (
-        <div>
+        <div style={{width:'100%'}}>
             {loading && <LoadingPage />}
             {!loading &&
                 <div className={classes.position}>

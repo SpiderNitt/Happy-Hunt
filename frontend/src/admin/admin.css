@@ -9,8 +9,8 @@
     margin-top: 10px;
   }
   .mission-container{
+    margin: auto;
     margin-top: 80px;
-    margin-left: 10%;
     display: grid;
     grid-gap: 6px;
     grid-template-columns: repeat(4, 1fr);
@@ -43,3 +43,8 @@
     align-items: center;
   }
   
+.admin-container{
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
