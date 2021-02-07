@@ -9,6 +9,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  isClicked: {
+    type: Boolean,
+    default: false,
+  },
   isEmailVerified: {
     type: Boolean,
     default: false,
