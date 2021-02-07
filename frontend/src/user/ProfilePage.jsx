@@ -9,6 +9,8 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import Message from '../components/Message';
 import colors from '../utils/colors';
 import LoadingPage from '../components/LoadingPage';
+import { TextareaAutosize } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     listContainer: {
         marginTop: 20,
         marginBottom: 20,
+    },
+    input: {
+       margin:5,
+       float:"left"
     }
 }))
 
@@ -49,8 +55,10 @@ function ProfilePage(props) {
     const [message, setmessage] = useState('')
     const [messageType, setmessageType] = useState('')
     const [UserInfo, setUserInfo] = useState({});
+    const [input, setInput]= useState('');
     const [TeamInfo, setTeamInfo] = useState({});
     const [copy,setCopy] = useState(false);
+    const [open,setOpen] = useState(false);
     const history = useHistory();
     const handleLogout = () => {
         authContext.logout();
@@ -73,7 +81,32 @@ function ProfilePage(props) {
 
     useEffect(() => {
       fetch();
-    }, [])
+    }, []);
+
+    const handleOpen=()=>{
+        setOpen(!open)
+    }
+    console.log(open);
+
+    const handleChange= (e)=>{
+        setInput(e.target.value)
+    }
+    // console.log(input)
+
+    const handleUpdate= async ()=>{
+        const body={
+            name: input
+        }
+        console.log (body)
+        const result= await client.patch('api/player/update', body);
+        console.log(result)
+        if(!result.ok){
+            console.log(result, result.originalError, result.problem, result.status);
+            console.log(result.data.message)
+            return;
+        }
+        window.location.reload(false);   
+    }
 
     if(loading){
         return <LoadingPage />
@@ -89,32 +122,34 @@ function ProfilePage(props) {
                 <ListItem className={classes.items}>
                     <ListItemText primary={`Name: ${UserInfo.name}`} />
                     <ListItemSecondaryAction>
-                    {/* <IconButton edge="end">
-                        <Edit />
-                    </IconButton> */}
+                    <IconButton edge="end">
+                        <Edit onClick={handleOpen}/>
+                    </IconButton>
+                    {open && 
+                    <div className={classes.input} noValidate autoComplete="off">
+                    <TextareaAutosize style={{fontSize:15, padding:7, minHeight:10, maxWidth:200}}
+                    placeholder="New name" 
+                    required
+                    value={input}
+                    onChange={handleChange}
+                    />
+                    </div>}
                     </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
                     <ListItemText primary={`Email Id: ${UserInfo.emailId}`} />
-                    <ListItemSecondaryAction>
-                    {/* <IconButton edge="end">
-                        <Edit />
-                    </IconButton> */}
-                    </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
                 <ListItem className={classes.items}>
                     <ListItemText primary={`Mobile no: ${UserInfo.phoneNo}`} />
-                    <ListItemSecondaryAction>
-                    {/* <IconButton edge="end">
-                        <Edit />
-                    </IconButton> */}
-                    </ListItemSecondaryAction>
                 </ListItem>
                 <Divider />
-                {
-                !ObjIsEmpty(TeamInfo) &&
+                {open && 
+                    <Button onClick={handleUpdate} style={{color:"white", backgroundColor:"green", padding:7, borderRadius:7, margin:10}}>Update</Button>
+                }
+
+                {!ObjIsEmpty(TeamInfo) &&
                 <>
                 <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
                 <ListItem className={classes.items}>

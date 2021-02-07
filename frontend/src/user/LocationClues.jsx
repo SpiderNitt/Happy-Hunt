@@ -19,6 +19,7 @@ function LocationClues(props) {
     const [evaluation, showEvaluation]= useState(false);
     const [disable, setDisable]= useState(true);
     const [ans, setAns]= useState("");
+    const [disableHint, setDisableHint]= useState(false);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -31,11 +32,11 @@ function LocationClues(props) {
             console.log(result.status, result.problem, result.originalError);
             return;
         }
-        console.log(result.data);
+        // console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
-        console.log(data);
+        // console.log(data);
     }
 
     useEffect(() => {
@@ -56,7 +57,7 @@ function LocationClues(props) {
         navigator.geolocation.getCurrentPosition(onSuccess);
         setDisable(false);
     };
-    console.log(location)
+    // console.log(location)
       const submitAnswer = async () => {
         const body= {
             MissionId:props.match.params.id,
@@ -77,8 +78,9 @@ function LocationClues(props) {
         }
         showEvaluation(true)
         setAns(result.data.message)
+        handleDisable(result);
       }
-      console.log(ans);
+    //   console.log(ans);
   
     const handleOpen = () => {
         setOpen(true);
@@ -88,6 +90,12 @@ function LocationClues(props) {
         setOpen(false);
     };
 
+    const handleDisable=(result)=>{
+        if(result=="answer succesfully submitted and points awarded"){
+            setDisableHint(true)
+        }
+    }
+    // console.log(disableHint)
 
     return (
         
@@ -123,7 +131,7 @@ function LocationClues(props) {
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} onClick={submitAnswer}  disabled={disable}>Submit my Location</Button>
                 {!data.isBonus ? (<div>
-                    <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                    <Button className={classes.Button} onClick={handleOpen} disabled={disableHint}>Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

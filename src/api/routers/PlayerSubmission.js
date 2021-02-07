@@ -377,6 +377,7 @@ player.patch(
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
+      console.log(req.body, userDetails, id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }
@@ -388,7 +389,7 @@ player.patch(
           ? req.file.buffer.toString("base64")
           : userDetails.photo;
       } catch (err) {
-        console.log(err.message);
+        console.log(err);
         return res.status(400).json({ message: "Image upload failed" });
       }
       const result = await User.updateOne({ _id: id }, update);
@@ -467,8 +468,8 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         });
       }
     }
-
-    return res.status(200).json({ missions: arr, bonus: arr2 });
+    arr.concat(arr2);
+    return res.status(200).json({ missions: arr });
   } catch (e) {
     console.log(e);
     return res.status(500).json({

@@ -5,10 +5,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Chip, Container } from '@material-ui/core';
-import Routes from '../utils/routes';
+import { Container } from '@material-ui/core';
+import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import LoadingPage from '../components/LoadingPage';
-import client from '../api/client';
 
 const useStyles = makeStyles({
   title: {
@@ -55,23 +54,13 @@ const RedirectUrl = (category, id) => {
 
 function Clues(props){
   const classes= useStyles();
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const fetch = async () => {
-    const result = await client.get('api/player/mission')
-    if(!result.ok){
-      console.log(result.originalError, result.problem, result.status);
-      return;
-    }
-    setData(result.data.missions);
-    setLoading(false);
-  }
+  const data = props.data.data;
   useEffect(() => {
-    fetch();
+    setLoading(false);
   }, []);
 
-  console.log(props)
+  // console.log(props)
 
   const RenderClues=()=>{
     return (
@@ -83,7 +72,9 @@ function Clues(props){
             <Typography className={classes.title} color="textSecondary" variant="ul" >
               {mission.MissionName}
             </Typography>
-            <Chip size="small" label={data.isSolved? "solved" : "unsolved" } />
+            {mission.isBonus &&
+              <StarOutlineIcon style={{color:"orange", fontSize:25}}/>
+            } 
           </div>
         </CardContent>
         <div className={classes.category} color="textSecondary" variant="p" >
