@@ -2,6 +2,7 @@
 const multer = require("multer");
 const player = require("express").Router();
 const geolib = require("geolib");
+const path = require("path");
 const { getDistance } = require("geolib");
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
@@ -11,6 +12,26 @@ const Hint = require("../../database/models/Hint");
 const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
+
+const storageSubmission = multer.diskStorage({
+  destination: "/submissionMedia",
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      ` ${file.fieldname} - ${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+
+const storageProfile = multer.diskStorage({
+  destination: "/profileMedia",
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      ` ${file.fieldname} - ${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
 // player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
 //   try {
 //     const { team } = req.jwt_payload;
@@ -124,7 +145,7 @@ const { TeamenRollVerify } = require("../../middlewares/team");
 // });
 player.post(
   "/submission",
-  multer({ storage: multer.memoryStorage() }).single("answer"),
+  multer({ storageSubmission }).single("answer"),
   playerVerify,
   TeamenRollVerify,
   async (req, res) => {
@@ -146,7 +167,7 @@ player.post(
           case "Picture": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No picture submission" });
-            answer = req.file.buffer.toString("base64");
+            answer = req.file.path;
             break;
           }
 
@@ -159,7 +180,7 @@ player.post(
           case "Video": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
-            answer = req.file.buffer.toString("base64");
+            answer = req.file.path;
             break;
           }
           case "Picture and Location": {
@@ -177,7 +198,7 @@ player.post(
               return res
                 .status(200)
                 .json({ message: "You haven't reached the location" });
-            answer = req.file.buffer.toString("base64");
+            answer = req.file.path;
             break;
           }
           default: {
@@ -370,7 +391,7 @@ player.get("/profile", playerVerify, async (req, res) => {
 });
 player.patch(
   "/update",
-  multer({ storage: multer.memoryStorage() }).single("photo"),
+  multer({ storageProfile }).single("photo"),
   playerVerify,
   async (req, res) => {
     try {
@@ -385,9 +406,7 @@ player.patch(
       update.gender = req.body.gender ? req.body.gender : userDetails.gender;
       update.name = req.body.name ? req.body.name : userDetails.name;
       try {
-        update.photo = req.file
-          ? req.file.buffer.toString("base64")
-          : userDetails.photo;
+        update.photo = req.file ? req.file.path : userDetails.photo;
       } catch (err) {
         console.log(err);
         return res.status(400).json({ message: "Image upload failed" });
