@@ -96,7 +96,13 @@ Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
 });
 Router.get("/start", superAdminVerify, async (req, res) => {
   try {
+    const SAdmin = await User.findById(req.jwt_payload.id);
+    if (SAdmin.isClicked) {
+      return res.status(400).json({ message: "game already started" });
+    }
     algo();
+    SAdmin.isClicked = true;
+    await SAdmin.save();
     return res.status(200).json({ message: "Success" });
   } catch (err) {
     console.log(err.message);
