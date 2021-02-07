@@ -100,12 +100,13 @@ const Drawer = props => {
         if(response.ok){
           // display message saying that game has been started
           setDisable(true);
-          console.log(response.data.message)
-          setInfo('Game started successfully');
+          setInfo(response.data.message);
           setmessageType('success')
         }
         else{
-          console.log(response.data.message)
+          setInfo(response.data.message);
+          setmessageType('error')
+          setDisable(true);
         }  
     }
     return (
@@ -161,7 +162,9 @@ const Drawer = props => {
                 </Button>
                 }
                 {
+                  disable && 
                  disable && 
+                  disable && 
                  <Button variant="outlined" color="secondary" disabled>
                      GAME IS ON
                  </Button>

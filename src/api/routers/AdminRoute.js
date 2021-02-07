@@ -49,7 +49,6 @@ Router.post(
           /* active: true, */
           isEmailVerified: true,
         });
-
         await sendEmail(
           emailId,
           "ADMIN created",
@@ -99,12 +98,12 @@ Router.get("/start", superAdminVerify, async (req, res) => {
   try {
     const SAdmin = await User.findById(req.jwt_payload.id);
     if (SAdmin.isClicked) {
-      return res.status(400).json({ message: "game already started" });
+      return res.status(400).json({ message: "Game has already started" });
     }
     algo();
     SAdmin.isClicked = true;
     await SAdmin.save();
-    return res.status(200).json({ message: "Success" });
+    return res.status(200).json({ message: "Game sucessfully started" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server error" });
