@@ -6,6 +6,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 // import ScoreNav from "../src/user/ScoreNav";
 // import Pricing from "./components/Pricing";
+
 // import SampleHomePage from "./SampleHomePage";
 // import StickyFooter from "./StickyFooter";
 // import Camera from "./components/Camera";
