@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import clsx from 'clsx';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,6 +9,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { makeStyles } from "@material-ui/core/styles";
+import client from '../api/client';
 
 const drawerWidth = 190;
 
@@ -94,6 +95,14 @@ const useStyles = makeStyles((theme) => ({
 const DrawerHeader = (props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
+    const [no,setNo]= React.useState(1);
+    useEffect(() => {
+       const fetchData = async () => {
+          const response= await client.get('api/notifications');
+          setNo(response.data.AdminNotification.length);
+       }
+       fetchData();
+    },[no])
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -115,8 +124,8 @@ const DrawerHeader = (props) => {
                         {props.title}
                     </Typography>
                     <IconButton color="inherit" href="/admin/notification">
-                        <Badge badgeContent={3} color="secondary">
-                            <NotificationsActiveIcon />
+                        <Badge badgeContent={no} color="secondary">
+                            <NotificationsActiveIcon/>
                         </Badge>
                     </IconButton>
                 </Toolbar>
