@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
@@ -10,10 +9,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { GroupOutlined } from '@material-ui/icons';
 import moment from 'moment';
+import ShareIcon from '@material-ui/icons/Share';
+import client from '../api/client';
+import WebShare from './WebShare';
+import ReactPlayer from 'react-player/lazy';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,17 +39,40 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontWeight: 'bold',
+  },
+  button: {
+    display:"flex",
+    justifyContent:"space-around"
   }
 }));
 
 export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
+  const [isLiked, setIsLiked]= useState(false);
+  const [sharePost,setSharePost] = useState(false);
+  const [media,setMedia] = useState("");
 
   useEffect(() => {
     setData(activity);
+    setMedia(data.Answer_type); 
   }, [])
 
+  console.log(data)
+  console.log(data.Answer_type)
+  console.log(data.Answer)
+
+  const likePost = async () => {
+    const result = await client.get(`api/activity/feed/likes/${data._id}`)
+    if(!result.ok){
+      console.log(result.originalError, result.problem, result.status);
+      return;
+    }
+    console.log(result);
+    setIsLiked(true);  
+  }
+
+  console.log(media)
   return (
     <Card className={classes.root}>
       {data && <>
@@ -68,27 +92,27 @@ export default function FeedCard({ data:activity }) {
           align: 'left',
         }}
       />
-      <CardMedia
-        className={classes.media}
-        image="https://source.unsplash.com/random"
-        title={data.MissionName}
-      />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {data.MissionName}
         </Typography>
       </CardContent>
-      <CardActions>
-        <IconButton>
-          <FavoriteIcon />
-          <span>{data.likes}</span>
-        </IconButton>
-        <IconButton>
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
+      {(media === " Video") &&
+        <ReactPlayer url={data.Answer} alt={"video"} /> }
+      <div className={classes.button}>
+        <CardActions>  
+          <IconButton>
+            <FavoriteIcon onClick={likePost} color={isLiked ? "secondary" : "disabled"} />
+            <span>{data.likes}</span>
+          </IconButton>
+          <IconButton>
+            <ShareIcon onClick={()=>{setSharePost(true)}}></ShareIcon>
+          </IconButton>
+        </CardActions>
+      </div>
       </>
     }
+    {sharePost?(<WebShare></WebShare>):(<></>)}
     </Card>
   );
 }

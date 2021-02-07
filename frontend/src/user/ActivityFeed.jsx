@@ -1,16 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Avatar, CardHeader, IconButton } from '@material-ui/core';
-import { Favorite, PeopleAltOutlined, Share } from '@material-ui/icons';
 import client from '../api/client';
-import moment from 'moment';
 import LoadingPage from '../components/LoadingPage';
 import FeedCard from '../components/Card';
 
@@ -41,15 +33,14 @@ function ActivityFeed() {
   const [data, setData] = useState([]);
   const [likedColor, setLikedColor]= useState("");
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const result = await client.get('api/activity/feed')
-      console.log(result);
-      setLoading(false);
-      setData(result.data.activityFeeds);
+  const fetch = async () => {
+    const result = await client.get('api/activity/feed')
+    console.log(result);
+    setLoading(false);
+    setData(result.data.activityFeeds);
   }
-  fetch();
+  useEffect(() => {
+    fetch();
   }, []);
 
 const getLike= ()=>{

@@ -10,6 +10,7 @@ Router.get("/feed", async (req, res) => {
       .exec();
     const feedToBeShown = [];
     for (let index = 0; index < feeds.length; index += 1) {
+      // console.log(feeds[index].mission);
       if (feeds[index].mission.Feed) {
         feedToBeShown.push({
           MissionName: feeds[index].mission.MissionName,
