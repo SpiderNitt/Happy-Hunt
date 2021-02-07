@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import { Container } from '@material-ui/core';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import LoadingPage from '../components/LoadingPage';
-import client from '../api/client';
 
 const useStyles = makeStyles({
   title: {

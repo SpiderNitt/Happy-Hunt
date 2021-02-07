@@ -84,6 +84,8 @@ export default function ClueTabs() {
     }
     return object;
   }
+
+  console.log(getSet1())
   const getSet2 = () => {
     const object = {};
     if (data.length >= 10) {

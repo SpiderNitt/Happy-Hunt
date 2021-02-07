@@ -2,15 +2,14 @@ import React , { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import client from '../api/client';
 import WarningIcon from '@material-ui/icons/Warning';
-import { DriveEtaOutlined } from '@material-ui/icons';
 
 function Hints(props) {
     const [showSecondHint, setshowSecondHint] = useState(false);
+    const [showFirstHint, setshowFirstHint] = useState(false);
     const [disable1, setDisable1] = useState(false);
+    const [warning, setWarning] = useState(true);
     const [data, setData]= useState([]);
     const [hints, setHints] = useState(props.data);
-    const [result, setResult]= useState("");
-    const [warning, setWarning]= useState(false);
 
     const getHints=() => {
         const body= {
@@ -19,22 +18,13 @@ function Hints(props) {
         const fetch = async () => {
           const result = await client.post('api/player/hint', body)
           console.log(result);
-          setData(result.data);
-          setResult(result.status)
-        
+          setData(result.data);    
       }
-      console.log(result)
-      if (result===200){
-        setWarning(true)
-        }
+
       fetch();
+      setshowFirstHint(true);
+      setWarning(false)
       }
-
-      useEffect(()=>{
-          getHints();
-      },[]);
-
-      console.log(warning)
 
     // console.log(props)
     // console.log(data)
@@ -50,16 +40,23 @@ function Hints(props) {
 
         {hints !== [] && <>
             {warning &&
-            <div>
+                <div>
                 <p style={{color:"red", fontFamily:"tahoma"}}><span><WarningIcon style={{ color:"orange", fontSize:20, marginRight: 5}}/></span>Viewing hints will lead to a reduction of points.</p>
+                <button onClick={getHints} style={{margin:5, backgroundColor:"#DC143C", color:"white", padding:5, fontFamily:"tahoma", borderRadius:5, fontSize:16}}>
+                    Continue
+                </button>
             </div>
             }
-            <ul>
-                {hints[0].Content}
-                <div style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic", margin:10}}>
-                -{hints[0].MaxPoints}
-                </div>
-            </ul>
+           
+            {showFirstHint && 
+             <ul>
+                    {hints[0].Content}
+                    <div style={{float:"right", fontFamily:"tahoma", fontSize:15, fontStyle:"italic", margin:10}}>
+                    -{hints[0].MaxPoints}
+                    </div>
+                </ul>
+            }
+           
             {showSecondHint && 
             <ul>
                 {hints[1].Content}
@@ -68,9 +65,11 @@ function Hints(props) {
                 </div>
             </ul>
             }
-            <Button variant="contained" onClick={onButtonClickHandler} disabled={disable1} color="primary" style={{margin:5}}>
-                 View second hint
-            </Button>
+            {showFirstHint && 
+                <Button variant="contained" onClick={onButtonClickHandler} disabled={disable1} color="primary" style={{margin:5}}>
+                    View second hint
+                </Button>
+            }
            </>}
         </div>
     );

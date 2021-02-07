@@ -1,7 +1,7 @@
 import apisauce from "apisauce";
 
 const client = apisauce.create({
-  baseURL:  "http://localhost:3001/",
+  baseURL:  "http://localhost:3000/",
 });
 
 client.addAsyncRequestTransform(async (request) => {
