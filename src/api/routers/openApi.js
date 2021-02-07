@@ -60,8 +60,8 @@ openApi.get("/adminList", async (req, res) => {
   return res.status(200).json({ message: "scheduled" });
 }); */
 openApi.get("/image", (req, res) => {
-  const { photo, file } = req.query;
-  res.sendFile(path.join(__dirname, `./media/${file}/${photo}`));
+  const { photo } = req.query;
+  res.sendFile(path.join(__dirname, `/${photo}`));
 });
 openApi.get("/notifications", async (req, res) => {
   try {
