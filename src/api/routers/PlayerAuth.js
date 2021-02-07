@@ -151,7 +151,8 @@ player.get("/email", async (req, res) => {
       });
     }
     if (user.isEmailVerified) {
-      return res.status(402).json({ message: "user already verified" });
+      console.log("user already verified");
+      return res.redirect("https://www.hhc.eventspeciale.com/user/login");
     }
 
     user.isEmailVerified = true;
@@ -260,4 +261,5 @@ player.post("/reset", resetValidator, async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
+
 module.exports = player;
