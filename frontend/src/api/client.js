@@ -1,8 +1,10 @@
 import apisauce from "apisauce";
 
 const client = apisauce.create({
-  baseURL: "https://www.hhc.eventspeciale.com/",
+  baseURL: "http://localhost:3000/",
 });
+// https://www.hhc.eventspeciale.com/
+// http://localhost:3000/
 
 client.addAsyncRequestTransform(async (request) => {
   const authToken = await localStorage.getItem("token");

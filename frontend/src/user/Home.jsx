@@ -20,7 +20,7 @@ import CreateTeam from './CreateTeam';
 import JoinTeam from './JoinTeam';
 import { Container } from '@material-ui/core';
 import logo from '../assets/android-chrome-512x512.png';
-import '../CSS/style.css';
+// import '../CSS/style.css';
 import Footer from '../components/Footer';
 
 // const useStyles = makeStyles((theme) => ({

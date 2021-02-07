@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { IconButton } from '@material-ui/core';
@@ -14,11 +14,13 @@ import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
-    textAlign: 'center',
+    display:"flex",
+    justifyContent:"center"
   },
   imgBox: {
-    maxWidth: "80%",
-    maxHeight: "80%",
+    maxWidth: "100%",
+    maxHeight: "100%",
+
   },
   img: {
     height: "inherit",
@@ -42,65 +44,81 @@ api.addAsyncRequestTransform(async (request) => {
 
 function Camera(props) {
   const classes = useStyles();
-  const [dataUri, setDataUri] = useState('');
+  const [data, setData] = useState('');
+  const [response, setResponse] = useState('');
   const [disable, setDisable]=useState(true);
   const [source, setSource] = useState("");
   const [inputFile,setInputFile]= useState(null);
+      const fetch = async () => {
+        const result = await client.get(`api/mission/${props.match.params.id}`);
+        // console.log(result.data);
+        await setData(result.data.mission.answer_Type);
+    }
+
+      useEffect(() => {
+        fetch();
+      }, [props.match.params.id]);
+
+      // console.log(data)
 
   const handleCapture = (target) => {
     if (target.files) {
       if (target.files.length !== 0) {
         const file = target.files[0];
-        console.log(file);
+        // console.log(file);
         const newUrl = URL.createObjectURL(file);
-        console.log(newUrl);
+        // console.log(newUrl);
         setSource(newUrl);
         setInputFile(file)
         setDisable(false)
       }
     }
   }
-  console.log(inputFile);
-  console.log(props)
+  // console.log(inputFile);
+  // console.log(props)
 
   const handleSubmit = async() => {
     var formData = new FormData();
     formData.append('mission', props.match.params.id);
     formData.append('answer', inputFile, inputFile.name);
     console.log(formData.get("answer"));
-    // try {
-    //   const response = await axios.post('/api/player/submission', formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   })
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    
     const response = await api.post('api/player/submission', formData)
     console.log(response)
     if(!response.ok){
-      console.log(response.problem);
-      console.log(response.data);
+      // console.log(response.problem);
+      // console.log(response.data);
+      setResponse(response.data.message);
       return;
     }
-    console.log(response)
-
+    // console.log(formData)
+    setResponse(response.data.message);
+    // console.log(response);
   }
+
+  const mediaType =(type)=>{
+    let mediatype="";
+    if (type =="Picture"){
+      mediatype="image/*"
+    }else if(type=="Video"){
+      mediatype="video/*"
+    }
+    return mediatype;
+  }
+
   return (
     <div className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
-          <h5>Capture your image</h5>
-          {source &&
-            <Box display="flex" justifyContent="center" border={1} className={classes.imgBox}>
-              <img src={source} alt={"snap"} className={classes.img}></img>
-              {/* <ReactPlayer url={source} /> */}
+          <h3 style={{fontFamily:"tahoma", fontWeight:"100"}}>Capture your image/video</h3>
+          
+          {source &&       
+            <Box display="flex" justifySelf="center" border={1} className={classes.imgBox}>
+              {(data=="Picture")?
+               <img src={source} alt={"snap"} className={classes.img}></img>
+              : <ReactPlayer url={source} alt={"video"} /> }
             </Box>}
           <input
-            accept="image/*"
+            accept={mediaType(data)}
             className={classes.input}
             id="icon-button-file"
             type="file"
@@ -117,8 +135,8 @@ function Camera(props) {
             </IconButton>
           </label>
           <br/>
-          <Button className={classes.Button} onClick={handleSubmit} disabled={disable}>Submit Picture</Button>
-
+          <Button className={classes.Button} onClick={handleSubmit} disabled={disable}>Submit</Button>
+          {response && <p>{response}</p>}
         </Grid>
       </Grid>
     </div>

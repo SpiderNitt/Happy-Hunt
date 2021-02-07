@@ -88,6 +88,7 @@ function CreateTeam(props) {
                   className={classes.TextField} 
               />
               <ErrorMessage visible={touched.teamName} error={errors.teamName} />
+              
               <Button type="submit" variant="outlined" color="secondary" fullWidth className={classes.submit}>
                 Register
               </Button>

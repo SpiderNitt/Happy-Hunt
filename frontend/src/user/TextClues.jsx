@@ -21,6 +21,7 @@ function TextClues(props) {
     const [hints, setHints]= useState([]);
     const [evaluation, showEvaluation]= useState(false);
     const [disable, setDisable]= useState(true);
+    const [disableHint, setDisableHint]= useState(false);
     const [resultoutput, showResultoutput]= useState(false);
     const [ans, setAns]= useState("");
     const [location, setLocation]= useState({
@@ -43,8 +44,8 @@ const getLocation=()=>{
     setDisable(false)
 
 }
-console.log(location);
-console.log(props)
+// console.log(location);
+// console.log(props)
     
 const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
@@ -57,7 +58,7 @@ const fetch = async () => {
     useEffect(() => {
         fetch();
     }, [props.match.params.id]);
-    console.log(data)
+    // console.log(data)
 
       const submitAnswer = async () => {
       const body= {
@@ -80,12 +81,12 @@ const fetch = async () => {
         showEvaluation(true)
         setAns(result.data.message)
       }
-      console.log(ans);
+    //   console.log(ans);
 
     const handleChange= (e)=>{
         setInput(e.target.value)
     }
-    console.log(input)
+    // console.log(input)
 
     
     const handleSubmit = async() => {
@@ -107,10 +108,10 @@ const fetch = async () => {
         setResult(response.data.message)
         console.log(result)
         showResultoutput(true)
-
+        handleDisable(result);
       }
 
-    console.log(data)
+    // console.log(data)
     const handleOpen = () => {
       setOpen(true);
     };
@@ -118,6 +119,13 @@ const fetch = async () => {
     const handleClose = () => {
       setOpen(false);
     };
+
+    const handleDisable=(result)=>{
+        if(result=="Successfully submitted"){
+            setDisableHint(true)
+        }
+    }
+    // console.log(disableHint)
     return (
         
         <React.Fragment >
@@ -160,9 +168,6 @@ const fetch = async () => {
                 </div>
                 :""}
 
-                <p style={{fontSize:12, fontStyle: 'italic',fontFamily:'tahoma', color:"dark-gray", display:'flex', justifyContent:'center'}}>
-                    note: the picture should be taken from inside the car.
-                </p>
                 {evaluation? <p>{ans}</p>: ''}
                 <form className={classes.root} noValidate autoComplete="off">
                 <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}}
@@ -181,7 +186,7 @@ const fetch = async () => {
                  <Button className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
                  : ''} 
                 {!data.isBonus ? (<div>
-                    <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                    <Button className={classes.Button} onClick={handleOpen} disabled={disableHint} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
