@@ -11,11 +11,13 @@ Router.get("/feed", async (req, res) => {
     const feedToBeShown = [];
     // console.log(feeds);
     for (let index = 0; index < feeds.length; index += 1) {
-      console.log(feeds[index].mission);
+      // console.log(feeds[index].mission);
       if (feeds[index].mission.Feed) {
         feedToBeShown.push({
           MissionName: feeds[index].mission.MissionName,
           TeamName: feeds[index].team.teamName,
+          Answer: feeds[index].Answer,
+          Answer_type: feeds[index].mission.answer_Type,
           likes: feeds[index].likes,
           _id: feeds[index]._id,
           team_id: feeds[index].team._id,

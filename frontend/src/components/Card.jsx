@@ -14,6 +14,8 @@ import moment from 'moment';
 import ShareIcon from '@material-ui/icons/Share';
 import client from '../api/client';
 import WebShare from './WebShare';
+import ReactPlayer from 'react-player/lazy';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -49,11 +51,16 @@ export default function FeedCard({ data:activity }) {
   const classes = useStyles();
   const [isLiked, setIsLiked]= useState(false);
   const [sharePost,setSharePost] = useState(false);
+  const [media,setMedia] = useState("");
+
   useEffect(() => {
     setData(activity);
+    setMedia(data.Answer_type); 
   }, [])
 
   console.log(data)
+  console.log(data.Answer_type)
+  console.log(data.Answer)
 
   const likePost = async () => {
     const result = await client.get(`api/activity/feed/likes/${data._id}`)
@@ -65,6 +72,7 @@ export default function FeedCard({ data:activity }) {
     setIsLiked(true);  
   }
 
+  console.log(media)
   return (
     <Card className={classes.root}>
       {data && <>
@@ -89,6 +97,8 @@ export default function FeedCard({ data:activity }) {
           {data.MissionName}
         </Typography>
       </CardContent>
+      {(media === " Video") &&
+        <ReactPlayer url={data.Answer} alt={"video"} /> }
       <div className={classes.button}>
         <CardActions>  
           <IconButton>
