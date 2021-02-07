@@ -1,5 +1,5 @@
 const openApi = require("express").Router();
-const schedule = require("node-schedule");
+const path = require("path");
 const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
 const User = require("../../database/models/User");
@@ -59,7 +59,10 @@ openApi.get("/adminList", async (req, res) => {
   }, 10800000);
   return res.status(200).json({ message: "scheduled" });
 }); */
-
+openApi.get("/image", (req, res) => {
+  const { photo, file } = req.query;
+  res.sendFile(path.join(__dirname, `./media/${file}/${photo}`));
+});
 openApi.get("/notifications", async (req, res) => {
   try {
     if (
