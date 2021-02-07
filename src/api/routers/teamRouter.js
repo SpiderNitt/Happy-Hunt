@@ -196,6 +196,9 @@ team.get("/accept", leaderVerify, async (req, res) => {
     if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
       return res.status(402).json({ message: "User already part of a team" });
     }
+    if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
+      return res.status(402).json({ message: "User already part of a team" });
+    }
     user.Role = "TeamMember";
     const existingTeam = await Team.findById(req.jwt_payload.team);
     if (existingTeam.Paid < 1) {
@@ -216,8 +219,6 @@ team.get("/accept", leaderVerify, async (req, res) => {
       }
     );
     await user.save();
-    const token = createJWTtoken(user);
-
     io.emit(`Request ${userId}`, "Accept");
 
     await sendEmail(
