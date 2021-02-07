@@ -14,7 +14,9 @@ const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
 
 const storageSubmission = multer.diskStorage({
-  destination: "/submissionMedia",
+  destination: (req, file, cb) => {
+    cb(null, "./media/submissionMedia");
+  },
   filename: (req, file, cb) => {
     cb(
       null,
@@ -24,7 +26,9 @@ const storageSubmission = multer.diskStorage({
 });
 
 const storageProfile = multer.diskStorage({
-  destination: "/profileMedia",
+  destination: (req, file, cb) => {
+    cb(null, "./media/profileMedia");
+  },
   filename: (req, file, cb) => {
     cb(
       null,
@@ -145,7 +149,7 @@ const storageProfile = multer.diskStorage({
 // });
 player.post(
   "/submission",
-  multer({ storageSubmission }).single("answer"),
+  multer({ storage: storageSubmission }).single("answer"),
   playerVerify,
   TeamenRollVerify,
   async (req, res) => {
@@ -180,25 +184,7 @@ player.post(
           case "Video": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
-            answer = req.file.path;
-            break;
-          }
-          case "Picture and Location": {
-            if (req.file === undefined || req.file == null)
-              return res.status(400).json({ message: "No picture submission" });
-            const { Lat, Long } = submit.Location;
-            const lat = Lat.toString();
-            const lon = Long.toString();
-            const { latSub, lonSub } = req.body;
-            const distance = geolib.getDistance(
-              { latitude: lat, longitude: lon },
-              { latitude: latSub, longitude: lonSub }
-            );
-            if (distance > 5000)
-              return res
-                .status(200)
-                .json({ message: "You haven't reached the location" });
-            answer = req.file.path;
+            answer = `../${req.file.path}`;
             break;
           }
           default: {
@@ -391,7 +377,7 @@ player.get("/profile", playerVerify, async (req, res) => {
 });
 player.patch(
   "/update",
-  multer({ storageProfile }).single("photo"),
+  multer({ storage: storageProfile }).single("photo"),
   playerVerify,
   async (req, res) => {
     try {
