@@ -14,7 +14,7 @@ Router.get("/feed", async (req, res) => {
       let like;
       if (feeds[index].likeList.includes(req.jwt_payload.id)) like = true;
       else like = false;
-      
+
       if (feeds[index].mission.Feed) {
         feedToBeShown.push({
           MissionName: feeds[index].mission.MissionName,
@@ -25,9 +25,7 @@ Router.get("/feed", async (req, res) => {
           _id: feeds[index]._id,
           team_id: feeds[index].team._id,
           Date: feeds[index].Date,
-
           like,
-
         });
       }
     }
