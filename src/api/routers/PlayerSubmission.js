@@ -13,9 +13,11 @@ const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
 
+const profilePath = path.join(__dirname, "../../../media/profileMedia");
+const submissionPath = path.join(__dirname, "../../../media/submissionMedia");
 const storageSubmission = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./media/submissionMedia");
+    cb(null, submissionPath);
   },
   filename: (req, file, cb) => {
     cb(
@@ -27,7 +29,7 @@ const storageSubmission = multer.diskStorage({
 
 const storageProfile = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./media/profileMedia");
+    cb(null, profilePath);
   },
   filename: (req, file, cb) => {
     cb(
@@ -171,7 +173,7 @@ player.post(
           case "Picture": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No picture submission" });
-            answer = req.file.path;
+            answer = `http://localhost:3000/api/image?photo=${req.file.path}`;
             break;
           }
 
@@ -184,7 +186,7 @@ player.post(
           case "Video": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
-            answer = req.file.path;
+            answer = `http://localhost:3000/api/image?photo=${req.file.path}`;
             break;
           }
           default: {
@@ -384,7 +386,7 @@ player.patch(
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
-      console.log(req.body, userDetails, id);
+      // console.log(req.body, userDetails, id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }
@@ -392,7 +394,9 @@ player.patch(
       update.gender = req.body.gender ? req.body.gender : userDetails.gender;
       update.name = req.body.name ? req.body.name : userDetails.name;
       try {
-        update.photo = req.file ? req.file.path : userDetails.photo;
+        update.photo = req.file
+          ? `http://localhost:3000/api/image?photo=${req.file.path}`
+          : userDetails.photo;
       } catch (err) {
         console.log(err);
         return res.status(400).json({ message: "Image upload failed" });

@@ -48,7 +48,7 @@ Router.get("/feed/likes/:id", async (req, res) => {
         { $push: { likeList: req.jwt_payload.id } }
       );
       feed.likes += 1;
-      feed.save();
+      await feed.save();
       return res.status(200).json({ message: "Success", like: true });
     }
     await Feed.updateOne(
@@ -56,7 +56,7 @@ Router.get("/feed/likes/:id", async (req, res) => {
       { $pull: { likeList: req.jwt_payload.id } }
     );
     feed.likes -= 1;
-    feed.save();
+    await feed.save();
     return res.status(200).json({ message: "Success", like: false });
   } catch (err) {
     console.log(err);
