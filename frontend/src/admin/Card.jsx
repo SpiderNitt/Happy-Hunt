@@ -77,6 +77,14 @@ export default function ActivityFeedCard(props) {
     };
     const response = client.post("api/admin/accept", object);
     console.log(response);
+      if(response.ok){
+      setmessageType('success');
+      setInfo(response.data.message)
+    }
+    else{
+      setmessageType('error');
+      setInfo(response.data.message)
+    }
     handleClose();
   };
   return (
@@ -93,7 +101,7 @@ export default function ActivityFeedCard(props) {
       />
       <CardMedia
         className={classes.media}
-        image={props.data.Answer}
+        src={props.data.Answer}
         title='image'
       />
       <CardContent>
