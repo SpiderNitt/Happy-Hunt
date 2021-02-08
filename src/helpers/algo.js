@@ -16,12 +16,12 @@ const BonusAsync = async () => {
     isBonus: true,
     maxPoints: 100, // 120
   });
-  /*                            uncomment this for reseting the database
-  await Team.updateMany(
-    {},
-    { $unset: { assignedMissions: 1, assignedBonus: 1 } }
-  );
-  await Mission.updateMany({}, { $unset: { assignedTeams: 1 } }); */
+  // uncomment this for reseting the database
+  // await Team.updateMany(
+  //   {},
+  //   { $unset: { assignedMissions: 1, assignedBonus: 1 } }
+  // );
+  // await Mission.updateMany({}, { $unset: { assignedTeams: 1 } });
 };
 
 const missionGenerator = async (points, teams, category) => {
@@ -140,6 +140,6 @@ const algo = async () => {
       clearInterval(algorithm);
       console.log("All missions assigned to all teams");
     }
-  }, 1800000);
+  }, 300000);
 };
 module.exports = algo;
