@@ -1,7 +1,9 @@
 /* eslint-disable no-await-in-loop */
 const Router = require("express").Router();
 const path = require("path");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
+const { uid } = require("uid");
 const multer = require("multer");
 const Mission = require("../../database/models/Mission");
 
@@ -17,10 +19,7 @@ const storageMission = multer.diskStorage({
     cb(null, "./media/missionMedia");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
+    cb(null, `${uid()}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -109,6 +108,7 @@ Router.post(
 
       return res.status(200).json({ message: "mission added sucessfully" });
     } catch (e) {
+      if (req.file) fs.unlink(req.file.path);
       console.log(e);
       return res.status(500).json({
         message: "Server Error ",
