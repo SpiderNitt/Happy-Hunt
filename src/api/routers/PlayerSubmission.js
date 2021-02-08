@@ -13,11 +13,9 @@ const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
 
-const profilePath = path.join(__dirname, "../../../media/profileMedia");
-const submissionPath = path.join(__dirname, "../../../media/submissionMedia");
 const storageSubmission = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, submissionPath);
+    cb(null, "./media/submissionMedia");
   },
   filename: (req, file, cb) => {
     cb(
@@ -29,7 +27,7 @@ const storageSubmission = multer.diskStorage({
 
 const storageProfile = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, profilePath);
+    cb(null, "./media/profileMedia");
   },
   filename: (req, file, cb) => {
     cb(
