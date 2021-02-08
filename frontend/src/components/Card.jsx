@@ -77,7 +77,6 @@ export default function FeedCard({ data:activity }) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(data);
 
   const likePost = async () => {
     const result = await client.get(`api/activity/feed/likes/${data._id}`)
@@ -85,7 +84,6 @@ export default function FeedCard({ data:activity }) {
       console.log(result.originalError, result.problem, result.status);
       return;
     }
-    console.log(result.data.like);
     setResponse(result.data.like);
     setIsLiked(response)
   }
