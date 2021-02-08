@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import Verify from "./components/Verify";
+// import Footer from "./Footer";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
@@ -29,6 +29,9 @@ import App from "./App";
 // import PaymentPage from "./user/PaymentPage";
 // import Pricing from "./components/Pricing";
 // import ForgotPassword from "./user/ForgotPassword";
-require("./utils/socketio");
+// require("./utils/socketio");
+
+import App from "./App";
+// require("./utils/socketio");
 
 ReactDOM.render(<App />, document.getElementById("root"));

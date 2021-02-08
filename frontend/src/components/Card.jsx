@@ -15,6 +15,10 @@ import ShareIcon from '@material-ui/icons/Share';
 import client from '../api/client';
 import WebShare from './WebShare';
 import ReactPlayer from 'react-player/lazy';
+import { CardMedia } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,24 +47,36 @@ const useStyles = makeStyles((theme) => ({
   button: {
     display:"flex",
     justifyContent:"space-around"
-  }
+  },
+  modal: {
+    display:"flex",
+    alignItems: 'center',
+    justifyContent:"space-around"
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+ 
+  },
 }));
 
 export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
-  const [isLiked, setIsLiked]= useState(false);
-  const [sharePost,setSharePost] = useState(false);
+  const [response, setResponse]= useState(false);
+  const [isLiked, setIsLiked]= useState(response);
   const [media,setMedia] = useState("");
+  const [open, setOpen] = React.useState(false);
 
-  useEffect(() => {
-    setData(activity);
-    setMedia(data.Answer_type); 
-  }, [])
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  console.log(data)
-  console.log(data.Answer_type)
-  console.log(data.Answer)
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const likePost = async () => {
     const result = await client.get(`api/activity/feed/likes/${data._id}`)
@@ -68,11 +84,20 @@ export default function FeedCard({ data:activity }) {
       console.log(result.originalError, result.problem, result.status);
       return;
     }
-    console.log(result);
-    setIsLiked(true);  
+    setResponse(result.data.like);
+    setIsLiked(response)
   }
 
-  console.log(media)
+
+  useEffect(() => {
+    setData(activity);
+    setMedia(data.Answer_type); 
+    setIsLiked(response);
+  }, []);
+
+  console.log(isLiked)
+  console.log(media);
+
   return (
     <Card className={classes.root}>
       {data && <>
@@ -97,8 +122,16 @@ export default function FeedCard({ data:activity }) {
           {data.MissionName}
         </Typography>
       </CardContent>
-      {(media === " Video") &&
-        <ReactPlayer url={data.Answer} alt={"video"} /> }
+      <CardMedia>
+
+      {(media == " Video") &&
+        <ReactPlayer url={`data:video/mp4;base64,${data.Answer}`} alt={"video"} /> 
+      }
+      {(media == " Picture") &&
+        <img src={data.Answer} alt={"picture"} />
+      }
+      </CardMedia>
+      
       <div className={classes.button}>
         <CardActions>  
           <IconButton>
@@ -106,13 +139,32 @@ export default function FeedCard({ data:activity }) {
             <span>{data.likes}</span>
           </IconButton>
           <IconButton>
-            <ShareIcon onClick={()=>{setSharePost(true)}}></ShareIcon>
+            <ShareIcon onClick={handleOpen}></ShareIcon>
           </IconButton>
         </CardActions>
       </div>
       </>
     }
-    {sharePost?(<WebShare></WebShare>):(<></>)}
+    {open?(
+      <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={open}>
+        <div className={classes.paper}>
+          <WebShare data={data}/>
+        </div>
+      </Fade>
+    </Modal>
+    ):(<></>)}
     </Card>
   );
 }

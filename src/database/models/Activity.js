@@ -53,5 +53,12 @@ const activitySchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  likeList:[
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    }
+  ]
+  
 });
 module.exports = mongoose.model("Activity", activitySchema);

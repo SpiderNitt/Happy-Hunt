@@ -10,9 +10,11 @@ Router.get("/feed", async (req, res) => {
       .exec();
     const feedToBeShown = [];
     for (let index = 0; index < feeds.length; index += 1) {
+      // console.log(feeds[index].mission);
       let like;
       if (feeds[index].likeList.includes(req.jwt_payload.id)) like = true;
       else like = false;
+
       if (feeds[index].mission.Feed) {
         feedToBeShown.push({
           MissionName: feeds[index].mission.MissionName,
