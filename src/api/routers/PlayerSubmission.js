@@ -3,6 +3,8 @@ const multer = require("multer");
 const player = require("express").Router();
 const geolib = require("geolib");
 const path = require("path");
+const { uid } = require("uid");
+const fs = require("fs");
 const { getDistance } = require("geolib");
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
@@ -18,10 +20,7 @@ const storageSubmission = multer.diskStorage({
     cb(null, "./media/submissionMedia");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
+    cb(null, `${uid()}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -30,10 +29,7 @@ const storageProfile = multer.diskStorage({
     cb(null, "./media/profileMedia");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
+    cb(null, `${uid()}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 // player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
@@ -284,14 +280,18 @@ player.post(
           return res.status(200).json({ message: "Successfully submitted" });
         }
         if (result.n === 1) {
+          if (req.file) fs.unlink(req.file.path);
           return res.status(204).json({ mission: "Activity unable to submit" });
         }
+        if (req.file) fs.unlink(req.file.path);
         return res.status(404).json({ message: "Activity not found" });
       } catch (error) {
         console.log(error);
+        if (req.file) fs.unlink(req.file.path);
         return res.status(416).json({ message: "Cannot submit answer" });
       }
     } catch (error) {
+      if (req.file) fs.unlink(req.file.path);
       console.log(error);
       return res.status(500).json({ message: "Server Error, Try again later" });
     }
