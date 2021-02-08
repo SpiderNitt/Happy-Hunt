@@ -5,7 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { app } = require("./src/helpers/timer");
+const { server, app } = require("./src/helpers/timer");
 
 if (!fs.existsSync("./media")) {
   fs.mkdirSync("./media");
@@ -44,4 +44,4 @@ global.appRoot = path.resolve(__dirname);
 // });
 const port = 3000;
 
-app.listen(port, () => console.log(`server started at port ${port}`));
+server.listen(port, () => console.log(`server started at port ${port}`));
