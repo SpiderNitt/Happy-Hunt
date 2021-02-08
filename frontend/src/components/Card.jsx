@@ -49,15 +49,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent:"space-around"
   },
   modal: {
-    display: 'flex',
+    display:"flex",
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent:"space-around"
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+ 
   },
 }));
 
@@ -144,7 +145,25 @@ export default function FeedCard({ data:activity }) {
       </>
     }
     {open?(
-      <WebShare data={data}/>):(<></>)}
+      <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={open}>
+        <div className={classes.paper}>
+          <WebShare data={data}/>
+        </div>
+      </Fade>
+    </Modal>
+    ):(<></>)}
     </Card>
   );
 }

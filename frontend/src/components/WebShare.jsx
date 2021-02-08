@@ -16,18 +16,20 @@ function WebShare(props) {
         }
     })
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
             <FacebookShareButton
                 url={data.Answer}
                 children={<FacebookIcon borderRadius="50%" />}
                 quote={data.MissionName}
                 hashtag="#happyhuntchallenge"
+                style={{margin:10}}
             />
             <TwitterShareButton
                 url="https://source.unsplash.com/random"
                 children={<TwitterIcon borderRadius="50%" />}
                 title={data.MissionName}
                 hashtags={["happyhuntchallenge","eventspeciale"]}
+                style={{margin:10}}
             />
         </div>
     );
