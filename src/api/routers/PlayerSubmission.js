@@ -280,18 +280,30 @@ player.post(
           return res.status(200).json({ message: "Successfully submitted" });
         }
         if (result.n === 1) {
-          if (req.file) fs.unlink(req.file.path);
-          return res.status(204).json({ mission: "Activity unable to submit" });
+          if (req.file)
+            fs.unlink(req.file.path, (err) => {
+              if (err) console.log(err);
+            });
+          return res.status(204).json({ mission: "Answer already submitted" });
         }
-        if (req.file) fs.unlink(req.file.path);
-        return res.status(404).json({ message: "Activity not found" });
+        if (req.file)
+          fs.unlink(req.file.path, (err) => {
+            if (err) console.log(err);
+          });
+        return res.status(404).json({ message: "Cannot submit answer" });
       } catch (error) {
         console.log(error);
-        if (req.file) fs.unlink(req.file.path);
+        if (req.file)
+          fs.unlink(req.file.path, (err) => {
+            if (err) console.log(err);
+          });
         return res.status(416).json({ message: "Cannot submit answer" });
       }
     } catch (error) {
-      if (req.file) fs.unlink(req.file.path);
+      if (req.file)
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.log(err);
+        });
       console.log(error);
       return res.status(500).json({ message: "Server Error, Try again later" });
     }
