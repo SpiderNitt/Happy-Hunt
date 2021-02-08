@@ -21,17 +21,23 @@ const useStyles = makeStyles((theme) => ({
 
 function MissionListItem(props) {
     const classes = useStyles();
+    React.useEffect(() => {
+        if (props.eval) {
+            console.log(props.value);
+        }
+    }, [])
     return (
         <div className={classes.root}>
-            {props.eval && props.value.length === 3 && <div>
+            {props.eval && props.value.length > 0 && <div>
                 <p className={classes.bold}>{props.title}</p>
-                <p><span className={classes.italic}>Part A:</span> {props.value[0]}</p>
-                <p><span className={classes.italic}>Part B:</span> {props.value[1]}</p>
-                <img src={props.value[2]} alt='picture clue' className={classes.img} />
-            </div>}
-            {props.eval && props.value.length === 1 && <div>
-                <p className={classes.bold}>{props.title}</p>
-                <p><span className={classes.italic}>Part A:</span> {props.value[0]}</p>
+                {
+                    props.value.map((clue, index) => (
+                        <div>
+                            <p><span className={classes.italic}>Part {index + 1}:</span> {clue.text}</p>
+                            {clue.photos !== "" && <img src={clue.photos} style={{ width: '300px', height: '300px' }} />}
+                        </div>
+                    ))
+                }
             </div>}
             {!props.eval && <p><span className={classes.bold}>{props.title}</span> {props.value}</p>}
         </div>

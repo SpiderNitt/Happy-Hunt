@@ -1,11 +1,12 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { makeStyles, Grid, Avatar, Divider } from "@material-ui/core";
+import client from '../api/client'
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    marginLeft: '10%',
+    marginLeft: '15%',
     marginRight: '10%',
     marginTop: 70,
   },
@@ -25,31 +26,37 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-let data = [];
-for(let i=0; i<10; i++){
-  data.push({
-    teamName: `team${i+1}`,
-    message: 'message'
-  })
-}
+const dummyData=['This is notification 1','This is notification 2'];
 
 function Notifications(props) {
   const classes = useStyles();
+  const [notify,setNotify] = React.useState(dummyData);
+    useEffect(() => {
+       const fetchData = async () => {
+          const response= await client.get('api/notifications');
+          if(response.data.AdminNotification[0].Notifications.length){
+             setNotify(response.data.AdminNotification[0].Notifications.reverse());
+          }
+          // console.log(response.data.AdminNotification[0].Notifications);
+       }
+       fetchData();
+    },[])
   return (
-    <div className={classes.container}>
+     <div className={classes.container}>
       <Grid container>
         {
-        data.map((element, i) => (
-            <Grid item xs={12} key={i}>  
+        notify.map((element, i) => (
+             
+               <Grid item xs={12} key={i}>  
               <div className={classes.paper}>
-                <Avatar>{element.teamName[0]}</Avatar>
+                <Avatar></Avatar>
                 <div style={{ marginLeft: 15 }}>
-                  <p className={classes.teamName}>{element.teamName}</p>
-                  <p className={classes.message}>{element.message}</p>
+                  <p className={classes.message}>{element}</p>
                 </div>
               </div>
               <Divider />
             </Grid>
+  
           ))
         }
       </Grid>

@@ -22,7 +22,12 @@ const dummyData = {
     mission: {
         Location: { Lat: 23, Long: 24 },
         Category: 'Picture and Location',
-        clue: 'I am clueless yaaar',
+        clue: [
+            {
+                text: 'Hey, yo',
+                photos: ""
+            }
+        ],
         answer_Type: 'Picture and Location',
         answer: ['orange', 'apple', 'mango'],
         Other_Info: 'I am orange'
@@ -56,7 +61,7 @@ function MissionDetail(props) {
             if (hint === null) {
                 return 'No hint';
             }
-            return `${hint.Content}: ${hint.MaxPoints}`;
+            return `"${hint.Content}": ${hint.MaxPoints}`;
         })
         return hintsArray.join(',')
     }

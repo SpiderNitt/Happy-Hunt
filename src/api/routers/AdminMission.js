@@ -65,10 +65,12 @@ Router.post(
       }
 
       const newHints = [];
-
-      for (let i = 0; i < Hints.length; i += 1) {
-        const newhint = await Hint.create(Hints[i]);
-        newHints.push(newhint);
+      if (Hints) {
+        const hintarray = JSON.parse(Hints);
+        for (let i = 0; i < hintarray.length; i += 1) {
+          const newhint = await Hint.create(hintarray[i]);
+          newHints.push(newhint);
+        }
       }
       const mediaFiles = [];
       if (req.files) {
@@ -116,7 +118,7 @@ Router.post(
     }
   }
 );
-Router.patch(
+Router.post(
   "/update",
   superAdminVerify,
   UpdateMissionValidator,
@@ -133,10 +135,11 @@ Router.patch(
       const HintsGiven = req.body.Hints;
 
       if (HintsGiven) {
+        const hintarray = JSON.parse(HintsGiven);
         const hints = mission.Hints;
 
-        for (let index = 0; index < HintsGiven.length; index += 1) {
-          await Hint.findByIdAndUpdate(hints[index], HintsGiven[index]);
+        for (let index = 0; index < hintarray.length; index += 1) {
+          await Hint.findByIdAndUpdate(hints[index], hintarray[index]);
         }
       }
       const mediaFiles = [];

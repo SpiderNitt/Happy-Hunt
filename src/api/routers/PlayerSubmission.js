@@ -418,7 +418,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     const teamId = req.jwt_payload.team;
 
     const team = await Team.findById(teamId);
-
+    console.log("team", team);
     const arr = [];
     const arr2 = [];
     const allMissions = team.assignedMissions;
