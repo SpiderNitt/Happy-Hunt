@@ -12,9 +12,10 @@ const {
 } = require("../../middlewares/expressValidator");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 
+const missionPath = path.join(__dirname, "../../../media/missionMedia");
 const storageMission = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./media/missionMedia");
+    cb(null, missionPath);
   },
   filename: (req, file, cb) => {
     cb(
@@ -73,7 +74,7 @@ Router.post(
       const mediaFiles = [];
       if (req.files) {
         for (let x = 0; x < req.files.length; x += 1) {
-          const basefile = req.files[x].path;
+          const basefile = `http://localhost:3000/api/image?photo=${req.files[x].path}`;
           mediaFiles.push(basefile);
         }
       }
@@ -142,7 +143,7 @@ Router.patch(
       const mediaFiles = [];
       if (req.files) {
         for (let x = 0; x < req.files.length; x += 1) {
-          const basefile = req.files[x].path;
+          const basefile = `http://localhost:3000/api/image?photo=${req.files[x].path}`;
           mediaFiles.push(basefile);
         }
       }
