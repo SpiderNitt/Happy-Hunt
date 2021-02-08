@@ -1,6 +1,5 @@
 const Router = require("express").Router();
 const Feed = require("../../database/models/Activity");
-const Mission = require("../../database/models/Mission");
 
 Router.get("/feed", async (req, res) => {
   try {

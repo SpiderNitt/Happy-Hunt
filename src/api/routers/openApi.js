@@ -3,8 +3,6 @@ const Team = require("../../database/models/Team");
 const Mission = require("../../database/models/Mission");
 const User = require("../../database/models/User");
 const Hint = require("../../database/models/Hint");
-const { io } = require("../../helpers/timer");
-const { superAdminVerify } = require("../../middlewares/role");
 
 openApi.get("/scoreboard", async (req, res) => {
   try {
