@@ -56,7 +56,7 @@ player.post(
           case "Picture": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No picture submission" });
-            answer = `http://localhost:3000/api/image?photo=${req.file.path}`;
+            answer = `https://www.hhc.eventspeciale.com/testing/api/image?photo=${req.file.path}`;
             break;
           }
 
@@ -69,7 +69,7 @@ player.post(
           case "Video": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
-            answer = `http://localhost:3000/api/image?photo=${req.file.path}`;
+            answer = `https://www.hhc.eventspeciale.com/testing/api/image?photo=${req.file.path}`;
             break;
           }
           default: {
@@ -294,7 +294,7 @@ player.patch(
       update.name = req.body.name ? req.body.name : userDetails.name;
       try {
         update.photo = req.file
-          ? `http://localhost:3000/api/image?photo=${req.file.path}`
+          ? `https://www.hhc.eventspeciale.com/testing/api/image?photo=${req.file.path}`
           : userDetails.photo;
       } catch (err) {
         console.log(err);
