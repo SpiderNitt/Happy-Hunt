@@ -53,7 +53,7 @@ Router.post(
           emailId,
           "ADMIN created",
           `Hii ur invited to happy hunt as admin.`,
-          `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Admin added.</h4><p>Congratualtions! You have been successfully added to Happy Hunt as an admin.</p><p> This is your password: ${password} < We request you to keep it confidential. </p><p style="color:navy">Happy hunting!</p></body>`
+          `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Admin added.</h4><p>Congratualtions! You have been successfully added to Happy Hunt as an admin.</p><p> This is your password: ${adminpassword} < We request you to keep it confidential. </p><p style="color:navy">Happy hunting!</p></body>`
         );
         return res
           .status(200)
@@ -129,9 +129,8 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const activity = await Activity.findById(activityfeedId)
-      .populate("team")
-      .exec();
+    const activity = await Activity.findById(activityfeedId).populate("team");
+
     if (!activity) {
       return res.status(404).json({ message: "no such activity found" });
     }
