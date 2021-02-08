@@ -108,7 +108,10 @@ Router.post(
 
       return res.status(200).json({ message: "mission added sucessfully" });
     } catch (e) {
-      if (req.file) fs.unlink(req.file.path);
+      if (req.file)
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.log(err);
+        });
       console.log(e);
       return res.status(500).json({
         message: "Server Error ",
