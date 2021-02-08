@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useState } from "react";
 import {
     Drawer as MUIDrawer,
     ListItem,
@@ -19,6 +19,9 @@ import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
 import Routes from '../utils/routes';
 import { AuthContext } from "../api/authContext";
+import Button from '@material-ui/core/Button';
+import Message from '../components/Message';
+import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -41,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
 const Drawer = props => {
     const { history } = props;
     const authContext = useContext(AuthContext);
+    const [disable,setDisable] = useState(false);
+    const [messageType, setmessageType] = useState('');
+    const [info, setInfo] = useState('');
     const classes = useStyles();
     const itemsList = [
         {
@@ -51,7 +57,7 @@ const Drawer = props => {
             }
         },
         {
-            text: "Activity",
+            text: "Submissions",
             icon: <DynamicFeedIcon />,
             onClick: () => {
                 history.push(Routes.ADMIN_ACTIVITY_FEED);
@@ -89,8 +95,23 @@ const Drawer = props => {
             }
         }
     ]
+    const startGame = async () => {
+        const response= await client.get('api/admin/start');
+        if(response.ok){
+          // display message saying that game has been started
+          setDisable(true);
+          setInfo(response.data.message);
+          setmessageType('success')
+        }
+        else{
+          setInfo(response.data.message);
+          setmessageType('error')
+          setDisable(true);
+        }  
+    }
     return (
         <MUIDrawer variant="permanent" className={classes.drawer} open="true">
+            {info && <Message message={info} show={true} type={messageType} />}
             <div className={classes.toolbarIcon}>
                 <Avatar className={classes.orange}>{props.title}</Avatar>
                 <div>
@@ -132,6 +153,23 @@ const Drawer = props => {
                     );
                 })}
             </List>
+            <div style={{
+                marginTop:'20px'
+            }}>
+                {!disable && 
+                <Button variant="outlined" color="secondary" onClick={startGame} >
+                  START GAME
+                </Button>
+                }
+                {
+                  disable && 
+                 disable && 
+                  disable && 
+                 <Button variant="outlined" color="secondary" disabled>
+                     GAME IS ON
+                 </Button>
+                }
+            </div>
             </>
             )}
         </MUIDrawer>

@@ -11,12 +11,14 @@ const countDown = require("./routers/countdown");
 const { jwtVerify } = require("../middlewares/jwt");
 
 api.use("/", payment);
+
 api.get("/image", (req, res) => {
   const { photo } = req.query;
   const picDirectory = path.join(__dirname, "../../");
   const picPath = path.join(picDirectory, photo);
   res.sendFile(picPath);
 });
+
 api.use("/", jwtVerify);
 
 // comman route

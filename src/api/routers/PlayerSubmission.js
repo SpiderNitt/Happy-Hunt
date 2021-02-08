@@ -179,14 +179,14 @@ player.post(
           fs.unlink(req.file.path, (err) => {
             if (err) console.log(err);
           });
-        return res.status(404).json({ message: "Cannot submit answer" });
+        return res.status(404).json({ message: "Answer already submitted" });
       } catch (error) {
         console.log(error);
         if (req.file)
           fs.unlink(req.file.path, (err) => {
             if (err) console.log(err);
           });
-        return res.status(416).json({ message: "Cannot submit answer" });
+        return res.status(416).json({ message: "Answer already submitted" });
       }
     } catch (error) {
       if (req.file)
@@ -319,7 +319,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     const teamId = req.jwt_payload.team;
 
     const team = await Team.findById(teamId);
-
+    console.log("team", team);
     const arr = [];
     const arr2 = [];
     const allMissions = team.assignedMissions;

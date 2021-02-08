@@ -16,14 +16,38 @@ import UserLogin from "../user/UserLogin";
 import GameIntro from "../user/GameIntro";
 import { AuthContext } from "../api/authContext";
 
+import { io } from "socket.io-client";
+import Message from "../components/Message";
+
+const socket = io("http://localhost:3000/");
+
+socket.on("connect", () => {
+  console.log(socket.id);
+});
+
 const AdminRoute = ({ children, ...rest }) => {
     const auth = useContext(AuthContext);
+    const [message, setmessage] = useState("");
+    const listener = (...args) => {
+        setmessage(args[0]);
+    }
+    socket.on(`Notifications`, listener);
     return (
         <Route
             {...rest}
             render={() =>
                 auth.isAuthenticated() && auth.isAdmin() ? (
-                    <>{children}</>
+                    <>
+                    {message && (
+                        <Message
+                        message={message}
+                        type='info'
+                        show={true}
+                        setMessage={setmessage}
+                        />
+                    )}
+                    {children}
+                    </>
                 ) : (
                         <Redirect to={Routes.WELCOME} />
                     )
@@ -35,6 +59,11 @@ const AdminRoute = ({ children, ...rest }) => {
 export default function AdminNav() {
     const auth = useContext(AuthContext);
     const [username, setUsername] = useState('admin');
+    const [message, setmessage] = useState("");
+    const listener = (...args) => {
+        setmessage(args[0]);
+    }
+    socket.on(`Notifications`, listener);
     useEffect(() => {
         const email = auth.authState.userInfo.emailId;
         const trimmedUserName = email.substring(0, email.lastIndexOf("@"))
@@ -53,7 +82,7 @@ export default function AdminNav() {
                     </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_ACTIVITY_FEED} exact>
-                    <DrawerHeader title="Activity Feed" />
+                    <DrawerHeader title="User Submissions" />
                     <Drawer username={username} title={username[0]} />
                     <Activity />
                 </AdminRoute>
@@ -75,6 +104,14 @@ export default function AdminNav() {
                     render={(props) => (
                         auth.isAuthenticated() && auth.isAdmin() ? (
                             <div>
+                                {message && (
+                                    <Message
+                                    message={message}
+                                    type='info'
+                                    show={true}
+                                    setMessage={setmessage}
+                                    />
+                                )}
                                 <DrawerHeader title="Mission Details" />
                                 <Drawer username={username} title={username[0]} />
                                 <MissionDetail {...props} />
@@ -101,6 +138,14 @@ export default function AdminNav() {
                     render={(props) => (
                         auth.isAuthenticated() && auth.isAdmin() ? (
                             <div>
+                                {message && (
+                                    <Message
+                                    message={message}
+                                    type='info'
+                                    show={true}
+                                    setMessage={setmessage}
+                                    />
+                                )}
                                 <DrawerHeader title="Edit Mission" />
                                 <Drawer username={username} title={username[0]} />
                                 <EditMission {...props} />

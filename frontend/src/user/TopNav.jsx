@@ -49,9 +49,9 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title} component={Link} href={Routes.HOME}>
             Happy Hunt
           </Typography>
-          {/* <Button href={Routes.USER_NOTIFICATION} color="inherit">
+          <Button href={Routes.USER_NOTIFICATION} color="inherit">
             <Notifications />
-          </Button> */}
+          </Button>
           <Button href={Routes.USER_PROFILE} color="inherit">
             <AccountCircleIcon />
           </Button>
