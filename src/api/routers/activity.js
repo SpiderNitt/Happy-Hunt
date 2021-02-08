@@ -10,7 +10,9 @@ Router.get("/feed", async (req, res) => {
       .exec();
     const feedToBeShown = [];
     for (let index = 0; index < feeds.length; index += 1) {
-      // console.log(feeds[index].mission);
+      let like;
+      if (feeds[index].likeList.includes(req.jwt_payload.id)) like = true;
+      else like = false;
       if (feeds[index].mission.Feed) {
         feedToBeShown.push({
           MissionName: feeds[index].mission.MissionName,
@@ -21,6 +23,7 @@ Router.get("/feed", async (req, res) => {
           _id: feeds[index]._id,
           team_id: feeds[index].team._id,
           Date: feeds[index].Date,
+          like,
         });
       }
     }
@@ -39,11 +42,22 @@ Router.get("/feed/likes/:id", async (req, res) => {
     if (!feed) {
       return res.status(404).json({ message: "no such feed found" });
     }
-
-    feed.likes += 1;
-
-    feed.save();
-    return res.status(200).json({ message: "post liked" });
+    if (!(await Feed.findOne({ _id: id, likeList: req.jwt_payload.id }))) {
+      await Feed.updateOne(
+        { _id: id },
+        { $push: { likeList: req.jwt_payload.id } }
+      );
+      feed.likes += 1;
+      await feed.save();
+      return res.status(200).json({ message: "Success", like: true });
+    }
+    await Feed.updateOne(
+      { _id: id },
+      { $pull: { likeList: req.jwt_payload.id } }
+    );
+    feed.likes -= 1;
+    await feed.save();
+    return res.status(200).json({ message: "Success", like: false });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
