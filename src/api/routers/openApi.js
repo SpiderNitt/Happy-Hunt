@@ -61,7 +61,9 @@ openApi.get("/adminList", async (req, res) => {
 }); */
 openApi.get("/image", (req, res) => {
   const { photo } = req.query;
-  res.sendFile(photo);
+  const picDirectory = path.join(__dirname, "../../../");
+  const picPath = path.join(picDirectory, photo);
+  res.sendFile(picPath);
 });
 openApi.get("/notifications", async (req, res) => {
   try {

@@ -12,10 +12,9 @@ const {
 } = require("../../middlewares/expressValidator");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
 
-const missionPath = path.join(__dirname, "../../../media/missionMedia");
 const storageMission = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, missionPath);
+    cb(null, "./media/missionMedia");
   },
   filename: (req, file, cb) => {
     cb(
