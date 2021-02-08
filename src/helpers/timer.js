@@ -10,4 +10,4 @@ const options = {
 };
 const io = require("socket.io")(server, options);
 
-module.exports = { app, io };
+module.exports = { server, app, io };
