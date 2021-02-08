@@ -15,10 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import client from '../api/client';
 import WebShare from './WebShare';
 import ReactPlayer from 'react-player/lazy';
-import { CardMedia } from '@material-ui/core';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
+import { Backdrop, CardMedia, Fade, Modal } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,15 +55,14 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
- 
   },
 }));
 
 export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
-  const [response, setResponse]= useState(false);
-  const [isLiked, setIsLiked]= useState(response);
+  const [isLiked, setIsLiked]= useState(false);
+  const [sharePost,setSharePost] = useState(false);
   const [media,setMedia] = useState("");
   const [open, setOpen] = React.useState(false);
 
@@ -78,26 +74,26 @@ export default function FeedCard({ data:activity }) {
     setOpen(false);
   };
 
+  useEffect(() => {
+    setData(activity);
+    setMedia(data.Answer_type); 
+  }, [])
+
+  console.log(data)
+  console.log(data.Answer_type)
+  console.log(data.Answer)
+
   const likePost = async () => {
     const result = await client.get(`api/activity/feed/likes/${data._id}`)
     if(!result.ok){
       console.log(result.originalError, result.problem, result.status);
       return;
     }
-    setResponse(result.data.like);
-    setIsLiked(response)
+    console.log(result);
+    setIsLiked(true);  
   }
 
-
-  useEffect(() => {
-    setData(activity);
-    setMedia(data.Answer_type); 
-    setIsLiked(response);
-  }, []);
-
-  console.log(isLiked)
-  console.log(media);
-
+  console.log(media)
   return (
     <Card className={classes.root}>
       {data && <>

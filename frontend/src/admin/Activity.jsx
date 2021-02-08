@@ -20,7 +20,7 @@ const Activity = () => {
       setData(result.data.submissions);
     }
     fetchData();
-  }, [data]);
+  }, []);
   return (
     <Grid container className={styles.container}>
       {
