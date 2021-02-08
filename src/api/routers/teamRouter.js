@@ -216,15 +216,11 @@ team.get("/accept", leaderVerify, async (req, res) => {
       }
     );
     await user.save();
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // io.emit(`Request ${userId}`, "Accept");
-=======
+
     const token = createJWTtoken(user);
-=======
->>>>>>> a606448... production code changes
+
     io.emit(`Request ${userId}`, "Accept");
->>>>>>> eae66c6... production code changes
+
     await sendEmail(
       user.emailId,
       "leader accepted your request",
