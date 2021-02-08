@@ -48,7 +48,6 @@ openApi.get("/adminList", async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-
 openApi.get("/notifications", async (req, res) => {
   try {
     if (
