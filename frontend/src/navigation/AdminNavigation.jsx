@@ -53,7 +53,7 @@ export default function AdminNav() {
                     </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_ACTIVITY_FEED} exact>
-                    <DrawerHeader title="Activity Feed" />
+                    <DrawerHeader title="User Submissions" />
                     <Drawer username={username} title={username[0]} />
                     <Activity />
                 </AdminRoute>

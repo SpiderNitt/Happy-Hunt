@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom'
 import './admin.css'
 
 const MissionCard = (props) => {
-    const { history } = props;
     const renderType = (type) => {
         const object = {
             'Picture': <CameraAltIcon fontSize="large" color="primary" />,
@@ -23,7 +22,7 @@ const MissionCard = (props) => {
                 {renderType(props.values['answer_Type'])}
             </div>
             <div className='mission-card-name'>
-                <p>{`Mission ${props.index}`}</p>
+                <p>{props.values['MissionName']}</p>
             </div>
         </div>
     );

@@ -53,7 +53,7 @@ Router.post(
           emailId,
           "ADMIN created",
           `Hii ur invited to happy hunt as admin.`,
-          `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Admin added.</h4><p>Congratualtions! You have been successfully added to Happy Hunt as an admin.</p><p> This is your password: ${password} < We request you to keep it confidential. </p><p style="color:navy">Happy hunting!</p></body>`
+          `<body style="font-family: tahoma"><h2>Greetings from Happy Hunt!</h2><h4>Admin added.</h4><p>Congratualtions! You have been successfully added to Happy Hunt as an admin.</p><p> This is your password: ${adminpassword} < We request you to keep it confidential. </p><p style="color:navy">Happy hunting!</p></body>`
         );
         return res
           .status(200)
@@ -98,12 +98,12 @@ Router.get("/start", superAdminVerify, async (req, res) => {
   try {
     const SAdmin = await User.findById(req.jwt_payload.id);
     if (SAdmin.isClicked) {
-      return res.status(400).json({ message: "game already started" });
+      return res.status(400).json({ message: "Game has already started" });
     }
     algo();
     SAdmin.isClicked = true;
     await SAdmin.save();
-    return res.status(200).json({ message: "Success" });
+    return res.status(200).json({ message: "Game sucessfully started" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Server error" });
@@ -114,8 +114,10 @@ Router.get("/submissions", adminVerify, async (req, res) => {
     const activityFeeds = await Activity.find({
       isSubmitted: true,
       status: false,
-    });
-
+    })
+      .populate("team")
+      .populate("mission");
+    console.log(activityFeeds.length);
     return res.status(200).json({ submissions: activityFeeds });
   } catch (error) {
     console.log(error);
@@ -129,9 +131,7 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const activity = await Activity.findById(activityfeedId)
-      .populate("team")
-      .exec();
+    const activity = await Activity.findById(activityfeedId).populate("team");
     if (!activity) {
       return res.status(404).json({ message: "no such activity found" });
     }

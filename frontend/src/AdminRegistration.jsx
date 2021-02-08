@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { SupervisorAccount } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
@@ -7,6 +7,7 @@ import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography
 import ErrorMessage from './components/ErrorMessage';
 import colors from './utils/colors';
 import { AdminRegister } from './api/auth';
+import Message from './components/Message';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -41,14 +42,19 @@ const useStyles = makeStyles((theme) => ({
 export default function AdminRegistration() {
 
     const classes = useStyles();
-
+     const [messageType, setmessageType] = useState('');
+     const [info, setInfo] = useState('');
     const handleSubmit = async ({ email }, { resetForm }) => {
       const response = await AdminRegister(email);
       if(!response.ok){
         console.log(response.problem);
         console.log(response.data);
+        setmessageType('error');
+        setInfo('Cannot add admin');
         return;
       }
+      setmessageType('success');
+      setInfo('Successfully added admin');
       console.log(response.data);
       resetForm();
     }
@@ -60,6 +66,7 @@ export default function AdminRegistration() {
           <div className={classes.avatar}>
             <SupervisorAccount style={{ fontSize: 40 }} />
           </div>
+          {info && <Message message={info} show={true} type={messageType} setMessage={setInfo} />}
           <Typography component="h1" variant="h5">
             Add Admin
           </Typography>

@@ -13,7 +13,7 @@ const listener = (...args) => {
 const setUnlock = () => {
   console.log("New set Unlocked");
 };
-
+/*
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const teamID = userInfo.team;
 
@@ -22,3 +22,4 @@ socket.on(`Notifications ${teamID}`, listener);
 socket.on(`Notifications`, listener);
 
 socket.on(`missions`, setUnlock);
+*/
