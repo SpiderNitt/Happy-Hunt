@@ -286,10 +286,10 @@ player.post(
         if (result.n === 1) {
           return res.status(204).json({ mission: "Answer already submitted" });
         }
-        return res.status(404).json({ message: "Cannot submit answer" });
+        return res.status(404).json({ message: "Answer already submitted" });
       } catch (error) {
         console.log(error);
-        return res.status(416).json({ message: "Cannot submit answer" });
+        return res.status(416).json({ message: "Answer already submitted" });
       }
     } catch (error) {
       console.log(error);

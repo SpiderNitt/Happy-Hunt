@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 // import AdminMembers from "./AdminMembers";
 // import AdminRegistration from "./AdminRegistration";
 import App from "./App";
+// import Socketio from "./utils/socketio";
 // import ScoreNav from "../src/user/ScoreNav";
 // import Pricing from "./components/Pricing";
 
@@ -31,7 +32,7 @@ import App from "./App";
 // import ForgotPassword from "./user/ForgotPassword";
 // require("./utils/socketio");
 
-import App from "./App";
-// require("./utils/socketio");
+// import App from "./App";
+require("./utils/socketio");
 
 ReactDOM.render(<App />, document.getElementById("root"));

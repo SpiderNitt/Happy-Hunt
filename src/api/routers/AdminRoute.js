@@ -117,7 +117,7 @@ Router.get("/submissions", adminVerify, async (req, res) => {
     })
       .populate("team")
       .populate("mission");
-    console.log(activityFeeds.length);
+    // console.log(activityFeeds.length);
     return res.status(200).json({ submissions: activityFeeds });
   } catch (error) {
     console.log(error);

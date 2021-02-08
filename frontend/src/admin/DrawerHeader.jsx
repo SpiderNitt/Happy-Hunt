@@ -99,6 +99,10 @@ const DrawerHeader = (props) => {
     useEffect(() => {
        const fetchData = async () => {
           const response= await client.get('api/notifications');
+          if(!response.ok){
+              console.log(response.originalError);
+              return;
+          }
           setNo(response.data.AdminNotification.length);
        }
        fetchData();
