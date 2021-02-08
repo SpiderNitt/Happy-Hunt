@@ -9,6 +9,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  isClicked: {
+    type: Boolean,
+    default: false,
+  },
   isEmailVerified: {
     type: Boolean,
     default: false,
@@ -43,9 +47,11 @@ const UserSchema = new mongoose.Schema({
   Location: {
     Lat: {
       type: Number,
+      default: 18.516726,
     },
     Long: {
       type: Number,
+      default: 73.856255,
     },
   },
   Notifications: [{ type: String }],

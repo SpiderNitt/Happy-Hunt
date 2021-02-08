@@ -261,5 +261,4 @@ player.post("/reset", resetValidator, async (req, res) => {
     return res.status(500).json({ message: "Server Error, Try again later" });
   }
 });
-
 module.exports = player;

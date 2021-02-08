@@ -12,88 +12,94 @@ import {
   makeStyles,
   Modal,
   Backdrop,
-} from '@material-ui/core';
-import { AccountCircle, Add, Close, Delete } from '@material-ui/icons';
-import React, { useEffect, useState } from 'react';
-import AdminRegistration from '../AdminRegistration';
-import colors from '../utils/colors';
-import client from '../api/client';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+} from "@material-ui/core";
+import { AccountCircle, Add, Close, Delete } from "@material-ui/icons";
+import React, { useEffect, useState } from "react";
+import AdminRegistration from "../AdminRegistration";
+import colors from "../utils/colors";
+import client from "../api/client";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import Message from '../components/Message';
 
-const admins = [{
-  emailId: 'sampleadmin@gmail.com',
-  password: 'secret'
-}, {
-  emailId: 'sampleadmin2@gmail.com',
-  password: 'secret2'
-}]
+const admins = [
+  {
+    emailId: "sampleadmin@gmail.com",
+    password: "secret",
+  },
+  {
+    emailId: "sampleadmin2@gmail.com",
+    password: "secret2",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
-  '@global': {
-    '*::-webkit-scrollbar': {
-      width: '0.4em',
-      overflowY: 'hidden',
+  "@global": {
+    "*::-webkit-scrollbar": {
+      width: "0.4em",
+      overflowY: "hidden",
     },
-    '*::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+    "*::-webkit-scrollbar-track": {
+      "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
     },
-    '*::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey'
-    }
+    "*::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(0,0,0,.1)",
+      outline: "1px solid slategrey",
+    },
   },
   root: {
-    paddingLeft: '10%',
-    paddingRight: '10%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '600px',
+    paddingLeft: "10%",
+    paddingRight: "10%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "600px",
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     bottom: theme.spacing(5),
     right: theme.spacing(7),
   },
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: colors.white,
-    flexDirection: 'column',
-    paddingBottom: '20%',
+    flexDirection: "column",
+    paddingBottom: "20%",
   },
   box: {
     marginTop: 70,
     width: 600,
-    overflowY: 'scroll',
+    overflowY: "scroll",
     backgroundColor: colors.light,
     borderRadius: 20,
-  }
-}))
+  },
+}));
 
 function AdminMembers(props) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [messageType, setmessageType] = useState('');
+  const [info, setInfo] = useState('');
   const [data, setData] = useState(admins);
   const styles = useStyles();
   useEffect(() => {
     const fetchData = async () => {
-      const result = await client.get('api/adminList');
-      console.log(result.data);
+      const result = await client.get("api/adminList");
+      //console.log(result.data);
       setData(result.data);
-    }
+    };
     fetchData();
-  }, []);
-  const handleOpen = () => {
+  }, [data]);
+  function handleOpen() {
     setOpen(true);
-  };
+  }
   const handleClose = () => {
     setOpen(false);
   };
@@ -107,14 +113,25 @@ function AdminMembers(props) {
   const handleDeleteConfirm = (email) => {
     setOpenDialog(false);
     const confirmDelete = async () => {
-      const response = await client.delete(`api/admin/deleteAdmin?emailId=${email}`);
+      const response = await client.delete(
+        `api/admin/deleteAdmin?emailId=${email}`
+      );
       console.log(response);
-    }
+      if(response.ok){
+        setInfo(`Deleted admin with email '${email}'`)
+        setmessageType('success');
+      }
+      else{
+         setInfo(`Cannot delete Admin with email '${email}'`)
+         setmessageType('error');
+      }
+    };
     confirmDelete();
-  }
+  };
   return (
     <Container className={styles.root}>
       <div className={styles.box}>
+        {info && <Message message={info} show={true} type={messageType} setMessage={setInfo}/>}
         <List>
           {data.map((element, index) => (
             <>
@@ -130,27 +147,38 @@ function AdminMembers(props) {
                   style={{ marginLeft: 10 }}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" style={{ marginRight: 20 }} onClick={handleClickOpen}>
+                  <IconButton
+                    edge='end'
+                    style={{ marginRight: 20 }}
+                    onClick={handleClickOpen}>
                     <Delete style={{ color: colors.danger }} />
                   </IconButton>
                 </ListItemSecondaryAction>
                 <Dialog
                   open={openDialog}
                   onClose={handleCloseDialog}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">{"DELETE ADMIN"}</DialogTitle>
+                  aria-labelledby='alert-dialog-title'
+                  aria-describedby='alert-dialog-description'>
+                  <DialogTitle id='alert-dialog-title'>
+                    {"DELETE ADMIN"}
+                  </DialogTitle>
                   <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+                    <DialogContentText id='alert-dialog-description'>
                       Are you sure you want to delete this Admin ?
-                </DialogContentText>
+                    </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary" autoFocus>
+                    <Button
+                      onClick={handleCloseDialog}
+                      color='primary'
+                      autoFocus>
                       NO
                     </Button>
-                    <Button onClick={() => handleDeleteConfirm(element.emailId)} color="secondary" variant="contained" autoFocus>
+                    <Button
+                      onClick={() => handleDeleteConfirm(element.emailId)}
+                      color='secondary'
+                      variant='contained'
+                      autoFocus>
                       YES
                     </Button>
                   </DialogActions>
@@ -168,16 +196,15 @@ function AdminMembers(props) {
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
-        }}
-      >
+        }}>
         <>
-          <IconButton onClick={handleClose} style={{ marginLeft: '50%' }}>
-            <Close style={{ color: colors.white }} fontSize="large" />
+          <IconButton onClick={handleClose} style={{ marginLeft: "50%" }}>
+            <Close style={{ color: colors.white }} fontSize='large' />
           </IconButton>
           <AdminRegistration />
         </>
       </Modal>
-      <Fab color="primary" className={styles.fab} onClick={handleOpen}>
+      <Fab color='primary' className={styles.fab} onClick={handleOpen}>
         <Add />
       </Fab>
     </Container>
@@ -185,4 +212,3 @@ function AdminMembers(props) {
 }
 
 export default AdminMembers;
-

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useFormik, Field } from 'formik';
+import React,{ useState} from 'react';
+import { useFormik } from 'formik';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -11,28 +11,22 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Message from '../components/Message';
 
 const categories = ['Riddles', 'Cryptic', 'Graphic', 'Factoids', 'Bonus'];
 const answerTypes = ['Picture', 'Video', 'Picture and Location', 'Text']
 
 const NewMission = (props) => {
     const { history } = props;
-    const convertBase64 = (file, key) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file)
-            fileReader.onload = () => {
-                formik.setFieldValue(key, fileReader.result);
-                resolve(fileReader.result);
-            }
-            fileReader.onerror = (error) => {
-                reject(error);
-            }
-        })
-    }
-    const handleImageUpload = async (event, key) => {
-        const file = event.target.files[0]
-        await convertBase64(file, key);
+    const [messageType, setmessageType] = useState('');
+    const [info, setInfo] = useState('');
+    const checkBonus = (category) => {
+        if (category === 'Bonus') {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     const formik = useFormik({
         initialValues: {
@@ -42,30 +36,21 @@ const NewMission = (props) => {
             answer: '',
             Other_Info: '',
             answer_Type: '',
-            ServerEvaluation: ''
+            ServerEvaluation: '',
+            hint1: '',
+            maxPointsHint1: 0,
+            hint2: '',
+            maxPointsHint2: 0,
         },
         enableReinitialize: true,
         onSubmit: async (values) => {
 
-            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, file, answerfile, hint1, maxPointsHint1, hint2, maxPointsHint2 } = values;
+            const { Category, clue2, answer, answer_Type, Other_Info, Lat, Long, maxPoints, MissionName, ServerEvaluation, clue1, hint1, maxPointsHint1, hint2, maxPointsHint2, Photos } = values;
             let answerArray = [];
-            if (answer_Type === answerTypes[0] || answer_Type === answerTypes[2]) {
-                answerArray.push(answerfile);
-            }
-            else {
-                answerArray = answer.split(',');
-            }
+            answerArray = answer.split(',');
             const cluesArray = [];
-            if (clue2 === "") {
-                cluesArray.push(clue1);
-            }
-            else {
-                cluesArray.push(clue1);
-                if (values.file !== undefined) {
-                    cluesArray.push(clue2);
-                    cluesArray.push(file);
-                }
-            }
+            cluesArray.push(clue1);
+            cluesArray.push(clue2);
             let hintsArray = [];
             if (Category !== 'Bonus') {
                 hintsArray.push({ 'Content': hint1, 'MaxPoints': maxPointsHint1 });
@@ -77,8 +62,7 @@ const NewMission = (props) => {
             }
             const object = {
                 Category,
-                clue: cluesArray,
-                answer: answerArray,
+                isBonus: checkBonus(Category),
                 answer_Type,
                 Other_Info,
                 Location: {
@@ -89,11 +73,42 @@ const NewMission = (props) => {
                 Feed: true,
                 ServerEvaluation: ServerEvaluationBoolean,
                 maxPoints,
-                Hints: hintsArray,
             };
-            console.log(object)
-            const response = await client.post('api/admin/mission/add', object);
+            const formData = new FormData();
+            for(let key in object) {
+               if(typeof(object[key]) === 'object') {
+                   for (let subKey in object[key]) {
+                      formData.append(`${key}[${subKey}]`, object[key][subKey]);
+                   }
+               }
+               else {
+                    formData.append(key, object[key]);
+                }
+            }
+            for(let i=0;i<answerArray.length;i++){
+                formData.append('answer',answerArray[i]);
+            }
+            for(let i=0;i<cluesArray.length;i++){
+                formData.append('statement',cluesArray[i]);
+            }
+            if(hintsArray.length > 0){
+                formData.append('Hints',JSON.stringify(hintsArray));
+            }
+            if(Photos){
+                for(let i=0;i<Photos.length;i++){
+                    formData.append('Photos',Photos[i]);
+                }
+            }
+            const response = await client.post('api/admin/mission/add', formData);
             console.log(response);
+            if(response.ok){
+              setInfo(response.data.message);
+              setmessageType("success")
+            }
+            else{
+              setInfo('Cannot add mission. Fill all the fields properly');
+              setmessageType("error")
+            }
         },
     });
 
@@ -107,6 +122,7 @@ const NewMission = (props) => {
             }} onClick={() => history.push('/admin/mission/update')}>
                 <ArrowBackIcon fontSize="large" color="info" />
             </div>
+            {info && <Message message={info} show={true} type={messageType} setMessage={setInfo}/>}
             <div style={{
                 position: 'absolute',
                 left: '50%',
@@ -116,7 +132,7 @@ const NewMission = (props) => {
                 width: '600px',
             }}>
                 <h3 style={{ textAlign: 'center' }}>Add a Mission</h3>
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} enctype='multipart/form-data'>
                     <TextField
                         fullWidth
                         id="Category"
@@ -164,12 +180,12 @@ const NewMission = (props) => {
                         error={formik.touched.clue2 && Boolean(formik.errors.clue2)}
                         helperText={formik.touched.clue2 && formik.errors.clue2}
                     />
-                    {(formik.values.clue2 !== "" && formik.values.clue1 !== "") &&
+                    {(formik.values.clue1 !== "") &&
                         <div>
                             <br /><br />
                             <div className="form-group">
-                                <input type="file" onChange={(event) => {
-                                    handleImageUpload(event, 'file');
+                                <input id="file" name="file" type="file" multiple onChange={(event) => {
+                                    formik.setFieldValue("Photos", event.currentTarget.files);
                                 }} />
                             </div>
                         </div>
@@ -191,27 +207,16 @@ const NewMission = (props) => {
                             </MenuItem>
                         ))}
                     </TextField>
-                    {(formik.values['answer_Type'] === answerTypes[0] || formik.values['answer_Type'] === answerTypes[2]) ?
-                        <div>
-                            <br /><br />
-                            <div className="form-group">
-                                <input type="file" onChange={(event) => {
-                                    handleImageUpload(event, 'answerfile');
-                                }} />
-                            </div>
-                        </div>
-                        :
-                        <TextField
-                            fullWidth
-                            id="answer"
-                            name="answer"
-                            label="Answer (Multiple answers are to be separated by commas)"
-                            value={formik.values.answer}
-                            onChange={formik.handleChange}
-                            error={formik.touched.answer && Boolean(formik.errors.answer)}
-                            helperText={formik.touched.answer && formik.errors.answer}
-                        />
-                    }
+                    <TextField
+                        fullWidth
+                        id="answer"
+                        name="answer"
+                        label="Answer (Multiple answers are to be separated by commas)"
+                        value={formik.values.answer}
+                        onChange={formik.handleChange}
+                        error={formik.touched.answer && Boolean(formik.errors.answer)}
+                        helperText={formik.touched.answer && formik.errors.answer}
+                    />
                     <TextField
                         fullWidth
                         id="Lat"

@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const Router = require("express").Router();
+const path = require("path");
 const { validationResult } = require("express-validator");
 const multer = require("multer");
 const Mission = require("../../database/models/Mission");
@@ -10,6 +11,18 @@ const {
   UpdateMissionValidator,
 } = require("../../middlewares/expressValidator");
 const { adminVerify, superAdminVerify } = require("../../middlewares/role");
+
+const storageMission = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./media/missionMedia");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
 
 Router.get("/", adminVerify, async (req, res) => {
   try {
@@ -25,7 +38,7 @@ Router.get("/", adminVerify, async (req, res) => {
 
 Router.post(
   "/add",
-  multer({ storage: multer.memoryStorage() }).array("Photos", 2),
+  multer({ storage: storageMission }).array("Photos", 2),
   MissionValidator,
   superAdminVerify,
 
@@ -52,15 +65,17 @@ Router.post(
       }
 
       const newHints = [];
-
-      for (let i = 0; i < Hints.length; i += 1) {
-        const newhint = await Hint.create(Hints[i]);
-        newHints.push(newhint);
+      if (Hints) {
+        const hintarray = JSON.parse(Hints);
+        for (let i = 0; i < hintarray.length; i += 1) {
+          const newhint = await Hint.create(hintarray[i]);
+          newHints.push(newhint);
+        }
       }
       const mediaFiles = [];
       if (req.files) {
         for (let x = 0; x < req.files.length; x += 1) {
-          const basefile = req.files[x].buffer.toString("base64");
+          const basefile = `http://localhost:3000/api/image?photo=${req.files[x].path}`;
           mediaFiles.push(basefile);
         }
       }
@@ -103,11 +118,11 @@ Router.post(
     }
   }
 );
-Router.patch(
+Router.post(
   "/update",
   superAdminVerify,
   UpdateMissionValidator,
-  multer({ storage: multer.memoryStorage() }).array("Photos", 2),
+  multer({ storage: storageMission }).array("Photos", 2),
 
   async (req, res) => {
     try {
@@ -120,16 +135,17 @@ Router.patch(
       const HintsGiven = req.body.Hints;
 
       if (HintsGiven) {
+        const hintarray = JSON.parse(HintsGiven);
         const hints = mission.Hints;
 
-        for (let index = 0; index < HintsGiven.length; index += 1) {
-          await Hint.findByIdAndUpdate(hints[index], HintsGiven[index]);
+        for (let index = 0; index < hintarray.length; index += 1) {
+          await Hint.findByIdAndUpdate(hints[index], hintarray[index]);
         }
       }
       const mediaFiles = [];
       if (req.files) {
         for (let x = 0; x < req.files.length; x += 1) {
-          const basefile = req.files[x].buffer.toString("base64");
+          const basefile = `http://localhost:3000/api/image?photo=${req.files[x].path}`;
           mediaFiles.push(basefile);
         }
       }

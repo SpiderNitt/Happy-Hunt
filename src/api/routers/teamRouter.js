@@ -4,7 +4,7 @@ const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
-const { io } = require("../../helpers/timer");
+// const { io } = require("../../helpers/timer");
 const { sendEmail } = require("../../helpers/EMAIL/SGemail");
 
 team.post("/create", playerVerify, async (req, res) => {
@@ -78,7 +78,7 @@ team.post("/create", playerVerify, async (req, res) => {
     console.log(error);
     return res
       .status(500)
-      .json({ Message: "Internal Server Error, Try again later!!" });
+      .json({ message: "Internal Server Error, Try again later!!" });
   }
   // return 0;
 });
@@ -109,7 +109,7 @@ team.get("/request/:teamId", playerVerify, async (req, res) => {
         CaptainID = member._id;
       }
     }
-    io.emit(`Request ${CaptainID}`);
+    // io.emit(`Request ${CaptainID}`);
     if (existingTeam.Paid < 1) {
       return res.status(200).json({ message: "Oops! Team is already full" });
     }
@@ -153,7 +153,7 @@ team.get("/reject", leaderVerify, async (req, res) => {
         .json({ message: "Invalid userId or Provide userId" });
     }
     const existingTeam = await Team.findById(req.jwt_payload.team);
-    io.emit(`Request ${userId}`, "Reject");
+    // io.emit(`Request ${userId}`, "Reject");
     existingTeam.requests.splice(existingTeam.requests.indexOf(userId), 1);
     // await existingTeam.save();
     await Team.updateOne(
@@ -162,7 +162,7 @@ team.get("/reject", leaderVerify, async (req, res) => {
         $pull: { requests: userId },
       }
     );
-    io.emit(`Request ${userId}`, "Reject");
+    // io.emit(`Request ${userId}`, "Reject");
     await sendEmail(
       user.emailId,
       "Team request",
@@ -175,9 +175,9 @@ team.get("/reject", leaderVerify, async (req, res) => {
     return res.status(200).json({ message: "Request Rejected" });
   } catch (error) {
     console.log(error);
-    res
+    return res
       .status(500)
-      .json({ Message: "Internal Server Error, Try again later!!" });
+      .json({ message: "Internal Server Error, Try again later!!" });
   }
 });
 
@@ -186,7 +186,12 @@ team.get("/accept", leaderVerify, async (req, res) => {
     const { userId } = req.query;
     const user = await User.findById(userId);
     if (userId == null || userId === "" || user === null) {
-      return res.status(200).json({ Message: "Fill all the fields " });
+      return res
+        .status(400)
+        .json({ message: "Error accepting request, try again later" });
+    }
+    if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
+      return res.status(402).json({ message: "User already part of a team" });
     }
     if (user.Role === "TeamLeader" || user.Role === "TeamMember") {
       return res.status(402).json({ message: "User already part of a team" });
@@ -194,7 +199,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
     user.Role = "TeamMember";
     const existingTeam = await Team.findById(req.jwt_payload.team);
     if (existingTeam.Paid < 1) {
-      return res.status(200).json({ message: "Team is full" });
+      return res.status(400).json({ message: "Team is full" });
     }
 
     user.team = existingTeam._id;
@@ -211,7 +216,7 @@ team.get("/accept", leaderVerify, async (req, res) => {
       }
     );
     await user.save();
-    io.emit(`Request ${userId}`, "Accept");
+    // io.emit(`Request ${userId}`, "Accept");
     await sendEmail(
       user.emailId,
       "leader accepted your request",
@@ -230,11 +235,10 @@ team.get("/accept", leaderVerify, async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res
+    return res
       .status(500)
       .json({ message: "Internal Server Error, Try again later!!" });
   }
-  return 0;
 });
 
 team.post("/location", leaderVerify, async (req, res) => {
@@ -267,7 +271,7 @@ team.post("/location", leaderVerify, async (req, res) => {
       return res.status(200).json({ message: "success" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -279,7 +283,7 @@ team.get("/requests", async (req, res) => {
     return res.status(200).json({ message: "success", TeamsRequest });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ message: e.message });
+    return res.status(500).json({ message: e.message });
   }
 });
 team.get("/score", async (req, res) => {

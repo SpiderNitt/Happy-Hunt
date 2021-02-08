@@ -2,6 +2,7 @@
 const multer = require("multer");
 const player = require("express").Router();
 const geolib = require("geolib");
+const path = require("path");
 const { getDistance } = require("geolib");
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
@@ -11,6 +12,30 @@ const Hint = require("../../database/models/Hint");
 const { playerVerify } = require("../../middlewares/role");
 const { io } = require("../../helpers/timer");
 const { TeamenRollVerify } = require("../../middlewares/team");
+
+const storageSubmission = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./media/submissionMedia");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+
+const storageProfile = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./media/profileMedia");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
 // player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
 //   try {
 //     const { team } = req.jwt_payload;
@@ -124,7 +149,7 @@ const { TeamenRollVerify } = require("../../middlewares/team");
 // });
 player.post(
   "/submission",
-  multer({ storage: multer.memoryStorage() }).single("answer"),
+  multer({ storage: storageSubmission }).single("answer"),
   playerVerify,
   TeamenRollVerify,
   async (req, res) => {
@@ -146,7 +171,7 @@ player.post(
           case "Picture": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No picture submission" });
-            answer = req.file.buffer.toString("base64");
+            answer = `http://localhost:3000/api/image?photo=${req.file.path}`;
             break;
           }
 
@@ -159,25 +184,7 @@ player.post(
           case "Video": {
             if (req.file === undefined || req.file == null)
               return res.status(400).json({ message: "No video submission" });
-            answer = req.file.buffer.toString("base64");
-            break;
-          }
-          case "Picture and Location": {
-            if (req.file === undefined || req.file == null)
-              return res.status(400).json({ message: "No picture submission" });
-            const { Lat, Long } = submit.Location;
-            const lat = Lat.toString();
-            const lon = Long.toString();
-            const { latSub, lonSub } = req.body;
-            const distance = geolib.getDistance(
-              { latitude: lat, longitude: lon },
-              { latitude: latSub, longitude: lonSub }
-            );
-            if (distance > 5000)
-              return res
-                .status(200)
-                .json({ message: "You haven't reached the location" });
-            answer = req.file.buffer.toString("base64");
+            answer = `http://localhost:3000/api/image?photo=${req.file.path}`;
             break;
           }
           default: {
@@ -370,14 +377,14 @@ player.get("/profile", playerVerify, async (req, res) => {
 });
 player.patch(
   "/update",
-  multer({ storage: multer.memoryStorage() }).single("photo"),
+  multer({ storage: storageProfile }).single("photo"),
   playerVerify,
   async (req, res) => {
     try {
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
-      console.log(req.body, userDetails, id);
+      // console.log(req.body, userDetails, id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }
@@ -386,7 +393,7 @@ player.patch(
       update.name = req.body.name ? req.body.name : userDetails.name;
       try {
         update.photo = req.file
-          ? req.file.buffer.toString("base64")
+          ? `http://localhost:3000/api/image?photo=${req.file.path}`
           : userDetails.photo;
       } catch (err) {
         console.log(err);
@@ -411,7 +418,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     const teamId = req.jwt_payload.team;
 
     const team = await Team.findById(teamId);
-
+    console.log("team", team);
     const arr = [];
     const arr2 = [];
     const allMissions = team.assignedMissions;
