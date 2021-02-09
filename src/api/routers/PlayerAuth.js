@@ -29,8 +29,8 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
     const hash = cryptoRandomString({ length: 128, type: "alphanumeric" });
-    console.log(hash);
-    const user = await User.create({
+
+    await User.create({
       emailId,
       phoneNo,
       name,
@@ -138,7 +138,7 @@ player.post("/verify", async (req, res) => {
 player.get("/email", async (req, res) => {
   try {
     const { verificationId } = req.query;
-    console.log(verificationId);
+
     if (verificationId === null) {
       return res.status(401).json({
         message: "Verification token wasn't provided to verify account",
@@ -175,7 +175,7 @@ player.get("/resendEmail", async (req, res) => {
     }
 
     const hash = cryptoRandomString({ length: 128, type: "alphanumeric" });
-    console.log(hash);
+
     user.VerificationToken = hash;
     await user.save();
 

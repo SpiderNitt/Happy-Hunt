@@ -47,6 +47,7 @@ export default function ActivityFeedCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  console.log(props.data);
   const handleAccept = async (isAccepted, activityfeedId) => {
     console.log(isAccepted, activityfeedId);
     const object = {
@@ -55,7 +56,7 @@ export default function ActivityFeedCard(props) {
     };
     //route for accepting
     const response = await client.post("api/admin/accept", object);
-    console.log(response);
+    // console.log(response);
     if(response.ok){
       setmessageType('success');
       setInfo(response.data.message)
@@ -68,15 +69,15 @@ export default function ActivityFeedCard(props) {
   const handleReject = () => {
     handleOpen();
   };
-  const handleRejectConfirm = (isAccepted, activityfeedId) => {
-    console.log(isAccepted, activityfeedId);
+  const handleRejectConfirm = async (isAccepted, activityfeedId) => {
+    // console.log(isAccepted, activityfeedId);
     //route for rejecting
     const object = {
       isAccepted,
       activityfeedId,
     };
-    const response = client.post("api/admin/accept", object);
-    console.log(response);
+    const response = await client.post("api/admin/accept", object);
+    // console.log(response);
       if(response.ok){
       setmessageType('success');
       setInfo(response.data.message)
@@ -99,11 +100,15 @@ export default function ActivityFeedCard(props) {
         title={`Team name: ${props.data.team.teamName}`}
         subheader={props.data.Date}
       />
-      <CardMedia
+      {/* <CardMedia
         className={classes.media}
         src={props.data.Answer}
         title='image'
-      />
+      /> */}
+      {props.data.mission.answer_Type === "Photo" && <img src={props.data.Answer} alt='submission' style={{ width: 400, height: 300 }} />}
+      {props.data.mission.answer_Type === "Video" && <video controls width={400} >
+        <source src={props.data.Answer} />
+        </video>}
       <CardContent>
         <Typography variant='body2' color='textSecondary' component='p'>
           {`Mission name: ${props.data.mission.MissionName}`}

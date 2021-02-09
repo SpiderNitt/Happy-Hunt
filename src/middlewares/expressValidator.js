@@ -1,5 +1,4 @@
 const { body } = require("express-validator");
-const { isValidObjectId } = require("mongoose");
 
 module.exports = {
   AdminCreateValidator: [body("emailId").isEmail().notEmpty()],

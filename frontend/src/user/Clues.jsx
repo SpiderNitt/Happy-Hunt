@@ -54,11 +54,13 @@ const RedirectUrl = (category, id) => {
 
 function Clues(props){
   const classes= useStyles();
-  const [loading, setLoading] = useState(true);
-  const data = props.data.data;
+  // const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(props.data.data);
+  // const data = props.data.data;
+  // console.log(data);
   useEffect(() => {
-    setLoading(false);
-  }, []);
+    setData(props.data.data);
+  }, [props.data.data]);
 
   // console.log(props)
 
@@ -66,6 +68,8 @@ function Clues(props){
     return (
       <Container maxWidth="md">
         {data !== [] && data.map((mission, index) => (
+        mission ?  
+        <>
         <Card key={mission._id} index={index + 1} style={{ marginBottom: 10, padding: 10 }}>
         <CardContent>
           <div className={classes.container}>
@@ -88,7 +92,8 @@ function Clues(props){
           </Typography>
         </CardActions>
         </Card>
-        
+        </>:
+        <></>
       ))}
       </Container>
     )
@@ -96,9 +101,7 @@ function Clues(props){
 
   return (   
     <Container maxWidth="md">
-      {loading && <LoadingPage />}
-      {!loading && <RenderClues/>} 
-
+      <RenderClues/>
     </Container>
   )
 };

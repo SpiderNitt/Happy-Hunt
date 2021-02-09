@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import Clues from './Clues';
 import client from '../api/client';
+import LoadingPage from '../components/LoadingPage';
 
 const useStyles = makeStyles({
   root: {
@@ -56,6 +57,8 @@ export default function ClueTabs() {
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [data, setData] = useState([]);
+  const [loading, setloading] = useState(true);
+  
   const fetch = async () => {
     const result = await client.get('api/player/mission')
     if (!result.ok) {
@@ -63,6 +66,7 @@ export default function ClueTabs() {
       return;
     }
     console.log(result.data);
+    setloading(false);
     if (result.data.missions.length >= 10) {
       setOpen2(true);
     }
@@ -85,7 +89,7 @@ export default function ClueTabs() {
     return object;
   }
 
-  console.log(getSet1())
+  // console.log(getSet1())
   const getSet2 = () => {
     const object = {};
     if (data.length >= 10) {
@@ -112,6 +116,8 @@ export default function ClueTabs() {
 
   return (
     <Container className={classes.root} maxWidth="md">
+      {loading ? <LoadingPage />
+      : <>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -124,14 +130,15 @@ export default function ClueTabs() {
         {open3 ? <Tab icon={<LockOpen {...a11yProps(2)} />} /> : <Tab icon={<Lock />} disabled />}
       </Tabs>
       <TabPanel value={value} index={0}>
-        <Clues data={getSet1()} />
+        {data !== [] && <Clues data={getSet1()} />}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Clues data={getSet2()} />
+        {data !== [] && <Clues data={getSet2()} />}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Clues data={getSet3()} />
+        {data !== [] && <Clues data={getSet3()} />}
       </TabPanel>
+      </>}
     </Container>
   );
 }

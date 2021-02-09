@@ -15,10 +15,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import client from '../api/client';
 import WebShare from './WebShare';
 import ReactPlayer from 'react-player/lazy';
-import { CardMedia } from '@material-ui/core';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
+import { Backdrop, CardMedia, Fade, Modal } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
- 
   },
 }));
 
@@ -69,6 +65,14 @@ export default function FeedCard({ data:activity }) {
   const [isLiked, setIsLiked]= useState(response);
   const [media,setMedia] = useState("");
   const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -122,16 +126,12 @@ export default function FeedCard({ data:activity }) {
           {data.MissionName}
         </Typography>
       </CardContent>
-      <CardMedia>
-
-      {(media == " Video") &&
-        <ReactPlayer url={`data:video/mp4;base64,${data.Answer}`} alt={"video"} /> 
-      }
-      {(media == " Picture") &&
-        <img src={data.Answer} alt={"picture"} />
-      }
-      </CardMedia>
+      {(media === "Video") &&
+        <video width="100%" controls>
+        <source src={data.Answer} type="video/mp4" />
+      </video> }
       
+      {media === "Picture" && <img src={data.Answer} alt="answer" width="100%" />}
       <div className={classes.button}>
         <CardActions>  
           <IconButton>

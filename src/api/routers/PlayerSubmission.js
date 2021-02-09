@@ -1,8 +1,10 @@
 /* eslint-disable no-await-in-loop */
 const multer = require("multer");
 const player = require("express").Router();
-const geolib = require("geolib");
+
 const path = require("path");
+const { uid } = require("uid");
+const fs = require("fs");
 const { getDistance } = require("geolib");
 const Mission = require("../../database/models/Mission");
 const Activity = require("../../database/models/Activity");
@@ -18,10 +20,7 @@ const storageSubmission = multer.diskStorage({
     cb(null, "./media/submissionMedia");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
+    cb(null, `${uid()}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -30,123 +29,9 @@ const storageProfile = multer.diskStorage({
     cb(null, "./media/profileMedia");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
+    cb(null, `${uid()}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
-// player.post("/submission", playerVerify, TeamenRollVerify, async (req, res) => {
-//   try {
-//     const { team } = req.jwt_payload;
-//     const user = await Team.findById(team);
-//     const { mission, answer } = req.body;
-//     console.log(req.body);
-//     if (!mission) return res.status(400).json({ message: "Fill all fields" });
-//     const submit = await Mission.findById(mission);
-//     const answerType = submit.answer_Type;
-//     const { Category, visibility, ServerEvaluation, maxPoints } = submit;
-//     if (answerType === undefined || answerType === null) {
-//       return res.status(404).json({ message: "Mission not found" });
-//     }
-//     let notification;
-//     let result;
-//     if (ServerEvaluation && answerType === "Text") {
-//       const originalAnswer = submit.answer;
-//       let rightAnswer = false;
-//       for (let i = 0; i < originalAnswer.length; i += 1) {
-//         if (originalAnswer[i] === answer) {
-//           rightAnswer = true;
-//         }
-//       }
-//       if (rightAnswer) {
-//         const { hintsTaken } = await Activity.findOne({
-//           mission,
-//           team,
-//           isSubmitted: false,
-//         });
-//         let { points } = await Team.findById(team);
-//         const marks = maxPoints / 2 - hintsTaken * 20;
-//         points += marks;
-//         const teamResult = await Team.updateOne({ _id: team }, { points });
-//         if (teamResult.nModified !== 1)
-//           return res.status(404).json({ message: "Team score not updated" });
-//         result = await Activity.updateOne(
-//           { team, mission, isSubmitted: false },
-//           {
-//             Answer: answer,
-//             category: Category,
-//             status: true,
-//             ShouldBeShown: visibility,
-//             isSubmitted: true,
-//           }
-//         );
-//         // team
-//         notification = `You got right answer for ${submit.MissionName}`;
-//       } else {
-//         notification = `You got wrong answer for ${submit.MissionName}`;
-//         return res.status(200).json({ message: "Your answer is wrong" });
-//       }
-//       user.Notifications.push(notification);
-//       await user.save();
-//       io.emit(`Notifications ${team}`, notification);
-//     } else if (ServerEvaluation) {
-//       const { hintsTaken } = await Activity.findOne({
-//         mission,
-//         team,
-//         isSubmitted: false,
-//       });
-//       let { points } = await Team.findById(team);
-//       const marks = maxPoints / 2 - hintsTaken * 20;
-//       points += marks;
-//       const teamResult = await Team.updateOne({ _id: team }, { points });
-//       if (teamResult.nModified !== 1)
-//         return res.status(404).json({ message: "Team score not updated" });
-//       result = await Activity.updateOne(
-//         { team, mission, isSubmitted: false },
-//         {
-//           Answer: answer,
-//           category: Category,
-//           status: true,
-//           ShouldBeShown: visibility,
-//           isSubmitted: true,
-//         }
-//       );
-//       // team
-//       notification = `You got right answer for ${submit.MissionName}`;
-//       user.Notifications.push(notification);
-//       await user.save();
-//       io.emit(`Notifications ${team}`, notification);
-//     } else {
-//       result = await Activity.updateOne(
-//         { team, mission, isSubmitted: false },
-//         {
-//           Answer: answer,
-//           category: Category,
-//           status: false,
-//           ShouldBeShown: visibility,
-//           isSubmitted: true,
-//         }
-//       );
-//       // admin
-//       const head = await User.findOne({ Role: "SuperAdmin" });
-//       notification = `New submission for ${submit.MissionName} by team ${user.teamName}`;
-//       head.Notifications.push(notification);
-//       await head.save();
-//       io.emit(`Notifications`, notification);
-//     }
-//     if (result.nModified === 1) {
-//       return res.status(200).json({ message: "Successfully submitted" });
-//     }
-//     if (result.n === 1) {
-//       return res.status(204).json({ mission: "Activity unable to submit" });
-//     }
-//     return res.status(404).json({ message: "Activity not found" });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ message: "Server Error, Try again later" });
-//   }
-// });
 player.post(
   "/submission",
   multer({ storage: storageSubmission }).single("answer"),
@@ -284,14 +169,30 @@ player.post(
           return res.status(200).json({ message: "Successfully submitted" });
         }
         if (result.n === 1) {
+          if (req.file)
+            fs.unlink(req.file.path, (err) => {
+              if (err) console.log(err);
+            });
           return res.status(204).json({ mission: "Answer already submitted" });
         }
-        return res.status(404).json({ message: "Cannot submit answer" });
+        if (req.file)
+          fs.unlink(req.file.path, (err) => {
+            if (err) console.log(err);
+          });
+        return res.status(404).json({ message: "Answer already submitted" });
       } catch (error) {
         console.log(error);
-        return res.status(416).json({ message: "Cannot submit answer" });
+        if (req.file)
+          fs.unlink(req.file.path, (err) => {
+            if (err) console.log(err);
+          });
+        return res.status(416).json({ message: "Answer already submitted" });
       }
     } catch (error) {
+      if (req.file)
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.log(err);
+        });
       console.log(error);
       return res.status(500).json({ message: "Server Error, Try again later" });
     }
@@ -350,7 +251,7 @@ player.get("/profile", playerVerify, async (req, res) => {
     const user = await User.findById(req.jwt_payload.id)
       .populate("team", "teamId teamName")
       .lean();
-    // console.log(user);
+
     if (user === undefined || user === null) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -368,7 +269,7 @@ player.get("/profile", playerVerify, async (req, res) => {
       }
       return object;
     }, {});
-    // console.log(response);
+
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -384,7 +285,7 @@ player.patch(
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
-      // console.log(req.body, userDetails, id);
+
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }
