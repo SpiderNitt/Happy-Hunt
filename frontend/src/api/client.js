@@ -1,9 +1,9 @@
 import apisauce from "apisauce";
 
 const client = apisauce.create({
-  baseURL: "https://www.hhc.eventspeciale.com/testing/",
+  baseURL: "https://www.hhc.eventspeciale.com/",
 });
-// https://www.hhc.eventspeciale.com/testing
+// https://www.hhc.eventspeciale.com/
 // http://localhost:3000/
 
 client.addAsyncRequestTransform(async (request) => {
