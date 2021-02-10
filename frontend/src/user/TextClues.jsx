@@ -162,13 +162,20 @@ const fetch = async () => {
                 <br/><br/> */}
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
+                <h3>Part A</h3>
+                <small>Click on the icon to mark your location</small>
+                <br/>
+                <br/>
                 {!data.isBonus?
                 <div>
                     <LocationOnIcon className={classes.icon}  onClick={getLocation} />
                 </div>
                 :""}
-
+                {!data.isBonus ? 
+                <Button className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
+                : ''} 
                 {evaluation? <p>{ans}</p>: ''}
+                <h3>Part B</h3>
                 <form className={classes.root} noValidate autoComplete="off">
                 <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}}
                 placeholder="Answer" 
@@ -182,9 +189,6 @@ const fetch = async () => {
                 <br/>
                 <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
                 <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
-                {!data.isBonus ? 
-                 <Button className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
-                 : ''} 
                 {!data.isBonus ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} disabled={disableHint} >Hint</Button>
                 <Modal
