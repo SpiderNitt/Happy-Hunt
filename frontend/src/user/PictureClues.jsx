@@ -125,14 +125,14 @@ function PictureClues(props) {
                         
                     {evaluation? <p>{ans}</p>: ''}
     
-                    <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                    <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</Button>
+                    <button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</button>
+                    <button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</button>
                     {!data.isBonus ? 
-                    <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                    <button className={classes.Button} onClick={submitAnswer}>Submit Location</button>
                     : ''} 
                 
                     {!data.isBonus ? (<div>
-                        <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                        <button className={classes.Button} onClick={handleOpen} >Hint</button>
                     <Modal
                     aria-labelledby="transition-modal-title"
                     aria-describedby="transition-modal-description"
@@ -181,7 +181,10 @@ const useStyles = makeStyles((theme)=>({
         color:'white', 
         fontFamily:'tahoma', 
         backgroundColor:"gray",
-        margin:5
+        margin:5,
+        borderRadius:10,
+        padding:7,
+        cursor:"pointer"
     },
     modal: {
         display: "flex",

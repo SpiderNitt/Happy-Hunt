@@ -123,15 +123,16 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <div>
+                    <p style={{fontFamily:"tahoma", color:"gray", fontStyle:"italic"}}>Tap the icon to mark your location.</p>
                     <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
                 {evaluation? <p>{ans}</p>: ''}
                 <br/>
                 <br/>
-                <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} onClick={submitAnswer}  disabled={disable}>Submit my Location</Button>
+                <button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</button>
+                <button className={classes.Button} onClick={submitAnswer}  disabled={disable}>Submit my Location</button>
                 {!data.isBonus ? (<div>
-                    <Button className={classes.Button} onClick={handleOpen} disabled={disableHint}>Hint</Button>
+                    <button className={classes.Button} onClick={handleOpen} disabled={disableHint}>Hint</button>
                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -200,13 +201,17 @@ const useStyles = makeStyles((theme)=>({
         color:'black',
         backgroundColor:"gray",
         fontSize:20,
-        fontFamily:'tahoma'
+        fontFamily:'tahoma',
+       
       },
       Button:{
       color:'white', 
       fontFamily:'tahoma', 
       backgroundColor:"gray",
-      margin:5
+      margin:5,
+      borderRadius:10,
+      padding:7,
+      cursor:"pointer"
     },
     icon: {
         fontSize:65,
