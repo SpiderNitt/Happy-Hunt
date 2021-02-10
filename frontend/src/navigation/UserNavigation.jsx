@@ -112,7 +112,8 @@ function UserNav() {
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
           <TopNav />
-          <div style={{ marginTop: 70 }}>
+          <ScoreNav />
+          <div style={{marginTop: 20 }}>
             <ProfilePage />
           </div>
         </UserAuthenticatedRoute>
