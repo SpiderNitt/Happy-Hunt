@@ -376,8 +376,8 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         });
       }
     }
-    arr.concat(arr2);
-    return res.status(200).json({ missions: arr });
+    const missions= arr.concat(arr2);
+    return res.status(200).json({ missions });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
