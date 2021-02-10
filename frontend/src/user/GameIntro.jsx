@@ -31,19 +31,21 @@ export default function GameIntro() {
   return (
     <>
     <Container fixed maxWidth="xl" className={classes.root}>
+      <div style={{marginBottom: -35 ,marginTop:30}}>
         <Typography component="h1" variant="h3" style={{ fontWeight: 'bold', color: '#EE5C53' }}>
           Welcome
         </Typography>
         <Typography component="h1" variant="h5" style={{ fontWeight: 'bold', color: '#213B4B' }}>
           to the
         </Typography>
+      </div>
         <img alt="hhc-logo" src={logo} width={300} />
         <Container fixed maxWidth="sm">
-        <Button variant="outlined"  style={{ backgroundColor: '#F2F2F3', color: '#213B4B', outline: 1 , outlineColor: '#213B4B', width: '100%', marginBottom: 20 }} href={Routes.USER_REGISTER}>
+        <Button variant="outlined"  style={{  color: '#EE5C53', outline: 1 , border:'1px solid #EE5C53', width: '100%', marginBottom: 20 }} href={Routes.USER_REGISTER}>
             Register
         </Button>
         <br/>
-        <Button variant="contained"  style={{ backgroundColor: '#213B4B', color: 'white', width: '100%' }} onClick={handleLogin}>
+        <Button variant="contained"  style={{ backgroundColor: '#EE5C53', color: 'white', width: '100%' }} onClick={handleLogin}>
             Login
         </Button>
         </Container>
