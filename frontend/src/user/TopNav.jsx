@@ -8,6 +8,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Routes from '../utils/routes';
 import { Notifications } from '@material-ui/icons';
 import { Link } from '@material-ui/core';
+import logo from '../assets/android-chrome-512x512.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,8 +47,8 @@ export default function ButtonAppBar() {
     <div className={classes.root}>
       <AppBar style={{ backgroundColor: '#213B4B', color: 'white' }}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title} component={Link} href={Routes.HOME}>
-            Happy Hunt
+          <Typography variant="p" className={classes.title} component={Link} href={Routes.HOME}>
+          <img src={logo} alt="hhc-logo" width="70" />
           </Typography>
           <Button href={Routes.USER_NOTIFICATION} color="inherit">
             <Notifications />

@@ -109,21 +109,26 @@ function Home(props) {
   }, []);
 
   const handleOpen = async() => {
-    const body = {
-      Location:{
-        coords:{
-          latitude:coords.lat,
-          longitude:coords.long
+    const role = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(role.Role)
+    if (role.Role==="TeamLeader"){
+      const body = {
+        Location:{
+          coords:{
+            latitude:coords.lat,
+            longitude:coords.long
+          }
         }
       }
+      const result = await client.post('api/team/location', body);
+      if(!result.ok){
+        console.log(result, result.originalError, result.problem, result.status);
+        console.log(result.data.message);
+        return;
+      }
+      console.log(result);
     }
-    const result = await client.post('api/team/location', body);
-    if(!result.ok){
-      console.log(result, result.originalError, result.problem, result.status);
-      console.log(result.data.message);
-      return;
-    }
-    console.log(result);
+    
     setTimeout(() => {
       setOpen(true);
     }, 500);
