@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   message: {
     fontSize: 14,
     color: theme.palette.text.secondary,
+    wordWrap: 'break-word',
   }
 }));
 
@@ -38,10 +39,12 @@ function Notifications(props) {
   const getNotifications = async() => {
     const response = await client.get('/api/notifications');
     if(!response.ok){
+      console.log(response);
       console.log(response.status, response.originalError);
       return;
     }
-    console.log(response.data);
+    console.log(response.data.TeamsNotification.Notifications);
+    setData(response.data.TeamsNotification.Notifications);
   }
 
   useEffect(() => {
@@ -55,10 +58,9 @@ function Notifications(props) {
         data.map((element, i) => (
             <Grid item xs={12} key={i}>  
               <div className={classes.paper}>
-                <Avatar>{element.teamName[0]}</Avatar>
+                <Avatar>{element[0]}</Avatar>
                 <div style={{ marginLeft: 15 }}>
-                  <p className={classes.teamName}>{element.teamName}</p>
-                  <p className={classes.message}>{element.message}</p>
+                  <p className={classes.message}>{element}</p>
                 </div>
               </div>
               <Divider />

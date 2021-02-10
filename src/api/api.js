@@ -1,4 +1,5 @@
 const api = require("express").Router();
+const path = require("path");
 const openApi = require("./routers/openApi");
 const missionroute = require("./routers/AdminMission");
 const payment = require("./routers/payment");
@@ -10,6 +11,14 @@ const countDown = require("./routers/countdown");
 const { jwtVerify } = require("../middlewares/jwt");
 
 api.use("/", payment);
+
+api.get("/image", (req, res) => {
+  const { photo } = req.query;
+  const picDirectory = path.join(__dirname, "../../");
+  const picPath = path.join(picDirectory, photo);
+  res.sendFile(picPath);
+});
+
 api.use("/", jwtVerify);
 
 // comman route
