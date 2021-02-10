@@ -66,20 +66,12 @@ export default function FeedCard({ data:activity }) {
   const [media,setMedia] = useState("");
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const likePost = async () => {
