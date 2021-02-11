@@ -123,11 +123,7 @@ export default function ClueTabs() {
   };
 
   return (
-<<<<<<< HEAD
-    <Container className={classes.root} maxWidth="md">
-=======
     <Container className={classes.root} maxWidth="md" >
->>>>>>> 76577f913dca419399f50128dd25b8253003f323
       {loading ? <LoadingPage />
       : <>
       <Tabs
