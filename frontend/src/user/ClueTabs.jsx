@@ -81,7 +81,9 @@ export default function ClueTabs() {
   const getSet1 = () => {
     const object = {};
     if (data.length >= 5) {
-      object.data = data.slice(0, 5);
+     const length = (data.length/5);
+     object.data=data.slice(0,3);
+     object.data.push(data[3*length],data[3*length+1]);
     }
     else {
       object.data = [];
@@ -93,7 +95,9 @@ export default function ClueTabs() {
   const getSet2 = () => {
     const object = {};
     if (data.length >= 10) {
-      object.data = data.slice(5, 10);
+      const length = (data.length/5);
+      object.data=data.slice(3,6);
+      object.data.push(data[3*length+2],data[3*length+3]);
     }
     else {
       object.data = [];
@@ -103,7 +107,9 @@ export default function ClueTabs() {
   const getSet3 = () => {
     const object = {};
     if (data.length >= 15) {
-      object.data = data.slice(10, 15);
+      const length = (data.length/5);
+      object.data=data.slice(6,9);
+      object.data.push(data[3*length+4],data[3*length+4]);
     }
     else {
       object.data = [];
