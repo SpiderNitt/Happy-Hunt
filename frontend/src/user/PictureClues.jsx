@@ -106,6 +106,7 @@ function PictureClues(props) {
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
                        Mission : {data.MissionName}
                 </h4>
+                <h3>Part A</h3>
                 <p style={{color:'dark-gray',
                     fontSize:20,
                     fontFamily:'calibri',

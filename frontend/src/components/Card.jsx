@@ -49,18 +49,13 @@ const useStyles = makeStyles((theme) => ({
 export default function FeedCard({ data:activity }) {
   const [data, setData] = useState(activity);
   const classes = useStyles();
-  const [isLiked, setIsLiked]= useState(false);
-  const [sharePost,setSharePost] = useState(false);
+  const [response, setResponse]= useState(false);
+  const [isLiked, setIsLiked]= useState(response);
   const [media,setMedia] = useState("");
 
-  useEffect(() => {
-    setData(activity);
-    setMedia(data.Answer_type); 
-  }, [])
-
-  console.log(data)
-  console.log(data.Answer_type)
-  console.log(data.Answer)
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const likePost = async () => {
     const result = await client.get(`api/activity/feed/likes/${data._id}`)
@@ -68,11 +63,20 @@ export default function FeedCard({ data:activity }) {
       console.log(result.originalError, result.problem, result.status);
       return;
     }
-    console.log(result);
-    setIsLiked(true);  
+    setResponse(result.data.like);
+    setIsLiked(response)
   }
 
-  console.log(media)
+
+  useEffect(() => {
+    setData(activity);
+    setMedia(data.Answer_type); 
+    setIsLiked(response);
+  }, []);
+
+  console.log(isLiked)
+  console.log(media);
+
   return (
     <Card className={classes.root}>
       {data && <>

@@ -106,6 +106,7 @@ function LocationClues(props) {
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
                         Mission : {data.MissionName}
                 </h4>
+                <h3>Part A</h3>
                 <p style={{color:"black",
                     fontSize:16,
                     fontFamily:'calibri',
@@ -122,6 +123,7 @@ function LocationClues(props) {
                 <br/>
                 <br/>
                 <br/>
+                <small>Click on the icon to mark your location</small>
                 <div>
                     <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                 </div>
