@@ -338,6 +338,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         answer_Type: missionAll.answer_Type,
         isBonus: missionAll.isBonus,
         status: activity.isSubmitted,
+        _id: missionAll._id,
       };
       arr2.push(bonus);
 
@@ -366,6 +367,7 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         answer_Type: missionAll.answer_Type,
         isBonus: missionAll.isBonus,
         status: activity.isSubmitted,
+        _id: missionAll._id,
       };
       arr.push(mission);
       if (!activity) {
