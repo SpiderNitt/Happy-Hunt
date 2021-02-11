@@ -13,4 +13,4 @@ const options = {
 const io = require("socket.io")(server, options);
 // io.origins("*:*");
 
-module.exports = { app, io, server };
+module.exports = { server, app, io };
