@@ -285,7 +285,7 @@ player.patch(
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
-
+      console.log(req.body, userDetails, id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }

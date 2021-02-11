@@ -74,6 +74,7 @@ export default function ClueTabs() {
     if (result.data.missions.length >= 15) {
       setOpen3(true);
     }
+    setLoading(false);
     setData(result.data.missions);
   }
   useEffect(() => {

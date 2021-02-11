@@ -12,7 +12,7 @@ import LoadingPage from '../components/LoadingPage';
 const useStyles = makeStyles({
   title: {
     fontSize: 20,
-    color: "olive",
+    color: "#213b4b",
     fontWeight: 300,
     textAlign: 'left',
     fontFamily: "tahoma"
@@ -61,14 +61,8 @@ const RedirectUrl = (category, id) => {
 
 function Clues(props){
   const classes= useStyles();
-  // const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(props.data.data);
-  // const data = props.data.data;
-  // console.log(data);
-  useEffect(() => {
-    setData(props.data.data);
-  }, [props.data.data]);
-
+  const loading = props.loading;
+  const data = props.data.data;
   // console.log(props)
   const missions= data.slice(0,3);
   const bonusMissions= data.slice(3,5)
