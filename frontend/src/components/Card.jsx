@@ -15,7 +15,6 @@ import ShareIcon from '@material-ui/icons/Share';
 import client from '../api/client';
 import WebShare from './WebShare';
 import ReactPlayer from 'react-player/lazy';
-import { Backdrop, CardMedia, Fade, Modal } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,18 +43,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     display:"flex",
     justifyContent:"space-around"
-  },
-  modal: {
-    display:"flex",
-    alignItems: 'center',
-    justifyContent:"space-around"
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
+  }
 }));
 
 export default function FeedCard({ data:activity }) {
@@ -64,11 +52,6 @@ export default function FeedCard({ data:activity }) {
   const [response, setResponse]= useState(false);
   const [isLiked, setIsLiked]= useState(response);
   const [media,setMedia] = useState("");
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -118,12 +101,8 @@ export default function FeedCard({ data:activity }) {
           {data.MissionName}
         </Typography>
       </CardContent>
-      {(media === "Video") &&
-        <video width="100%" controls>
-        <source src={data.Answer} type="video/mp4" />
-      </video> }
-      
-      {media === "Picture" && <img src={data.Answer} alt="answer" width="100%" />}
+      {(media === " Video") &&
+        <ReactPlayer url={data.Answer} alt={"video"} /> }
       <div className={classes.button}>
         <CardActions>  
           <IconButton>
@@ -131,32 +110,13 @@ export default function FeedCard({ data:activity }) {
             <span>{data.likes}</span>
           </IconButton>
           <IconButton>
-            <ShareIcon onClick={handleOpen}></ShareIcon>
+            <ShareIcon onClick={()=>{setSharePost(true)}}></ShareIcon>
           </IconButton>
         </CardActions>
       </div>
       </>
     }
-    {open?(
-      <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
-      className={classes.modal}
-      open={open}
-      onClose={handleClose}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Fade in={open}>
-        <div className={classes.paper}>
-          <WebShare data={data}/>
-        </div>
-      </Fade>
-    </Modal>
-    ):(<></>)}
+    {sharePost?(<WebShare></WebShare>):(<></>)}
     </Card>
   );
 }

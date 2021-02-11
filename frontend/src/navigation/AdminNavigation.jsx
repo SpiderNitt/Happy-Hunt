@@ -75,77 +75,75 @@ export default function AdminNav() {
                 <Route path={Routes.USER_LOGIN} component={UserLogin} />
                 <Route path={Routes.WELCOME} exact component={GameIntro} />
                 <AdminRoute path={Routes.ADMIN_MISSIONS} exact>
-                    <DrawerHeader title="Missions" />
-                    <Drawer username={username} title={username[0]} />
-                    <div style={{ marginLeft: '10%' }}>
-                        <Mission />
+                    <div className="admin-container">
+                        <DrawerHeader title="Missions" />
+                        <Drawer username={username} title={username[0]} />
+                        <div style={{ width:"100%" }}>
+                            <Mission />
+                        </div>
                     </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_ACTIVITY_FEED} exact>
-                    <DrawerHeader title="User Submissions" />
-                    <Drawer username={username} title={username[0]} />
-                    <Activity />
+                    <div className="admin-container">
+                        <DrawerHeader title="Activity Feed" />
+                        <Drawer username={username} title={username[0]} />
+                        <Activity />
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_LEADERBOARD} exact>
-                    <DrawerHeader title="Score Board" />
-                    <Drawer username={username} title={username[0]} />
-                    <div style={{ marginTop: '5%', marginLeft: '7%' }}>
-                        <ScoreBoard />
+                    <div className="admin-container">
+                        <DrawerHeader title="Score Board" />
+                        <Drawer username={username} title={username[0]} />
+                        <div style={{ margin:'auto',marginTop:'80px' }}>
+                            <ScoreBoard />
+                        </div>
                     </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_LIST} exact>
-                    <DrawerHeader title="Admin List" />
-                    <Drawer username={username} title={username[0]} />
-                    <AdminList />
+                    <div className="admin-container">
+                        <DrawerHeader title="Admin List" />
+                        <Drawer username={username} title={username[0]} />
+                        <AdminList />
+                    </div>
                 </AdminRoute>
                 <Route
                     path={Routes.ADMIN_MISSION_DETAILS}
                     exact
                     render={(props) => (
                         auth.isAuthenticated() && auth.isAdmin() ? (
-                            <div>
-                                {message && (
-                                    <Message
-                                    message={message}
-                                    type='info'
-                                    show={true}
-                                    setMessage={setmessage}
-                                    />
-                                )}
+                            <div className="admin-container">
                                 <DrawerHeader title="Mission Details" />
                                 <Drawer username={username} title={username[0]} />
                                 <MissionDetail {...props} />
                             </div>) : (<Redirect to={Routes.WELCOME} />)
                     )} />
                 <AdminRoute path={Routes.ADMIN_MISSION_UPDATE} exact>
-                    <DrawerHeader title="Admin Mission" />
-                    <Drawer username={username} title={username[0]} />
-                    <AdminMission />
+                    <div className="admin-container">
+                        <DrawerHeader title="Admin Mission" />
+                        <Drawer username={username} title={username[0]} />
+                        <AdminMission />
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_NOTIFICATION} exact>
-                    <DrawerHeader title="Notifications" />
-                    <Drawer username={username} title={username[0]} />
-                    <Notification />
+                    <div className="container admin-container">
+                        <DrawerHeader title="Notifications" />
+                        <Drawer username={username} title={username[0]} />
+                        <Notification />
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_NEW_MISSION} exact>
-                    <DrawerHeader title="ADD MISSION" />
-                    <Drawer username={username} title={username[0]} />
-                    <NewMission />
+                    <div className="admin-container">
+                        <DrawerHeader title="ADD MISSION" />
+                        <Drawer username={username} title={username[0]} />
+                        <NewMission />
+                    </div>
                 </AdminRoute>
                 <Route
                     path={Routes.ADMIN_EDIT_MISSION}
                     exact
                     render={(props) => (
                         auth.isAuthenticated() && auth.isAdmin() ? (
-                            <div>
-                                {message && (
-                                    <Message
-                                    message={message}
-                                    type='info'
-                                    show={true}
-                                    setMessage={setmessage}
-                                    />
-                                )}
+                            <div className="admin-container">
                                 <DrawerHeader title="Edit Mission" />
                                 <Drawer username={username} title={username[0]} />
                                 <EditMission {...props} />

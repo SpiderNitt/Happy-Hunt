@@ -12,7 +12,7 @@ import LoadingPage from '../components/LoadingPage';
 const useStyles = makeStyles({
   title: {
     fontSize: 20,
-    color: "olive",
+    color: "#213b4b",
     fontWeight: 300,
     textAlign: 'left',
     fontFamily: "tahoma"
@@ -35,6 +35,13 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  heading:{
+    fontWeight: '200',
+    fontFamily:"tahoma",
+    textDecoration:"underline",
+    color:"#34495E",
+    fontSize:22
   }
 });
 
@@ -54,20 +61,18 @@ const RedirectUrl = (category, id) => {
 
 function Clues(props){
   const classes= useStyles();
-  // const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(props.data.data);
-  // const data = props.data.data;
-  // console.log(data);
-  useEffect(() => {
-    setData(props.data.data);
-  }, [props.data.data]);
-
+  const loading = props.loading;
+  const data = props.data.data;
   // console.log(props)
+  const missions= data.slice(0,3);
+  const bonusMissions= data.slice(3,5)
 
   const RenderClues=()=>{
     return (
       <Container maxWidth="md">
-        {data !== [] && data.map((mission, index) => (
+        <p className={classes.heading}>CLUES</p>
+      
+        {missions !== [] && missions.map((mission, index) => (
         mission ?  
         <>
         <Card key={mission._id} index={index + 1} style={{ marginBottom: 10, padding: 10 }}>
@@ -76,9 +81,34 @@ function Clues(props){
             <Typography className={classes.title} color="textSecondary" variant="ul" >
               {mission.MissionName}
             </Typography>
-            {mission.isBonus &&
-              <StarOutlineIcon style={{color:"orange", fontSize:25}}/>
-            } 
+          </div>
+        </CardContent>
+        <div className={classes.category} color="textSecondary" variant="p" >
+            {mission.answer_Type}
+        </div>
+          <br/><br/>
+        <CardActions style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <Button variant="contained" size="small" href={RedirectUrl(mission.answer_Type, mission._id)}>View</Button>
+          <Typography color="textSecondary">
+            {mission.maxPoints}
+          </Typography>
+        </CardActions>
+        </Card>
+        </>:
+        <></>
+      ))}
+      <br/>
+      <p className={classes.heading}>BONUS CLUES</p>
+      {bonusMissions !== [] && bonusMissions.map((mission, index) => (
+        mission ?  
+        <>
+        <Card key={mission._id} index={index + 1} style={{ marginBottom: 10, padding: 10 }}>
+        <CardContent>
+          <div className={classes.container}>
+            <Typography className={classes.title} color="textSecondary" variant="ul" >
+              {mission.MissionName}
+            </Typography>
+           <StarOutlineIcon style={{color:"orange", fontSize:25}}/>  
           </div>
         </CardContent>
         <div className={classes.category} color="textSecondary" variant="p" >

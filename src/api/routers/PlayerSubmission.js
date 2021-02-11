@@ -224,7 +224,7 @@ player.post(
         }
       );
       if (!teamActivity.ispart) {
-        if (distance < 1000) {
+        if (distance < 500) {
           team.points += mission.maxPoints / 2;
           teamActivity.ispart = true;
           await teamActivity.save();
@@ -285,7 +285,7 @@ player.patch(
       const { id } = req.jwt_payload;
       const update = {};
       const userDetails = await User.findById(id);
-
+      console.log(req.body, userDetails, id);
       if (!req.body.name && !req.body.gender && !req.file && !req.body.age) {
         return res.status(400).json({ message: "Fill all fields" });
       }
@@ -329,15 +329,16 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         team: req.jwt_payload.team,
         mission: allBonus[index],
       });
-
-      const bonus = await Mission.findById(allBonus[index]).select({
-        clue: 1,
-        MissionName: 1,
-        Category: 1,
-        maxPoints: 1,
-        answer_Type: 1,
-        isBonus: 1,
-      });
+      const missionAll = await Mission.findById(allBonus[index]);
+      const bonus = {
+        clue: missionAll.clue,
+        MissionName: missionAll.MissionName,
+        Category: missionAll.Category,
+        maxPoints: missionAll.maxPoints,
+        answer_Type: missionAll.answer_Type,
+        isBonus: missionAll.isBonus,
+        status: activity.isSubmitted,
+      };
       arr2.push(bonus);
 
       if (!activity) {
@@ -356,16 +357,17 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         mission: allMissions[i],
       });
 
-      const mission = await Mission.findById(allMissions[i]).select({
-        clue: 1,
-        MissionName: 1,
-        Category: 1,
-        maxPoints: 1,
-        answer_Type: 1,
-        isBonus: 1,
-      });
+      const missionAll = await Mission.findById(allMissions[i]);
+      const mission = {
+        clue: missionAll.clue,
+        MissionName: missionAll.MissionName,
+        Category: missionAll.Category,
+        maxPoints: missionAll.maxPoints,
+        answer_Type: missionAll.answer_Type,
+        isBonus: missionAll.isBonus,
+        status: activity.isSubmitted,
+      };
       arr.push(mission);
-
       if (!activity) {
         await Activity.create({
           team: req.jwt_payload.team,
@@ -376,8 +378,8 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
         });
       }
     }
-    arr.concat(arr2);
-    return res.status(200).json({ missions: arr });
+    const missions = arr.concat(arr2);
+    return res.status(200).json({ missions });
   } catch (e) {
     console.log(e);
     return res.status(500).json({

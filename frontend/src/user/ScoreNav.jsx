@@ -7,7 +7,7 @@ import client from '../api/client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop:63,
+    marginTop:74,
     flexGrow: 1,
   },
   appbar: {
@@ -38,8 +38,9 @@ export default function ScoreNav() {
         <div className={classes.root}>
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.title}>     
-          <Typography variant="p" style={{color:"#303030", fontWeight:"bold", fontFamily:"tahoma"}}>
-             My Score : {score}
+          <Typography variant="p" style={{color:"#303030", fontWeight:"lighter", fontFamily:"tahoma", fontSize:22}}>
+          My Score :
+            <span style={{color:"#303030", fontFamily:"tahoma", fontWeight:"bold", fontSize:23}}>  {score}</span>   
           </Typography>
         </Toolbar>
       </AppBar>
