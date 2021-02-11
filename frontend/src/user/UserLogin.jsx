@@ -46,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 10,
       backgroundColor: '#fafafa',
     },
+    input:{
+      borderRadius:'15px',
+      borderColor:'black'
+    }
 }));
 
 export default function UserLogin(props) {
@@ -134,6 +138,7 @@ export default function UserLogin(props) {
                   value={values.email}
                   onChange={e => setFieldValue("email", e.target.value)}
                   className={classes.TextField}
+                  InputProps={{className:classes.input}}
                 />
                 <ErrorMessage visible={touched.email} error={errors.email} />
               </Grid>
@@ -146,11 +151,12 @@ export default function UserLogin(props) {
                   value={values.password}
                   onChange={e => setFieldValue("password", e.target.value)}
                   className={classes.TextField} 
+                  InputProps={{className:classes.input}}
                 />
                 <ErrorMessage visible={touched.password} error={errors.password} />
               </Grid>
             </Grid>
-            <p style={{ color: '#2C73D2', textAlign: 'right', cursor: 'pointer' }} onClick={() => {
+            <p style={{ color: '#00CCFF', textAlign: 'right', cursor: 'pointer' }} onClick={() => {
               if(!values["email"]){
                 errors.email='email is required';
                 setInfo('email is required');
@@ -158,14 +164,14 @@ export default function UserLogin(props) {
                 return;
               }
               handleForgotPassword(values["email"])
-            }}>forgot password?</p>
-            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53' }} fullWidth className={classes.submit}>
+            }}>Forgot password?</p>
+            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53',borderRadius:'10px' }} fullWidth className={classes.submit}>
               Login
             </Button>
           </Form>
         )}
         </Formik>
-        <p>Don't have account? <Link href={Routes.USER_REGISTER}>Register</Link></p>
+        <p style={{fontSize:'1.2em'}}>Haven't registered? <Link href={Routes.USER_REGISTER} style={{color: '#00CCFF'}}>Register</Link></p>
     </div>}
     </Container>
     <Footer />

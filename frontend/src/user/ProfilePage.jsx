@@ -1,5 +1,5 @@
-import { Avatar, Card, Container, Divider, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles, CardContent } from '@material-ui/core';
-import { Add, Edit, ExitToApp, FileCopyOutlined, GroupAdd } from '@material-ui/icons';
+import { Avatar, Container, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles,Typography } from '@material-ui/core';
+import { Edit, ExitToApp, FileCopyOutlined} from '@material-ui/icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Routes from '../utils/routes';
@@ -7,7 +7,6 @@ import {AuthContext} from '../api/authContext.js';
 import client from '../api/client';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import Message from '../components/Message';
-import colors from '../utils/colors';
 import LoadingPage from '../components/LoadingPage';
 import { TextareaAutosize } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
@@ -22,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'inline',
     },
     large: {
-        width: theme.spacing(10),
-        height: theme.spacing(10),
+        width: theme.spacing(8),
+        height: theme.spacing(8),
     },
     items: {
         paddingTop: 10,
@@ -38,11 +37,11 @@ const useStyles = makeStyles((theme) => ({
        margin:5,
        float:"left"
     },
-    teamCard: {
-        textAlign:'center',
-        paddingTop: 10,
-        paddingBottom: 10,
-        justifyContent: 'space-between'
+    teamInfo:{
+        backgroundColor: '#544b80',
+        color:'white',
+        borderRadius:'5px',
+        padding:'5px'
     }
 }))
 
@@ -121,12 +120,12 @@ function ProfilePage(props) {
     return (
         <Container maxWidth="md" >
             {message && <Message message={message} show={true} type={messageType} setMessage={setmessage} />}
-            <div className={classes.root}>
-                <Avatar alt="Remy Sharp" className={classes.large} />
-            </div>
+            <Typography component="h1" variant="h4" style={{  textDecorationLine: 'underline', color: '#213B4B' }}>
+               My profile
+            </Typography>
             {UserInfo && <List className={classes.listContainer}>
                 <ListItem className={classes.items}>
-                    <ListItemText primary={`Name: ${UserInfo.name}`} />
+                    <ListItemText disableTypography primary={<Typography type="body2"><span style={{color:'#213B4B',fontWeight:'bold'}}>Name: </span> {UserInfo.name}</Typography>} />
                     <ListItemSecondaryAction>
                     <IconButton edge="end">
                         <Edit onClick={handleOpen}/>
@@ -142,49 +141,45 @@ function ProfilePage(props) {
                     </div>}
                     </ListItemSecondaryAction>
                 </ListItem>
-                <Divider />
                 <ListItem className={classes.items}>
-                    <ListItemText primary={`Email Id: ${UserInfo.emailId}`} />
+                    <ListItemText primary={<Typography type="body2"><span style={{color:'#213B4B',fontWeight:'bold'}}>Email: </span> {UserInfo.emailId}</Typography>} />
                 </ListItem>
-                <Divider />
                 <ListItem className={classes.items}>
-                    <ListItemText primary={`Mobile no: ${UserInfo.phoneNo}`} />
+                    <ListItemText primary={<Typography type="body2"><span style={{color:'#213B4B',fontWeight:'bold'}}>Phone: </span> {UserInfo.phoneNo}</Typography>} />
                 </ListItem>
-                <Divider />
                 {open && 
                     <Button onClick={handleUpdate} style={{color:"white", backgroundColor:"green", padding:7, borderRadius:7, margin:10}}>Update</Button>
                 }
 
                 {!ObjIsEmpty(TeamInfo) &&
                 <>
-                <Card>
-                    <CardContent>
-                        <h2 style={{ fontFamily: 'monospace', backgroundColor: colors.light, paddingTop: 5, paddingBottom: 5 }}>Team</h2>
-                        <ListItem className={classes.teamCard}>
-                            <ListItemText primary={`Role`} secondary={UserInfo.Role==="TeamLeader" ? "Team Admin" : "Team Member"} />
-                        </ListItem>
-                        <Divider />
-                        <ListItem className={classes.teamCard}>
-                            <ListItemText primary={`Team Name`} secondary={TeamInfo.teamName} />
-                        </ListItem>
-                        <Divider />
-                        <ListItem className={classes.teamCard} style={{paddingRight:'0px'}}>
-                            <ListItemText primary={`Team Id`} secondary={TeamInfo.teamId} />
-                            <ListItemSecondaryAction>
-                            <CopyToClipboard text={TeamInfo.teamId}
-                                onCopy={() => {
-                                    setCopy(true);
-                                    setmessage("Team ID copied!");
-                                    setmessageType("success");
-                                }}>
-                                <IconButton edge="end">
-                                    <FileCopyOutlined />
-                                </IconButton>
-                            </CopyToClipboard>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        </CardContent>
-                </Card>
+                <div className={classes.teamInfo}>
+                <div className={classes.root}>
+                   <Avatar alt="Remy Sharp" className={classes.large} />
+                 </div>
+                <h2 style={{textDecoration:'underline'}}>Team Details</h2>
+                <ListItem className={classes.items}>
+                    <ListItemText primary={<Typography type="body2"><span style={{fontWeight: 'bold'}}>Your Role:</span> {UserInfo.Role==="TeamLeader" ? "Team Admin" : "Team Member"} </Typography>} />
+                </ListItem>
+                <ListItem className={classes.items}>
+                    <ListItemText primary={<Typography type="body2"><span style={{fontWeight:'bold'}}>Name:</span> {TeamInfo.teamName} </Typography>} />
+                </ListItem>
+                <ListItem className={classes.items}>
+                    <ListItemText primary={<Typography type="body2"><span style={{fontWeight:'bold'}}>ID:</span> {TeamInfo.teamId} </Typography>} />
+                    <ListItemSecondaryAction>
+                    <CopyToClipboard text={TeamInfo.teamId}
+                        onCopy={() => {
+                            setCopy(true);
+                            setmessage("Team ID copied!");
+                            setmessageType("success");
+                        }}>
+                        <IconButton edge="end">
+                            <FileCopyOutlined style={{color:'white'}} />
+                        </IconButton>
+                    </CopyToClipboard>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                </div>
                 </>
                 // :
                 // <>
@@ -202,11 +197,14 @@ function ProfilePage(props) {
                 // </ListItem>
                 // </>
                 }
-                <ListItem style={{ marginBottom: 20 }} component={Link} onClick={handleLogout}>
+                <ListItem style={{ marginTop: 20 ,marginBottom:20}} component={Link} onClick={handleLogout}>
                 <ListItemIcon>
                     <ExitToApp />
                 </ListItemIcon>
-                    <ListItemText primary="Logout" />
+                    <ListItemText primary={<Typography type="body2" style={{color:'00CCFF'}}>Logout</Typography>} />
+                </ListItem>
+                <ListItem style={{marginTop:-15}}>
+                    <ListItemText primary={<Typography type="body2" style={{color:'blue'}}>View Rules and Regulations</Typography>} />
                 </ListItem>
             </List>}
         </Container>
