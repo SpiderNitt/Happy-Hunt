@@ -7,7 +7,7 @@ require("../database/setup");
 
 const options = {
   cors: {
-    origin: "http://localhost:3001",
+    origin: "http://localhost:3000",
   },
 };
 const io = require("socket.io")(server, options);
