@@ -5,7 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const { app, server } = require("./src/helpers/timer");
+const { server, app } = require("./src/helpers/timer");
 
 if (!fs.existsSync("./media")) {
   fs.mkdirSync("./media");
