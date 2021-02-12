@@ -19,7 +19,7 @@ import { AuthContext } from "../api/authContext";
 import { io } from "socket.io-client";
 import Message from "../components/Message";
 import '../admin/admin.css';
-const socket = io("http://localhost:3000/");
+const socket = io("https://www.hhc.eventspeciale.com/");
 
 socket.on("connect", () => {
   console.log(socket.id);

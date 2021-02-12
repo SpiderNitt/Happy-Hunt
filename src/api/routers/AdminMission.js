@@ -74,7 +74,7 @@ Router.post(
       const mediaFiles = [];
       if (req.files) {
         for (let x = 0; x < req.files.length; x += 1) {
-          const basefile = `http://localhost:3000/api/image?photo=${req.files[x].path}`;
+          const basefile = `https://www.hhc.eventspeciale.com/api/image?photo=${req.files[x].path}`;
           mediaFiles.push(basefile);
         }
       }
@@ -144,7 +144,7 @@ Router.post(
       const mediaFiles = [];
       if (req.files) {
         for (let x = 0; x < req.files.length; x += 1) {
-          const basefile = `http://localhost:3000/api/image?photo=${req.files[x].path}`;
+          const basefile = `https://www.hhc.eventspeciale.com/api/image?photo=${req.files[x].path}`;
           mediaFiles.push(basefile);
         }
       }

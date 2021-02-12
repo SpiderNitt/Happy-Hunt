@@ -14,6 +14,7 @@ const MissionSchema = new Schema({
   },
   clue: [
     {
+      _id: false,
       text: {
         type: String,
       },
