@@ -11,6 +11,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
 import client from '../api/client';
 import Capture from './Photogragh';
+import Message from '../components/Message';
 
 const api = create({
     baseURL: 'https://api.cloudinary.com/v1_1/dqj309mtu/image',
@@ -27,6 +28,8 @@ function PictureClues(props) {
     const [open, setOpen] = useState(false);
     const [onCam, setonCam] = useState(false);
     const [ans, setAns]= useState("");
+    const [message, setmessage] = useState('');
+    const [messageType, setmessageType] = useState('');
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -77,13 +80,14 @@ function PictureClues(props) {
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
           console.log(result.data.message)
-          await setAns(result.data.message)
-          showEvaluation(true)
+          setmessage(result.data.message)
+          setmessageType("error")
           return;
         }
         showEvaluation(true)
         setAns(result.data.message)
-
+        setmessage(result.data.message)
+        setmessageType("error")
         // console.log(ans);
         // console.log(dataUri);
       }
@@ -101,6 +105,7 @@ function PictureClues(props) {
             {onCam ?
             <Capture setDataUri={setDataUri} setonCam={setonCam} /> :
             <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh" }}>
+                {message && <Message message={message} show={true} type={messageType} setMessage={setmessage} />}
                 <h4 style={{color:'#57CFEF',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
@@ -109,50 +114,56 @@ function PictureClues(props) {
                 <p style={{color:'dark-gray',
                     fontSize:20,
                     fontFamily:'calibri',
-                    display:'flex', alignItems:'center', justifyContent:'center'}}>{data.Other_Info}</p>
-                    {clues !== [] && clues.map((clue, index) => (
-                    <div key={index} index={index + 1}>
-                    <p>{clue.text}</p>
-                    {clue.photos && <img src={clue.photos} style={{width:350, height:350}}/>}
-                    </div>
-                    ))}
-                    
-                    {!data.isBonus ? 
-                    <div>
-                        <LocationOnIcon className={classes.icon} onClick={getLocation}/>
-                    </div>
-                    : ''} 
-                        
-                    {evaluation? <p>{ans}</p>: ''}
-    
-                    <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                    <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</Button>
-                    {!data.isBonus ? 
-                    <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
-                    : ''} 
+                    display:'flex', alignItems:'center', justifyContent:'center'}}>{data.Other_Info}
+                </p>
+                {clues !== [] && clues.map((clue, index) => (
+                <div key={index} index={index + 1}>
+                <p>{clue.text}</p>
+                {clue.photos && <img src={clue.photos} style={{width:300}} alt="clue" />}
+                </div>
+                ))}
                 
-                    {!data.isBonus ? (<div>
-                        <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
-                    <Modal
-                    aria-labelledby="transition-modal-title"
-                    aria-describedby="transition-modal-description"
-                    className={classes.modal}
-                    open={open}
-                    onClose={handleClose}
-                    closeAfterTransition
-                    BackdropComponent={Backdrop}
-                    BackdropProps={{
-                    timeout: 500,
-                    }}
-                    >
-                    <Fade in={open}>
-                    <div className={classes.paper}>
-                        {hints && <Hints id={data._id} data={hints}/>}
+                {!data.isBonus ? 
+                <div>
+                    <h3>Part A</h3>
+                    <small>Click on icon to add your location</small>
+                    <div>
+                    <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                     </div>
+                    <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                    <hr/>
+                </div>
+                : ''} 
                     
-                    </Fade>                
-                    </Modal>
-                    </div>) :''}
+                {/* {evaluation? <p>{ans}</p>: ''} */}
+                <h3>Part B</h3>
+                <small>Click on button to add media files</small>
+                <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</Button>
+                {/* {!data.isBonus ? 
+                <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                : ''}  */}
+            
+                {!data.isBonus ? (<div>
+                    <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
+                <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+                >
+                <Fade in={open}>
+                <div className={classes.paper}>
+                    {hints && <Hints id={data._id} data={hints}/>}
+                </div>
+                </Fade>                
+                </Modal>
+                </div>) :''}
                 
             </Container>}
         </React.Fragment>

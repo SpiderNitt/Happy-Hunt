@@ -4,10 +4,10 @@ import { Formik, Form } from 'formik';
 import * as Yup from "yup";
 import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography } from '@material-ui/core';
 
-import ErrorMessage from './components/ErrorMessage';
-import colors from './utils/colors';
-import { AdminRegister } from './api/auth';
-import Message from './components/Message';
+import ErrorMessage from '../components/ErrorMessage';
+import colors from '../utils/colors';
+import { AdminRegister } from '../api/auth';
+import Message from '../components/Message';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),

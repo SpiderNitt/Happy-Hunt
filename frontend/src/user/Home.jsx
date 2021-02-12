@@ -7,7 +7,7 @@ import Rules from './Rules';
 import Routes from '../utils/routes';
 import client from '../api/client';
 import Message from '../components/Message';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, Link } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -23,6 +23,7 @@ import logo from '../assets/android-chrome-512x512.png';
 // import '../CSS/style.css';
 import Footer from '../components/Footer';
 import map from '../assets/map.svg';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -57,6 +58,7 @@ function Home(props) {
   const [coords, setCoords]= useState({});
   const [message, setmessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const history = useHistory();
 
   const onSuccess = (location) => {
     setCoords({
@@ -109,23 +111,28 @@ function Home(props) {
   }, []);
 
   const handleOpen = async() => {
-    const body = {
-      Location:{
-        coords:{
-          latitude:coords.lat,
-          longitude:coords.long
+    const role = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(role.Role)
+    if (role.Role==="TeamLeader"){
+      const body = {
+        Location:{
+          coords:{
+            latitude:coords.lat,
+            longitude:coords.long
+          }
         }
       }
+      const result = await client.post('api/team/location', body);
+      if(!result.ok){
+        console.log(result, result.originalError, result.problem, result.status);
+        console.log(result.data.message);
+        return;
+      }
+      console.log(result);
     }
-    const result = await client.post('api/team/location', body);
-    if(!result.ok){
-      console.log(result, result.originalError, result.problem, result.status);
-      console.log(result.data.message);
-      return;
-    }
-    console.log(result);
+    
     setTimeout(() => {
-      setOpen(true);
+      history.push(Routes.USER_CLUES);
     }, 500);
   };
 
@@ -149,8 +156,12 @@ function Home(props) {
       <Button variant="outlined" color="primary" onClick={getUserLocation}>Mark Your Location</Button>
       <br/>
       <br/>
-      <Button variant="outlined" color="secondary" onClick={handleOpen} disabled={disable}>start</Button>
+      {/* <Button variant="outlined" color="secondary" onClick={handleOpen} disabled={disable}>start</Button> */}
+      <Button variant="contained" color="primary" onClick={handleOpen} disabled={disable} style={{margin:5}}>
+          Start Game !
+      </Button>
       <br/>
+      <p style={{ color: 'dodgerblue' }} onClick={() => setOpen(true)}>View rules and regulations</p>
       <br/>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -167,9 +178,9 @@ function Home(props) {
         <Fade in={open}>
           <div className={classes.paper}>
             <Rules/>
-            <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
+            {/* <Button variant="contained" color="primary" href={Routes.USER_CLUES} style={{margin:5}}>
                 Start Game !
-            </Button>
+            </Button> */}
           </div>
         </Fade>
       </Modal>

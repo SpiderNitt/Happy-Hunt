@@ -112,14 +112,15 @@ function UserNav() {
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_PROFILE} exact>
           <TopNav />
-          <div style={{ marginTop: 70 }}>
+          <ScoreNav />
+          <div style={{marginTop: 20 }}>
             <ProfilePage />
           </div>
         </UserAuthenticatedRoute>
         <UserAuthenticatedRoute path={Routes.USER_ACTIVITY} exact>
           <TopNav />
           <ScoreNav/>
-          <div style={{ marginTop: 70 }}><NavBar select="activity" /></div>
+          <div><NavBar select="activity" /></div>
           <Container>
             <ActivityFeed />
           </Container>
@@ -127,7 +128,7 @@ function UserNav() {
         <UserAuthenticatedRoute path={Routes.USER_CLUES} exact>
           <TopNav />
           <ScoreNav/>
-          <div style={{ marginTop: 70 }}><NavBar select="clue" /></div>
+          <div><NavBar select="clue" /></div>
           <ClueTabs />
         </UserAuthenticatedRoute>
         <Route
@@ -186,7 +187,8 @@ function UserNav() {
         )} />  
         <UserAuthenticatedRoute path={Routes.USER_LEADERBOARD} exact>
           <TopNav />
-          <div style={{ marginTop: 70 }}><NavBar select="scoreboard" /></div>
+          <ScoreNav/>
+          <div><NavBar select="scoreboard" /></div>
           <Container>
             <Leaderboard />
           </Container>

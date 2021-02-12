@@ -22,6 +22,10 @@ const BonusAsync = async () => {
   //   { $unset: { assignedMissions: 1, assignedBonus: 1 } }
   // );
   // await Mission.updateMany({}, { $unset: { assignedTeams: 1 } });
+  // await Mission.updateMany(
+  //   { answer_Type: "Picture and Location" },
+  //   { answer_Type: "Picture" }
+  // );
 };
 
 const missionGenerator = async (points, teams, category) => {
@@ -62,21 +66,21 @@ const algo = async () => {
   // mission distribution
   for (let index = 0; index < teams.length; index += 1) {
     const category = [];
-    const mission1 = await missionGenerator(100, teams[index], category);
+    const mission1 = await missionGenerator(200, teams[index], category);
     teams[index].assignedMissions.push(mission1._id);
     await teams[index].save();
     await Mission.findByIdAndUpdate(mission1._id, {
       $push: { assignedTeams: teams[index]._id },
     });
     category.push(mission1.Category);
-    const mission2 = await missionGenerator(100, teams[index], category);
+    const mission2 = await missionGenerator(200, teams[index], category);
     teams[index].assignedMissions.push(mission2._id);
     await teams[index].save();
     await Mission.findByIdAndUpdate(mission2._id, {
       $push: { assignedTeams: teams[index]._id },
     });
     category.push(mission2.Category);
-    const mission3 = await missionGenerator(200, teams[index], category); // 200 missions dont exist
+    const mission3 = await missionGenerator(400, teams[index], category); // 200 missions dont exist
     teams[index].assignedMissions.push(mission3._id);
     await teams[index].save();
     await Mission.findByIdAndUpdate(mission3._id, {
@@ -101,21 +105,21 @@ const algo = async () => {
     // mission distribution
     for (let index = 0; index < teams.length; index += 1) {
       const category = [];
-      const mission1 = await missionGenerator(100, teams[index], category);
+      const mission1 = await missionGenerator(200, teams[index], category);
       teams[index].assignedMissions.push(mission1._id);
       await teams[index].save();
       await Mission.findByIdAndUpdate(mission1._id, {
         $push: { assignedTeams: teams[index]._id },
       });
       category.push(mission1.Category);
-      const mission2 = await missionGenerator(100, teams[index], category);
+      const mission2 = await missionGenerator(200, teams[index], category);
       teams[index].assignedMissions.push(mission2._id);
       await teams[index].save();
       await Mission.findByIdAndUpdate(mission2._id, {
         $push: { assignedTeams: teams[index]._id },
       });
       category.push(mission2.Category);
-      const mission3 = await missionGenerator(200, teams[index], category); // 200 missions dont exist
+      const mission3 = await missionGenerator(400, teams[index], category); // 200 missions dont exist
       teams[index].assignedMissions.push(mission3._id);
       await teams[index].save();
       await Mission.findByIdAndUpdate(mission3._id, {

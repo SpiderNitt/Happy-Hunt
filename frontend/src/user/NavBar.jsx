@@ -2,15 +2,17 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { BarChart, Notifications, Search, ShowChart } from '@material-ui/icons';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
+import { BarChart } from '@material-ui/icons';
+import GpsFixedOutlinedIcon from '@material-ui/icons/GpsFixedOutlined';
 import { Link } from 'react-router-dom';
 import Routes from '../utils/routes';
 import { AppBar, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    top: 'auto',
-    bottom: 0,
+    // top: 'auto',
+    // bottom: 0,
   },
 }));
 
@@ -22,7 +24,7 @@ export default function NavBar({ select }) {
   };
   return (
     <Paper square>
-      <AppBar position="fixed" className={styles.appBar} color="dodgerBlue">
+      {/* <AppBar className={styles.appBar} color="dodgerBlue"> */}
       <Tabs
         value={value}
         indicatorColor="secondary"
@@ -30,11 +32,11 @@ export default function NavBar({ select }) {
         onChange={handleChange}
         variant="fullWidth"
       >
-        <Tab icon={<Search />} component={Link} to={Routes.USER_CLUES} value="clue" />
-        <Tab icon={<ShowChart />} component={Link} value="activity" to={Routes.USER_ACTIVITY} />
-        <Tab icon={<BarChart />} component={Link} value="scoreboard" to={Routes.USER_LEADERBOARD} />
+        <Tab icon={<GpsFixedOutlinedIcon style={{fontSize:30}}/>} component={Link} to={Routes.USER_CLUES} value="clue" />
+        <Tab icon={<HomeOutlinedIcon style={{fontSize:30}}/>} component={Link} value="activity" to={Routes.USER_ACTIVITY} />
+        <Tab icon={<BarChart style={{fontSize:30}}/>} component={Link} value="scoreboard" to={Routes.USER_LEADERBOARD} />
       </Tabs>
-      </AppBar>
+      {/* </AppBar> */}
     </Paper>
   );
 }

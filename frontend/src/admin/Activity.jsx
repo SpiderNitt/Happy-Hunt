@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexDirection: "column",
     alignContent: "center",
-    marginTop: 70,
+    marginTop: 80,
   },
 }));
 
@@ -20,7 +20,7 @@ const Activity = () => {
       setData(result.data.submissions);
     }
     fetchData();
-  }, []);
+  }, [data]);
   return (
     <Grid container className={styles.container}>
       {

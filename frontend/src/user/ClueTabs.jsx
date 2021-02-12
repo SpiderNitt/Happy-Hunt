@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import Clues from './Clues';
 import client from '../api/client';
 import LoadingPage from '../components/LoadingPage';
+import AppBar from '@material-ui/core/AppBar';
 
 const useStyles = makeStyles({
   root: {
@@ -81,7 +82,9 @@ export default function ClueTabs() {
   const getSet1 = () => {
     const object = {};
     if (data.length >= 5) {
-      object.data = data.slice(0, 5);
+     const length = (data.length/5);
+     object.data=data.slice(0,3);
+     object.data.push(data[3*length],data[3*length+1]);
     }
     else {
       object.data = [];
@@ -93,7 +96,9 @@ export default function ClueTabs() {
   const getSet2 = () => {
     const object = {};
     if (data.length >= 10) {
-      object.data = data.slice(5, 10);
+      const length = (data.length/5);
+      object.data=data.slice(3,6);
+      object.data.push(data[3*length+2],data[3*length+3]);
     }
     else {
       object.data = [];
@@ -103,7 +108,9 @@ export default function ClueTabs() {
   const getSet3 = () => {
     const object = {};
     if (data.length >= 15) {
-      object.data = data.slice(10, 15);
+      const length = (data.length/5);
+      object.data=data.slice(6,9);
+      object.data.push(data[3*length+4],data[3*length+4]);
     }
     else {
       object.data = [];
@@ -115,7 +122,7 @@ export default function ClueTabs() {
   };
 
   return (
-    <Container className={classes.root} maxWidth="md">
+    <Container className={classes.root} maxWidth="md" >
       {loading ? <LoadingPage />
       : <>
       <Tabs
@@ -123,11 +130,13 @@ export default function ClueTabs() {
         onChange={handleChange}
         variant="fullWidth"
         indicatorColor="secondary"
-        textColor="secondary"
+        textColor="primary"
+        style={{ backgroundColor: "#34495E", borderRadius: 8 }}
       >
-        {open1 ? <Tab icon={<LockOpen {...a11yProps(0)} />} /> : <Tab icon={<Lock />} />}
-        {open2 ? <Tab icon={<LockOpen {...a11yProps(1)} />} /> : <Tab icon={<Lock />} disabled />}
-        {open3 ? <Tab icon={<LockOpen {...a11yProps(2)} />} /> : <Tab icon={<Lock />} disabled />}
+        {open1 ? <Tab label="SET 1" {...a11yProps(0)} style={{color:"whitesmoke", fontFamily:"tahoma"}}/> : <Tab label="SET 1" />}
+        {open2 ? <Tab label="SET 2" {...a11yProps(1)} style={{color:"whitesmoke", fontFamily:"tahoma"}}/> : <Tab label="SET 2" disabled/>}
+        {open3 ? <Tab label="SET 3" {...a11yProps(2)} style={{color:"whitesmoke", fontFamily:"tahoma"}}/> : <Tab label="SET 3" disabled/>}
+        
       </Tabs>
       <TabPanel value={value} index={0}>
         {data !== [] && <Clues data={getSet1()} />}

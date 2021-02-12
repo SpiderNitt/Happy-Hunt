@@ -5,7 +5,9 @@ function RulesAndRegulations(props) {
     return (
         <Container style={{ wordWrap: 'break-word' }}>
             <b>RULES, REGULATIONS & GUIDELINES</b>
+            <br/>
             <b>GUIDELINES FOR THE HUNT</b>
+            <br/>
             <div style={{ wordWrap: 'break-word' }}>
             1.	Participants must register in teams of 4 or 6 players for the event. <br/>
             2.	The event is four (4) hours long, from start to finish. Any activities done or answers submitted after the event has ended will automatically not be counted or considered.<br/>

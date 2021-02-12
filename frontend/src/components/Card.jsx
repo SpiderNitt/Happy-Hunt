@@ -16,6 +16,7 @@ import client from '../api/client';
 import WebShare from './WebShare';
 import ReactPlayer from 'react-player/lazy';
 import { Backdrop, CardMedia, Fade, Modal } from '@material-ui/core';
+import ToggleButton from '@material-ui/lab/ToggleButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +44,8 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     display:"flex",
-    justifyContent:"space-around"
+    flexDirection: 'row',
+    justifyContent:"space-between",
   },
   modal: {
     display:"flex",
@@ -65,6 +67,8 @@ export default function FeedCard({ data:activity }) {
   const [sharePost,setSharePost] = useState(false);
   const [media,setMedia] = useState("");
   const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState(false);
+  const [likeCount, setLikesCount] = useState(0);
 
   const handleOpen = () => {
     setOpen(true);
@@ -77,6 +81,7 @@ export default function FeedCard({ data:activity }) {
   useEffect(() => {
     setData(activity);
     setMedia(data.Answer_type); 
+    setLikesCount(data.likes);
   }, [])
 
   console.log(data)
@@ -90,7 +95,8 @@ export default function FeedCard({ data:activity }) {
       return;
     }
     console.log(result);
-    setIsLiked(true);  
+    setIsLiked(result.data.like);  
+    setLikesCount(prev => result.data.like ? prev+1 : prev-1);
   }
 
   console.log(media)
@@ -128,12 +134,13 @@ export default function FeedCard({ data:activity }) {
         <CardActions>  
           <IconButton>
             <FavoriteIcon onClick={likePost} color={isLiked ? "secondary" : "disabled"} />
-            <span>{data.likes}</span>
+            <span>{likeCount}</span>
           </IconButton>
           <IconButton>
             <ShareIcon onClick={handleOpen}></ShareIcon>
           </IconButton>
         </CardActions>
+        
       </div>
       </>
     }

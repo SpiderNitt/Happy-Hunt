@@ -3,7 +3,8 @@ import { LockOutlined } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import * as Yup from "yup";
 import { Grid, TextField, Container, makeStyles, CssBaseline, Button, Typography, Link } from '@material-ui/core';
-
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import ErrorMessage from '../components/ErrorMessage';
 import { userRegister } from '../api/auth';
 import { useHistory } from 'react-router-dom';
@@ -50,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
     TextField: {
       width: '100%',
       backgroundColor: '#fafafa',
+    },
+    input:{
+      borderRadius:'15px',
+      borderColor:'black'
     }
 }));
 
@@ -71,6 +76,15 @@ export default function UserRegistration(props) {
   const [messageType, setmessageType] = useState('');
   const classes = useStyles();
   const history = useHistory();
+  const [state, setState] = React.useState({
+    checkedA: false,
+    checkedB: false,
+  });
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
 
   const handleSubmit = async ({ username, email, phoneNo, password },{ resetForm }) => {
     
@@ -100,7 +114,6 @@ export default function UserRegistration(props) {
       history.push(`${Routes.USER_VERIFY}?email=${email}`);
     }, 500);
   }
-
   return (
     <>
     <Container component="main" maxWidth="xs">
@@ -129,6 +142,7 @@ export default function UserRegistration(props) {
                     value={values.username}
                     onChange={e => setFieldValue( "username", e.target.value)}
                     className={classes.TextField} 
+                    InputProps={{className:classes.input}}
                 />
                 <ErrorMessage visible={touched.username} error={errors.username} />
               </Grid>
@@ -141,6 +155,7 @@ export default function UserRegistration(props) {
                   value={values.email}
                   onChange={e => setFieldValue("email", e.target.value)}
                   className={classes.TextField}
+                  InputProps={{className:classes.input}}
                 />
                 <ErrorMessage visible={touched.email} error={errors.email} />
               </Grid>
@@ -153,6 +168,7 @@ export default function UserRegistration(props) {
                   value={values.phoneNo}
                   onChange={e => setFieldValue( "phoneNo", e.target.value)}
                   className={classes.TextField}
+                  InputProps={{className:classes.input}}
                 />
                 <ErrorMessage visible={touched.phoneNo} error={errors.phoneNo} />
               </Grid>
@@ -165,14 +181,39 @@ export default function UserRegistration(props) {
                   value={values.password}
                   onChange={e => setFieldValue( "password", e.target.value)}
                   className={classes.TextField} 
+                  InputProps={{className:classes.input}}
                 />
                 <ErrorMessage visible={touched.password} error={errors.password} />
               </Grid>
             </Grid>
-            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53' }} fullWidth className={classes.submit}>
+            <FormControlLabel
+              control={
+              <Checkbox
+               checked={state.checkedA}
+                onChange={handleChange}
+                name="checkedA"
+                color="primary"
+              />
+              }
+              style={{ marginTop:15}}
+              label={`Agree to Terms and Conditions`}
+            />
+            <FormControlLabel
+              control={
+              <Checkbox
+               checked={state.checkedB}
+                onChange={handleChange}
+                name="checkedB"
+                color="primary"
+              />
+              }
+              label={`Agree to Privacy Policy`}
+              style={{ marginTop:15}}
+            />
+            <Button type="submit" variant="contained" style={{ color: 'white', backgroundColor: '#EE5C53',borderRadius:'10px' }} fullWidth className={classes.submit}>
               Register
             </Button>
-            <p>Already have account? <Link href={Routes.USER_LOGIN}>Login</Link></p>
+            <p style={{fontSize:'1.2em'}}>Already Registered? <Link href={Routes.USER_LOGIN} style={{color: '#00CCFF'}}>Login</Link></p>
           </Form>
         )}
         </Formik>
