@@ -319,63 +319,74 @@ player.get("/mission", playerVerify, TeamenRollVerify, async (req, res) => {
     const teamId = req.jwt_payload.team;
 
     const team = await Team.findById(teamId);
-    console.log("team", team);
+
     const arr = [];
     const arr2 = [];
     const allMissions = team.assignedMissions;
     const allBonus = team.assignedBonus;
-    for (let index = 0; index < allBonus.length; index += 1) {
-      const activity = await Activity.findOne({
-        team: req.jwt_payload.team,
-        mission: allBonus[index],
-      });
-      const missionAll = await Mission.findById(allBonus[index]);
-      const bonus = {
-        clue: missionAll.clue,
-        MissionName: missionAll.MissionName,
-        Category: missionAll.Category,
-        maxPoints: missionAll.maxPoints,
-        answer_Type: missionAll.answer_Type,
-        isBonus: missionAll.isBonus,
-        status: activity.isSubmitted,
-      };
-      arr2.push(bonus);
 
-      if (!activity) {
-        await Activity.create({
+    for (let index = 0; index < allBonus.length; index += 1) {
+      if (allBonus[index] !== null) {
+        const activity = await Activity.findOne({
           team: req.jwt_payload.team,
-          isSubmitted: false,
-          likes: 0,
           mission: allBonus[index],
-          hintsTaken: 0,
         });
+        const missionAll = await Mission.findById(allBonus[index]);
+        const bonus = {
+          clue: missionAll.clue,
+          MissionName: missionAll.MissionName,
+          Category: missionAll.Category,
+          maxPoints: missionAll.maxPoints,
+          answer_Type: missionAll.answer_Type,
+          isBonus: missionAll.isBonus,
+          status: activity.isSubmitted,
+          _id: missionAll._id,
+        };
+        arr2.push(bonus);
+
+        if (!activity) {
+          await Activity.create({
+            team: req.jwt_payload.team,
+            isSubmitted: false,
+            likes: 0,
+            mission: allBonus[index],
+            hintsTaken: 0,
+          });
+        }
+      } else {
+        arr2.push(null);
       }
     }
     for (let i = 0; i < allMissions.length; i += 1) {
-      const activity = await Activity.findOne({
-        team: req.jwt_payload.team,
-        mission: allMissions[i],
-      });
-
-      const missionAll = await Mission.findById(allMissions[i]);
-      const mission = {
-        clue: missionAll.clue,
-        MissionName: missionAll.MissionName,
-        Category: missionAll.Category,
-        maxPoints: missionAll.maxPoints,
-        answer_Type: missionAll.answer_Type,
-        isBonus: missionAll.isBonus,
-        status: activity.isSubmitted,
-      };
-      arr.push(mission);
-      if (!activity) {
-        await Activity.create({
+      if (allMissions[i] !== null) {
+        const activity = await Activity.findOne({
           team: req.jwt_payload.team,
-          isSubmitted: false,
-          likes: 0,
           mission: allMissions[i],
-          hintsTaken: 0,
         });
+
+        const missionAll = await Mission.findById(allMissions[i]);
+        const mission = {
+          clue: missionAll.clue,
+          MissionName: missionAll.MissionName,
+          Category: missionAll.Category,
+          maxPoints: missionAll.maxPoints,
+          answer_Type: missionAll.answer_Type,
+          isBonus: missionAll.isBonus,
+          status: activity.isSubmitted,
+          _id: missionAll._id,
+        };
+        arr.push(mission);
+        if (!activity) {
+          await Activity.create({
+            team: req.jwt_payload.team,
+            isSubmitted: false,
+            likes: 0,
+            mission: allMissions[i],
+            hintsTaken: 0,
+          });
+        }
+      } else {
+        arr.push(null);
       }
     }
     const missions = arr.concat(arr2);
