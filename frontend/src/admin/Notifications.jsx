@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    // justifyContent: 'center',
   },
   teamName: {
     fontSize: 18,
@@ -35,7 +36,7 @@ function Notifications(props) {
        const fetchData = async () => {
           const response= await client.get('api/notifications');
           if(response.data.AdminNotification[0].Notifications.length){
-             setNotify(response.data.AdminNotification[0].Notifications.reverse());
+            setNotify(response.data.AdminNotification[0].Notifications.reverse());
           }
           // console.log(response.data.AdminNotification[0].Notifications);
        }

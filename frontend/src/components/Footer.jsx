@@ -6,8 +6,8 @@ function Copyright() {
     return (
       <Typography variant="body2" color="textSecondary" align="center">
         {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
+        <Link color="inherit" href="https://www.hhc.eventspeciale.com/">
+          HHC
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
@@ -42,8 +42,7 @@ const footers = [
         ['About us', Routes.ABOUT_US], 
         ['Contact us:', '#'], 
         ['info@eventspeciale.com', '#'], 
-        ['Location:', '#'], 
-        ['107, Sahajanand Complex, 2416 East Street, Camp, Pune – 411001', '#']
+        ['eventspeciale.com', 'https://www.eventspeciale.com/'],
       ],
     },
     // {

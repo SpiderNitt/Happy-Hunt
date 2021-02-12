@@ -129,7 +129,7 @@ export default function ClueTabs() {
         value={value}
         onChange={handleChange}
         variant="fullWidth"
-        indicatorColor="primary"
+        indicatorColor="secondary"
         textColor="primary"
         style={{ backgroundColor: "#34495E", borderRadius: 8 }}
       >

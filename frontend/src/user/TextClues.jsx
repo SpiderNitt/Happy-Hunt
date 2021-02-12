@@ -10,6 +10,7 @@ import { TextareaAutosize } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Routes from '../utils/routes';
 import client from '../api/client';
+import Message from '../components/Message';
 
 function TextClues(props) {
     const classes = useStyles();
@@ -24,6 +25,8 @@ function TextClues(props) {
     const [disableHint, setDisableHint]= useState(false);
     const [resultoutput, showResultoutput]= useState(false);
     const [ans, setAns]= useState("");
+    const [message, setmessage] = useState('');
+    const [messageType, setmessageType] = useState('');
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -42,7 +45,6 @@ const onSucces = location=>{
 const getLocation=()=>{
     navigator.geolocation.getCurrentPosition(onSucces);
     setDisable(false)
-
 }
 // console.log(location);
 // console.log(props)
@@ -74,7 +76,8 @@ const fetch = async () => {
         if(!result.ok){
           console.log(result, result.originalError, result.problem, result.status);
           console.log(result.data.message)
-          setAns(result.data.message)
+          setmessage(result.data.message);
+          setmessageType("error");
           showEvaluation(true)
           return;
         }
@@ -90,24 +93,21 @@ const fetch = async () => {
 
     
     const handleSubmit = async() => {
-        console.log(input)
         const body = {
             mission: `${props.match.params.id}`,
             answer: input
         }
-        console.log(body);
-
         const response = await client.post('api/player/submission', body)
         if(!response.ok){
           console.log(response.problem);
           console.log(response.data);
-          setResult(response.data.message)
-          showResultoutput(true)
+          setmessage(result.data.message);
+          setmessageType("error");
           return;
         }
-        setResult(response.data.message)
-        console.log(result)
-        showResultoutput(true)
+        console.log(result.data);
+        setmessage(result.data.message);
+        setmessageType("success");
         handleDisable(result);
       }
 
@@ -129,8 +129,8 @@ const fetch = async () => {
     return (
         
         <React.Fragment >
-            
-            <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh" }}>
+            <Container maxWidth="sm" style={{ height: '100vh', marginTop:"10vh", marginBottom: 20 }}>
+                {message && <Message message={message} show={true} type={messageType} setMessage={setmessage} />}
                 <h4 style={{color:'#C866F5',
                     fontSize:25,
                     fontFamily:'tahoma', display:'flex', alignItems:'center', justifyContent:'center', paddingTop:12}}>
@@ -162,6 +162,8 @@ const fetch = async () => {
                 <br/><br/> */}
                 <div className={classes.points}>{data.maxPoints} points</div>
                 <br/><br/>
+                <h3>Part A</h3>
+                <small>Click on the icon to add the location</small>
                 {!data.isBonus?
                 <div>
                     <LocationOnIcon className={classes.icon}  onClick={getLocation} />
@@ -169,6 +171,11 @@ const fetch = async () => {
                 :""}
 
                 {evaluation? <p>{ans}</p>: ''}
+                {!data.isBonus ? 
+                 <Button variant="outlined" className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
+                 : ''}
+                <hr/>
+                <h3>Part B</h3>
                 <form className={classes.root} noValidate autoComplete="off">
                 <TextareaAutosize style={{fontSize:15, padding:12, minHeight:20, maxWidth:300}}
                 placeholder="Answer" 
@@ -177,16 +184,13 @@ const fetch = async () => {
                 onChange={handleChange}
                 />
                 </form>
-                
-                {resultoutput ? <div>{result}</div> : ''}
+                {/* {resultoutput ? <div>{result}</div> : ''} */}
                 <br/>
-                <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
-                {!data.isBonus ? 
-                 <Button className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
-                 : ''} 
+                {/* <Button variant="outlined" className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button> */}
+                <Button variant="outlined" className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
+                
                 {!data.isBonus ? (<div>
-                    <Button className={classes.Button} onClick={handleOpen} disabled={disableHint} >Hint</Button>
+                    <Button variant="outlined" className={classes.Button} onClick={handleOpen} disabled={disableHint} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -257,12 +261,10 @@ const useStyles = makeStyles((theme)=>({
         fontSize:20,
         fontFamily:'tahoma'
     },
-    Button:
-      {color:'white', 
-      fontFamily:'tahoma', 
-      backgroundColor:"gray",
-      margin:5
-     },
+    Button:{
+        fontFamily:'tahoma', 
+        margin:5
+    },
     paper: {
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',

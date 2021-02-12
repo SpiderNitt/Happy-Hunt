@@ -1,4 +1,4 @@
-import { Avatar, Container, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles,Typography } from '@material-ui/core';
+import { Avatar, Backdrop, Container, Fade, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles,Modal,Typography } from '@material-ui/core';
 import { Edit, ExitToApp, FileCopyOutlined} from '@material-ui/icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -10,6 +10,7 @@ import Message from '../components/Message';
 import LoadingPage from '../components/LoadingPage';
 import { TextareaAutosize } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import Rules from './Rules';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,7 +43,18 @@ const useStyles = makeStyles((theme) => ({
         color:'white',
         borderRadius:'5px',
         padding:'5px'
-    }
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
 }))
 
 
@@ -64,6 +76,7 @@ function ProfilePage(props) {
     const [TeamInfo, setTeamInfo] = useState({});
     const [copy,setCopy] = useState(false);
     const [open,setOpen] = useState(false);
+    const [modalopen, setModalOpen] = useState(false);
     const history = useHistory();
     const handleLogout = () => {
         authContext.logout();
@@ -91,7 +104,7 @@ function ProfilePage(props) {
     const handleOpen=()=>{
         setOpen(!open)
     }
-    console.log(open);
+    // console.log(open);
 
     const handleChange= (e)=>{
         setInput(e.target.value)
@@ -102,16 +115,20 @@ function ProfilePage(props) {
         const body={
             name: input
         }
-        console.log (body)
+        // console.log (body)
         const result= await client.patch('api/player/update', body);
-        console.log(result)
+        // console.log(result)
         if(!result.ok){
             console.log(result, result.originalError, result.problem, result.status);
             console.log(result.data.message)
             return;
         }
-        window.location.reload(false);   
+        window.location.reload(); 
     }
+
+    const handleClose = () => {
+        setModalOpen(false);
+    };
 
     if(loading){
         return <LoadingPage />
@@ -154,9 +171,6 @@ function ProfilePage(props) {
                 {!ObjIsEmpty(TeamInfo) &&
                 <>
                 <div className={classes.teamInfo}>
-                <div className={classes.root}>
-                   <Avatar alt="Remy Sharp" className={classes.large} />
-                 </div>
                 <h2 style={{textDecoration:'underline'}}>Team Details</h2>
                 <ListItem className={classes.items}>
                     <ListItemText primary={<Typography type="body2"><span style={{fontWeight: 'bold'}}>Your Role:</span> {UserInfo.Role==="TeamLeader" ? "Team Admin" : "Team Member"} </Typography>} />
@@ -204,9 +218,27 @@ function ProfilePage(props) {
                     <ListItemText primary={<Typography type="body2" style={{color:'00CCFF'}}>Logout</Typography>} />
                 </ListItem>
                 <ListItem style={{marginTop:-15}}>
-                    <ListItemText primary={<Typography type="body2" style={{color:'blue'}}>View Rules and Regulations</Typography>} />
+                    <ListItemText primary={<Typography type="body2" onClick={() => setModalOpen(true)} style={{color:'blue'}}>View Rules and Regulations</Typography>} />
                 </ListItem>
             </List>}
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={modalopen}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+            >
+                <Fade in={modalopen}>
+                <div className={classes.paper}>
+                    <Rules/>
+                </div>
+                </Fade>
+            </Modal>
         </Container>
     );
 }

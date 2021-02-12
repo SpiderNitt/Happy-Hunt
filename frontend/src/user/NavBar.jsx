@@ -11,8 +11,8 @@ import { AppBar, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    top: 'auto',
-    bottom: 0,
+    // top: 'auto',
+    // bottom: 0,
   },
 }));
 
@@ -24,7 +24,7 @@ export default function NavBar({ select }) {
   };
   return (
     <Paper square>
-      <AppBar position="fixed" className={styles.appBar} color="dodgerBlue">
+      {/* <AppBar className={styles.appBar} color="dodgerBlue"> */}
       <Tabs
         value={value}
         indicatorColor="secondary"
@@ -36,7 +36,7 @@ export default function NavBar({ select }) {
         <Tab icon={<HomeOutlinedIcon style={{fontSize:30}}/>} component={Link} value="activity" to={Routes.USER_ACTIVITY} />
         <Tab icon={<BarChart style={{fontSize:30}}/>} component={Link} value="scoreboard" to={Routes.USER_LEADERBOARD} />
       </Tabs>
-      </AppBar>
+      {/* </AppBar> */}
     </Paper>
   );
 }

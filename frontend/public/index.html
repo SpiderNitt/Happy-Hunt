@@ -21,19 +21,6 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     </script>
-    <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script>
-    <script type="application/javascript" >
-      if( process.env.NODE_ENV === "production" && 'serviceWorker' in navigator ) {
-        window.addEventListener('load', async () => {
-          try {
-            const res = await navigator.serviceWorker.register('./serviceWorker.js', { scope: "/user/" });
-            console.log('Success: ', res.scope)
-          } catch (error) {
-            console.log('Failure: ', error)
-          }
-        })
-      }
-    </script>
-    
+    <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script> 
   </body>
 </html>

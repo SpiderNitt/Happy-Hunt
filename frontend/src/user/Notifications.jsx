@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   message: {
     fontSize: 14,
-    color: theme.palette.text.secondary,
+    // color: theme.palette.text.secondary,
     wordWrap: 'break-word',
   }
 }));
@@ -58,7 +58,7 @@ function Notifications(props) {
         data.map((element, i) => (
             <Grid item xs={12} key={i}>  
               <div className={classes.paper}>
-                <Avatar>{element[0]}</Avatar>
+                {/* <Avatar>{element[0]}</Avatar> */}
                 <div style={{ marginLeft: 15 }}>
                   <p className={classes.message}>{element}</p>
                 </div>

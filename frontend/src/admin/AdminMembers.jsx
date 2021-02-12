@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import { AccountCircle, Add, Close, Delete } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
-import AdminRegistration from "../AdminRegistration";
+import AdminRegistration from "./AdminRegistration";
 import colors from "../utils/colors";
 import client from "../api/client";
 import Dialog from "@material-ui/core/Dialog";

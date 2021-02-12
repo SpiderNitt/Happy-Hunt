@@ -10,6 +10,7 @@ import client from '../api/client';
 import { serialize } from 'object-to-formdata';
 import { create } from "apisauce";
 import axios from 'axios';
+import Message from '../components/Message';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   imgBox: {
     maxWidth: "100%",
     maxHeight: "100%",
-
+    justifyContent: 'center',
   },
   img: {
     height: "inherit",
@@ -49,6 +50,7 @@ function Camera(props) {
   const [disable, setDisable]=useState(true);
   const [source, setSource] = useState("");
   const [inputFile,setInputFile]= useState(null);
+  const [messageType, setmessageType] = useState('');
       const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
         // console.log(result.data);
@@ -88,10 +90,12 @@ function Camera(props) {
       // console.log(response.problem);
       // console.log(response.data);
       setResponse(response.data.message);
+      setmessageType("error");
       return;
     }
     // console.log(formData)
     setResponse(response.data.message);
+    setmessageType("success");
     // console.log(response);
   }
 
@@ -108,14 +112,17 @@ function Camera(props) {
   return (
     <div className={classes.root}>
       <Grid container>
+        {response && <Message message={response} show={true} type={messageType} setMessage={setResponse} />}
         <Grid item xs={12}>
           <h3 style={{fontFamily:"tahoma", fontWeight:"100"}}>Capture your image/video</h3>
           
           {source &&       
             <Box display="flex" justifySelf="center" border={1} className={classes.imgBox}>
               {(data=="Picture")?
-               <img src={source} alt={"snap"} className={classes.img}></img>
-              : <ReactPlayer url={source} alt={"video"} /> }
+               <img src={source} alt={"snap"} width={300} className={classes.img}></img>
+              : <video width={300} controls>
+              <source src={source} type="video/mp4" />
+            </video> }
             </Box>}
           <input
             accept={mediaType(data)}
@@ -135,7 +142,7 @@ function Camera(props) {
             </IconButton>
           </label>
           <br/>
-          <Button className={classes.Button} onClick={handleSubmit} disabled={disable}>Submit</Button>
+          <Button variant="outlined" className={classes.Button} onClick={handleSubmit} disabled={disable}>Submit</Button>
           {response && <p>{response}</p>}
         </Grid>
       </Grid>

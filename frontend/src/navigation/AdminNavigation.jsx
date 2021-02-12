@@ -18,7 +18,7 @@ import { AuthContext } from "../api/authContext";
 
 import { io } from "socket.io-client";
 import Message from "../components/Message";
-
+import '../admin/admin.css';
 const socket = io("http://localhost:3000/");
 
 socket.on("connect", () => {
@@ -75,35 +75,43 @@ export default function AdminNav() {
                 <Route path={Routes.USER_LOGIN} component={UserLogin} />
                 <Route path={Routes.WELCOME} exact component={GameIntro} />
                 <AdminRoute path={Routes.ADMIN_MISSIONS} exact>
+                    <div className="admin-container">
                     <DrawerHeader title="Missions" />
                     <Drawer username={username} title={username[0]} />
                     <div style={{ marginLeft: '10%' }}>
                         <Mission />
                     </div>
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_ACTIVITY_FEED} exact>
+                <div className="admin-container">
                     <DrawerHeader title="User Submissions" />
                     <Drawer username={username} title={username[0]} />
                     <Activity />
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_LEADERBOARD} exact>
+                <div className="admin-container">
                     <DrawerHeader title="Score Board" />
                     <Drawer username={username} title={username[0]} />
                     <div style={{ marginTop: '5%', marginLeft: '7%' }}>
                         <ScoreBoard />
                     </div>
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_LIST} exact>
+                <div className="admin-container">
                     <DrawerHeader title="Admin List" />
                     <Drawer username={username} title={username[0]} />
                     <AdminList />
+                    </div>
                 </AdminRoute>
                 <Route
                     path={Routes.ADMIN_MISSION_DETAILS}
                     exact
                     render={(props) => (
                         auth.isAuthenticated() && auth.isAdmin() ? (
-                            <div>
+                            <div className="admin-container">
                                 {message && (
                                     <Message
                                     message={message}
@@ -118,26 +126,32 @@ export default function AdminNav() {
                             </div>) : (<Redirect to={Routes.WELCOME} />)
                     )} />
                 <AdminRoute path={Routes.ADMIN_MISSION_UPDATE} exact>
+                <div className="admin-container">
                     <DrawerHeader title="Admin Mission" />
                     <Drawer username={username} title={username[0]} />
                     <AdminMission />
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_NOTIFICATION} exact>
+                <div className="admin-container">
                     <DrawerHeader title="Notifications" />
                     <Drawer username={username} title={username[0]} />
                     <Notification />
+                    </div>
                 </AdminRoute>
                 <AdminRoute path={Routes.ADMIN_NEW_MISSION} exact>
+                <div className="admin-container">
                     <DrawerHeader title="ADD MISSION" />
                     <Drawer username={username} title={username[0]} />
                     <NewMission />
+                    </div>
                 </AdminRoute>
                 <Route
                     path={Routes.ADMIN_EDIT_MISSION}
                     exact
                     render={(props) => (
                         auth.isAuthenticated() && auth.isAdmin() ? (
-                            <div>
+                            <div className="admin-container">
                                 {message && (
                                     <Message
                                     message={message}
