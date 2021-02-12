@@ -426,4 +426,18 @@ player.post("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
     });
   }
 });
+
+player.get("/event", async (req, res) => {
+  try {
+    const eventCompleted = (await User.findOne({ Role: "SuperAdmin" }))
+      .isClicked;
+    return res.status(200).json({ eventCompleted });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Server Error ",
+    });
+  }
+});
+
 module.exports = player;

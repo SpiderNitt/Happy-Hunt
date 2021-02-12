@@ -100,7 +100,12 @@ Router.get("/start", superAdminVerify, async (req, res) => {
     if (SAdmin.isClicked) {
       return res.status(400).json({ message: "Game has already started" });
     }
-    algo();
+    // algo();
+    setTimeout(async () => {
+      io.emit("Event over");
+      SAdmin.isClicked = false;
+      await SAdmin.save();
+    }, 30000);
     SAdmin.isClicked = true;
     await SAdmin.save();
     return res.status(200).json({ message: "Game sucessfully started" });

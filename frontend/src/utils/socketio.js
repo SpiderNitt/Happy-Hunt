@@ -67,6 +67,9 @@ function Socketio(props) {
     setMessage("New set Unlocked");
   };
   socket.on(`missions`, setUnlock);
+  socket.on(`Event over`, () => {
+    setMessage("Game Over");
+  });
   return (
     <>
       {message && (
