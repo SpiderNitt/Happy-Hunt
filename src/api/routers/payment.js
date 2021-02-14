@@ -19,12 +19,12 @@ payment.post("/payment", async (req, res) => {
     if (amount >= 399 && amount < 499)
       result = await User.updateOne(
         { emailId },
-        { Paid: 4, paymentAuthorize: 1, $unset: { paymentDetails: 1 } }
+        { Paid: 3, paymentAuthorize: 1, $unset: { paymentDetails: 1 } }
       );
     else if (amount >= 499)
       result = await User.updateOne(
         { emailId },
-        { Paid: 6, paymentAuthorize: false, $unset: { paymentDetails: 1 } }
+        { Paid: 5, paymentAuthorize: false, $unset: { paymentDetails: 1 } }
       );
     if (result.nModified === 1) {
       return res.status(200).json({ message: "Success" });

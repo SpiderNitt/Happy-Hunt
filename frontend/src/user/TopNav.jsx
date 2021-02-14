@@ -68,7 +68,7 @@ export default function ButtonAppBar() {
     var distance = countDownDate - now;
     if (distance < 0) {
       clearInterval(x);
-      return "Time Up";
+      setTime("Time Up");
     }
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));

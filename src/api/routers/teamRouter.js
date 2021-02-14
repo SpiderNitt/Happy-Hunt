@@ -4,7 +4,7 @@ const Team = require("../../database/models/Team");
 const User = require("../../database/models/User");
 const { createJWTtoken } = require("../../middlewares/jwt");
 const { playerVerify, leaderVerify } = require("../../middlewares/role");
-// const { io } = require("../../helpers/timer");
+const { io } = require("../../helpers/timer");
 const { sendEmail } = require("../../helpers/EMAIL/SGemail");
 
 team.post("/create", playerVerify, async (req, res) => {
