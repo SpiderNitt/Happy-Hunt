@@ -50,6 +50,7 @@ function Camera(props) {
   const [disable, setDisable]=useState(true);
   const [source, setSource] = useState("");
   const [inputFile,setInputFile]= useState(null);
+  const [upload, setUpload] = useState(false);
   const [messageType, setmessageType] = useState('');
       const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
@@ -80,12 +81,19 @@ function Camera(props) {
   // console.log(props)
 
   const handleSubmit = async() => {
+    setUpload(true);
     var formData = new FormData();
     formData.append('mission', props.match.params.id);
     formData.append('answer', inputFile, inputFile.name);
     console.log(formData.get("answer"));
+    if(inputFile.size > 10485760){
+      setResponse("File size exceed limit");
+      setmessageType("error");
+      return;
+    }
     const response = await api.post('api/player/submission', formData)
     console.log(response)
+    setUpload(false);
     if(!response.ok){
       // console.log(response.problem);
       // console.log(response.data);
@@ -142,8 +150,13 @@ function Camera(props) {
             </IconButton>
           </label>
           <br/>
+          <small>file limit - 10mb</small>
           <Button variant="outlined" className={classes.Button} onClick={handleSubmit} disabled={disable}>Submit</Button>
+          <br/>
+          <br/>
+          <Button variant="contained" href={`/user/happy-hunt/picture-clue/${props.match.params.id}`}>Back to clue</Button>
           {response && <p>{response}</p>}
+          {upload && <p>uploading...</p>}
         </Grid>
       </Grid>
     </div>
