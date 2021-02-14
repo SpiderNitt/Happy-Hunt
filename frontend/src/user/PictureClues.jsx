@@ -30,6 +30,7 @@ function PictureClues(props) {
     const [ans, setAns]= useState("");
     const [message, setmessage] = useState('');
     const [messageType, setmessageType] = useState('');
+    const [eventEnd, setEventEnd] = useState(false);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -44,8 +45,17 @@ function PictureClues(props) {
         await setHints(result.data.hint)
     }
 
+    const eventStatus = async() => {
+        const response = await client.get('api/player/event');
+        if(!response.ok){
+          return;
+        }
+        setEventEnd(!response.data.onEvent);
+    } 
+
       useEffect(() => {
         fetch();
+        eventStatus();
       }, [props.match.params.id]);
 
     //   console.log(data)
@@ -130,7 +140,7 @@ function PictureClues(props) {
                     <div>
                     <LocationOnIcon className={classes.icon} onClick={getLocation}/>
                     </div>
-                    <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
+                    {!eventEnd && <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>}
                     <hr/>
                 </div>
                 : ''} 
@@ -138,12 +148,12 @@ function PictureClues(props) {
                 {/* {evaluation? <p>{ans}</p>: ''} */}
                 <h3>Part B</h3>
                 <small>Click on button to add media files</small>
-                <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</Button>
+                {!eventEnd && <Button className={classes.Button} href={`/user/happy-hunt/camera/${props.match.params.id}`}>Capture Media!</Button>}
                 {/* {!data.isBonus ? 
                 <Button className={classes.Button} onClick={submitAnswer}>Submit Location</Button>
                 : ''}  */}
             
-                {!data.isBonus ? (<div>
+                {!data.isBonus && !eventEnd ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"

@@ -1,5 +1,5 @@
 import { Avatar, Backdrop, Container, Fade, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, makeStyles,Modal,Typography } from '@material-ui/core';
-import { Edit, ExitToApp, FileCopyOutlined} from '@material-ui/icons';
+import { Add, Edit, ExitToApp, FileCopyOutlined, GroupAdd} from '@material-ui/icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Routes from '../utils/routes';
@@ -168,7 +168,7 @@ function ProfilePage(props) {
                     <Button onClick={handleUpdate} style={{color:"white", backgroundColor:"green", padding:7, borderRadius:7, margin:10}}>Update</Button>
                 }
 
-                {!ObjIsEmpty(TeamInfo) &&
+                {!ObjIsEmpty(TeamInfo) ?
                 <>
                 <div className={classes.teamInfo}>
                 <h2 style={{textDecoration:'underline'}}>Team Details</h2>
@@ -195,21 +195,21 @@ function ProfilePage(props) {
                 </ListItem>
                 </div>
                 </>
-                // :
-                // <>
-                // <ListItem style={{ marginTop: 20 }} component={Link} to={Routes.USER_REGISTER_TEAM}>
-                //     <ListItemIcon>
-                //         <Add />
-                //     </ListItemIcon>
-                //         <ListItemText primary="Create Team" />
-                //     </ListItem>
-                // <ListItem component={Link} to={Routes.USER_JOIN_TEAM}>
-                // <ListItemIcon>
-                //     <GroupAdd />
-                // </ListItemIcon>
-                //     <ListItemText primary="Join Team" />
-                // </ListItem>
-                // </>
+                :
+                <>
+                <ListItem style={{ marginTop: 20 }} component={Link} to={Routes.USER_REGISTER_TEAM}>
+                    <ListItemIcon>
+                        <Add />
+                    </ListItemIcon>
+                        <ListItemText primary="Create Team" />
+                    </ListItem>
+                <ListItem component={Link} to={Routes.USER_JOIN_TEAM}>
+                <ListItemIcon>
+                    <GroupAdd />
+                </ListItemIcon>
+                    <ListItemText primary="Join Team" />
+                </ListItem>
+                </>
                 }
                 <ListItem style={{ marginTop: 20 ,marginBottom:20}} component={Link} onClick={handleLogout}>
                 <ListItemIcon>

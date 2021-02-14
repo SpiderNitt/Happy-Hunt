@@ -48,13 +48,11 @@ player.post("/register", playerRegisterValidator, async (req, res) => {
         `welcome ,click on the link to verify your email`,
 
         `<body style="font-family: tahoma">
-
-      <h2>Greetings from Happy Hunt Challenge!</h2>
-       <h4>Thank you for registering</h4>
-        <p>To verify your email please click the link below,</>
-        <a href="https://www.hhc.eventspeciale.com/auth/player>
-      <p style="color:navy">Happy hunting!</p>
-
+        <h2>Greetings from Happy Hunt Challenge!</h2>
+        <h4>Verify your Email</h4>
+       <p>Please use this to verify your Email.</p>
+         <a href="https://www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}">Verify</a>
+       <p style="color:navy">Happy hunting!</p>
       </body>`
       );
 
@@ -187,7 +185,7 @@ player.get("/resendEmail", async (req, res) => {
 
         `<body style="font-family: tahoma">
 
-      <h2>Greetings from Happy Hunt!</h2>
+      <h2>Greetings from Happy Hunt Challenge!</h2>
        <h4>Verify your Email</h4>
       <p>Please use this to verify your Email.</p>
         <a href="https://www.hhc.eventspeciale.com/auth/player/email?verificationId=${hash}">Verify</a>

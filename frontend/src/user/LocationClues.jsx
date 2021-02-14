@@ -20,6 +20,7 @@ function LocationClues(props) {
     const [disable, setDisable]= useState(true);
     const [ans, setAns]= useState("");
     const [disableHint, setDisableHint]= useState(false);
+    const [eventEnd, setEventEnd] = useState(false);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
@@ -39,8 +40,17 @@ function LocationClues(props) {
         // console.log(data);
     }
 
+    const eventStatus = async() => {
+        const response = await client.get('api/player/event');
+        if(!response.ok){
+          return;
+        }
+        setEventEnd(!response.data.onEvent);
+    } 
+
     useEffect(() => {
         fetch();
+        eventStatus();
     },[]);
 
     const onSuccess = location=>{
@@ -128,9 +138,8 @@ function LocationClues(props) {
                 {evaluation? <p>{ans}</p>: ''}
                 <br/>
                 <br/>
-                <Button className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button>
-                <Button className={classes.Button} onClick={submitAnswer}  disabled={disable}>Submit my Location</Button>
-                {!data.isBonus ? (<div>
+                {!eventEnd && <Button className={classes.Button} onClick={submitAnswer}  disabled={disable}>Submit my Location</Button>}
+                {!data.isBonus && !eventEnd ? (<div>
                     <Button className={classes.Button} onClick={handleOpen} disabled={disableHint}>Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"

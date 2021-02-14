@@ -5,7 +5,7 @@ const sendEmail = async (receiver, subject, text, html) => {
     sgMail.setApiKey(process.env.SENDGRID_TOKEN);
     const msg = {
       to: receiver,
-      from: "mansibisen354@gmail.com",
+      from: "hhc@eventspeciale.com",
       subject,
       text,
       html,

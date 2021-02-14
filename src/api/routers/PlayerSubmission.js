@@ -94,7 +94,7 @@ player.post(
               isSubmitted: false,
             });
             let { points } = await Team.findById(team);
-            const marks = maxPoints / 2 - hintsTaken * 20;
+            const marks = maxPoints / 2 - hintsTaken * 50;
             points += marks;
             const teamResult = await Team.updateOne({ _id: team }, { points });
             if (teamResult.nModified !== 1)
@@ -127,7 +127,7 @@ player.post(
             isSubmitted: false,
           });
           let { points } = await Team.findById(team);
-          const marks = maxPoints / 2 - hintsTaken * 20;
+          const marks = maxPoints / 2 - hintsTaken * 50;
           points += marks;
           const teamResult = await Team.updateOne({ _id: team }, { points });
           if (teamResult.nModified !== 1)
@@ -429,9 +429,12 @@ player.post("/hint", playerVerify, TeamenRollVerify, async (req, res) => {
 
 player.get("/event", async (req, res) => {
   try {
-    const eventCompleted = (await User.findOne({ Role: "SuperAdmin" }))
-      .isClicked;
-    return res.status(200).json({ eventCompleted });
+    const user = await User.findOne({ Role: "SuperAdmin" });
+    const response = {
+      eventOn: user.isClicked,
+      endTime: user.EndTime,
+    };
+    return res.status(200).json(response);
   } catch (err) {
     console.log(err);
     return res.status(500).json({

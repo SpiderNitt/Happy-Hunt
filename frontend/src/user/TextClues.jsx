@@ -27,63 +27,73 @@ function TextClues(props) {
     const [ans, setAns]= useState("");
     const [message, setmessage] = useState('');
     const [messageType, setmessageType] = useState('');
+    const [eventEnd, setEventEnd] = useState(false);
     const [location, setLocation]= useState({
         loaded:false,
         coordinates: {lat:"", long:""}
     });
 
-const onSucces = location=>{
-    setLocation({
-        loaded:true,
-            coordinates:{
-                lat: location.coords.latitude,
-                long: location.coords.longitude
-        }
-    })
-};
+    const onSucces = location=>{
+        setLocation({
+            loaded:true,
+                coordinates:{
+                    lat: location.coords.latitude,
+                    long: location.coords.longitude
+            }
+        })
+    };
 
-const getLocation=()=>{
-    navigator.geolocation.getCurrentPosition(onSucces);
-    setDisable(false)
-}
-// console.log(location);
-// console.log(props)
-    
-const fetch = async () => {
+    const getLocation=()=>{
+        navigator.geolocation.getCurrentPosition(onSucces);
+        setDisable(false)
+    }
+    // console.log(location);
+    // console.log(props)
+        
+    const fetch = async () => {
         const result = await client.get(`api/mission/${props.match.params.id}`);
         console.log(result.data);
         await setData(result.data.mission);
         await setClues(result.data.mission.clue);
         await setHints(result.data.hint)
-}
+    }
+
+    const eventStatus = async() => {
+        const response = await client.get('api/player/event');
+        if(!response.ok){
+          return;
+        }
+        setEventEnd(!response.data.onEvent);
+    } 
 
     useEffect(() => {
         fetch();
+        eventStatus();
     }, [props.match.params.id]);
     // console.log(data)
 
-      const submitAnswer = async () => {
-      const body= {
-            "MissionId":props.match.params.id,
-            "Location":{
-                "coords":{
-                    "latitude":`${location.coordinates.lat}`,
-                    "longitude":`${location.coordinates.long}`
-                }
+    const submitAnswer = async () => {
+    const body= {
+        "MissionId":props.match.params.id,
+        "Location":{
+            "coords":{
+                "latitude":`${location.coordinates.lat}`,
+                "longitude":`${location.coordinates.long}`
             }
         }
-        const result = await client.post('api/player/locationSubmission', body)
-        if(!result.ok){
-          console.log(result, result.originalError, result.problem, result.status);
-          console.log(result.data.message)
-          setmessage(result.data.message);
-          setmessageType("error");
-          showEvaluation(true)
-          return;
-        }
+    }
+    const result = await client.post('api/player/locationSubmission', body)
+    if(!result.ok){
+        console.log(result, result.originalError, result.problem, result.status);
+        console.log(result.data.message)
+        setmessage(result.data.message);
+        setmessageType("error");
         showEvaluation(true)
-        setAns(result.data.message)
-      }
+        return;
+    }
+    showEvaluation(true)
+    setAns(result.data.message)
+    }
     //   console.log(ans);
 
     const handleChange= (e)=>{
@@ -171,7 +181,7 @@ const fetch = async () => {
                 :""}
 
                 {evaluation? <p>{ans}</p>: ''}
-                {!data.isBonus ? 
+                {!data.isBonus && !eventEnd ? 
                  <Button variant="outlined" className={classes.Button} onClick={submitAnswer} disabled={disable}>Submit Location</Button>
                  : ''}
                 <hr/>
@@ -187,9 +197,9 @@ const fetch = async () => {
                 {/* {resultoutput ? <div>{result}</div> : ''} */}
                 <br/>
                 {/* <Button variant="outlined" className={classes.Button} href={Routes.USER_CLUES}>Back to clues</Button> */}
-                <Button variant="outlined" className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>
+                {!eventEnd && <Button variant="outlined" className={classes.Button} onClick={handleSubmit}>Submit Answer</Button>}
                 
-                {!data.isBonus ? (<div>
+                {!data.isBonus && !eventEnd ? (<div>
                     <Button variant="outlined" className={classes.Button} onClick={handleOpen} disabled={disableHint} >Hint</Button>
                 <Modal
                 aria-labelledby="transition-modal-title"

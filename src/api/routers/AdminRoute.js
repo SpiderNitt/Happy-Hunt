@@ -97,16 +97,18 @@ Router.delete("/deleteAdmin", superAdminVerify, async (req, res) => {
 Router.get("/start", superAdminVerify, async (req, res) => {
   try {
     const SAdmin = await User.findById(req.jwt_payload.id);
-    if (SAdmin.isClicked) {
-      return res.status(400).json({ message: "Game has already started" });
-    }
+    // if (SAdmin.isClicked) {
+    //   return res.status(400).json({ message: "Game has already started" });
+    // }
+    SAdmin.EndTime = Date.now() + 3 * 60 * 60 * 1000;
+    // SAdmin.EndTime = Date
     // algo();
-    setTimeout(async () => {
-      io.emit("Event over");
-      SAdmin.isClicked = false;
-      await SAdmin.save();
-    }, 30000);
-    SAdmin.isClicked = true;
+    // setTimeout(async () => {
+    //   io.emit("Event over");
+    //   SAdmin.isClicked = false;
+    //   await SAdmin.save();
+    // }, 30000);
+    // SAdmin.isClicked = true;
     await SAdmin.save();
     return res.status(200).json({ message: "Game sucessfully started" });
   } catch (err) {
@@ -145,7 +147,7 @@ Router.post("/accept", AcceptValidator, adminVerify, async (req, res) => {
     let notification;
     if (isAccepted) {
       if (activity.isSubmitted && !activity.status) {
-        team.points += mission.maxPoints / 2 - activity.hintsTaken * 20;
+        team.points += mission.maxPoints / 2 - activity.hintsTaken * 50;
         activity.status = true;
         activity.Date = Date.now();
         await team.save();

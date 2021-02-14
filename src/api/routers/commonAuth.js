@@ -15,7 +15,7 @@ commonAuth.post("/login", loginValidator, async (req, res) => {
     if (!emailId || !password)
       return res.status(400).json({ message: "Enter all fields" });
     const user = await User.findOne({
-      emailId,
+      emailId: { $regex: new RegExp(`^${emailId.toLowerCase()}`, "i") },
       /* active: true */ isEmailVerified: true,
     }).lean();
     if (user === undefined || user === null)

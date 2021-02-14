@@ -66,5 +66,8 @@ const UserSchema = new mongoose.Schema({
     entityId: String,
     amount: Number,
   },
+  EndTime: {
+    type: Date,
+  },
 });
 module.exports = mongoose.model("User", UserSchema);
